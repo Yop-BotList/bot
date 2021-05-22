@@ -9,7 +9,7 @@
 # Modules requis :
 > • Pour installer un module, ouvrez un terminal, et tapez la commande `npm install <nom du module>`.  
 >
-> • Voici la liste de tous les modules à installer : `discord.js`, `figlet`, `parse-ms`, `pretty-ms`, `moment`, et `easy-json-database`.
+> • Voici la liste de tous les modules à installer : `discord.js`, `figlet`, `parse-ms`, `pretty-ms`, `moment`, `colors`, et `easy-json-database`.
 # Configuration :
 > Pour configurer votre robot, vous pouvez modifier les informations dans le fichier `config.json`.
 # Remerciements :
