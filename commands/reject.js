@@ -17,7 +17,7 @@ exports.run = async (client, message, args) => {
             if (!dbVerifStatut.has(`Statut_${member.id}`)) {
                 return message.channel.send(client.no + ' | Aucune demande n\'a été faite pour ce bot.')
             } else {
-                if (args[2]) {
+                if (args[1]) {
                 // Messages
                 client.channels.cache.get(client.botlogs).send(`<@${dbProprio.get(`Proprio_${member.id}`)}>`, {
                     embed:{
