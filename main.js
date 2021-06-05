@@ -5,7 +5,7 @@ const { Client, Collection } = require('discord.js'),
       { green, red, magenta, blue, underline } = require('colors'),
       { no, yes } = require('./configs/emojis.json'),
       { botslogs } = require('./configs/channels.json'),
-      { verificators } = require('./configs/roles.json');
+      { verificator } = require('./configs/roles.json');
 
 client.prefix = config.prefix;
 client.color = config.color;
@@ -15,7 +15,7 @@ client.botAllowed = config.botAllowed;
 client.commands = new Collection();
 client.events = new Collection();
 client.botlogs = botslogs;
-client.verificator = verificators;
+client.verificator = verificator;
 
 
 fs.readdir("./commands/", (err, files) => {
