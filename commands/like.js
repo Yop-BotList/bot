@@ -42,5 +42,5 @@ exports.run = async (client, message) => {
 
 exports.help = {
     name: "like",
-    catogory: "botlist"
+    category: "botlist"
 }
