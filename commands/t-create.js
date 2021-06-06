@@ -57,6 +57,7 @@ exports.run = async (client, message, args) => {
                         embed: {
                             title: `Nouveau ticket de ${message.author.username}#${message.author.discriminator}`,
                             timestamp: new Date(),
+                            color: client.color,
                             fields: [
                                 {
                                     name: `:id: ID :`,
