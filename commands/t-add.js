@@ -43,7 +43,7 @@ exports.run = async (client, message, args) => {
                             ]
                         }
                     })
-                    message.channel.send(`J'ai bien ajouté\`${member.username}#${member.discriminator}\` à ce ticket.`)
+                    message.channel.send(`J'ai bien ajouté \`${member.username}#${member.discriminator}\` à ce ticket.`)
                     }
                 } else if (!message.member.roles.cache.get(ticketsaccess)) {
                     return message.channel.send(client.no + ' | Vous n\'avez pas la permission de faire cela.') 
