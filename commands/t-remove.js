@@ -23,6 +23,7 @@ exports.run = async (client, message, args) => {
                         embed: {
                             title: `Retrait d'un membre au ticket de ${user.username}#${user.discriminator}`,
                             timestamp: new Date(),
+                            color: client.color,
                             fields: [
                                 {
                                     name: `:bust_in_silhouette: Utilisateur :`,
