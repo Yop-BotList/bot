@@ -16,7 +16,7 @@ client.commands = new Collection();
 client.events = new Collection();
 client.botlogs = botslogs;
 client.verificator = verificator;
-
+["aliases", "categories"].forEach(x => { client[x] = new Collection() });
 
 fs.readdir("./commands/", (err, files) => {
     if (err) return console.error;
@@ -24,11 +24,18 @@ fs.readdir("./commands/", (err, files) => {
         if (!file.endsWith('.js')) return undefined;
         const props = require(`./commands/${file}`),
               cmdName = file.split('.')[0];
+        if (props.help.aliases) {
+            props.help.aliases.forEach(alias => {
+                client.aliases.set(alias, props);
+            });
+        }
+        if (props.help.category) {
+            client.categories.set(props.help.category, props);
+        }
         console.log(`${green('[COMMANDS]')} Commande ${underline(cmdName)} chargée avec succès !`)
         client.commands.set(cmdName, props);
     })
 });
-["commands", "aliases", "categories"].forEach(x => { client[x] = new Collection() });
 
 fs.readdir("./events/", (err, files) => {
     if (err) return console.error;
