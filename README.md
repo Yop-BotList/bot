@@ -15,3 +15,6 @@
 # Remerciements :
 > • Tout d’abord, j’aimerai remercier [LordAlex2015](https://github.com/LordAlex2015) pour avoir créé l’[handler](https://github.com/LordAlex2015/handler-discord.js) de YopBot (qui me servait au début car ce n'est plus le cas).  
 > • Ensuite, je voudrais remercier [ValRedstone](https://github.com/ValRedstone) qui m’as aidé à progresser en JavaScript (c’est la première fois que je code en JS 😄)
+# Support :
+> • Pour me contacter, vous pouvez ouvrir une issue en cliquant [ici](https://github.com/Nonolanlan1007/Yop-Bot/issues/new)
+> • Vous pouvez aussi venir sur le serveur support de YopBot : https://discord.gg/3dQeTg9Vz3 !
