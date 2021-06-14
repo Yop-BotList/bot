@@ -2,15 +2,6 @@ const config = require('../configs/config.json'),
       { botlogs } = require('../configs/channels.json');
 
 module.exports = (client, message) =>  {
-    if (message.content === "!d bump") {
-        setTimeout(() => {
-            if (message.embeds.length && message.author.id == '302050872383242240' && message.embeds[ 0 ].description.indexOf("Bump effectué !") > -1) {
-                return message.channel.send(client.yes + ` | Merci <@${message.author.id}> pour ton bump !`)
-            } else return message.channel.send(client.no + " | Mince, tu es arrivé trop tard ! ")
-        }, 1500)
-    }
-    
-    if (message.content.startsWith(client.prefix)) {
         if (message.content.indexOf(client.prefix) !== 0) return;
         const args = message.content.slice(client.prefix.length).trim().split(/ +/g);
         const command = args.shift().toLowerCase();
@@ -47,5 +38,4 @@ module.exports = (client, message) =>  {
             })
             cmd.run(client, message, args)
         }
-    }
 }
