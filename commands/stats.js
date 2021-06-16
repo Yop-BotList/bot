@@ -19,7 +19,7 @@ exports.run = async (client, message) => {
             fields: [
                 {
                     name: "**__:bookmark_tabs: Infos générales :__**",
-                    value: "> **:crown: Créateur :** Nolhan#2508 \n > :calendar: Date de création : 05/04/2021",
+                    value: "> **:crown: Créateur :** Nolhan#2508 \n > **:calendar: Date de création :** 05/04/2021\n**:minidisc: Version :** " + client.version,
                     inline: true
                 },
                 {
@@ -34,5 +34,6 @@ exports.run = async (client, message) => {
 
 exports.help = {
     name: "stats",
-    category: "utils"
+    category: "utils",
+    aliases: ["botinfo", "bi", "botstats"]
 }
