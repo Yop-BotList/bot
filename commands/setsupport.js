@@ -6,8 +6,8 @@ exports.run = async (client, message, args) => {
     
     if (args[0].length != 18 && !isNaN(parseInt(args[0]))) return message.channel.send(client.no + ' | Aïe ! Ton identifiant est invalide :confused:.')
         const member = await client.users.fetch(`${args[0]}`)
-        if (client.dbProprio.get(`Proprio_${member.id}`) !== message.author.id || !message.member.roles.cache.get(verificator)) return message.channel.send(client.no + " | Désolé, mais vous n'avez pas la permission d'utiliser cette commande")
         if (!client.dbProprio.has(`Proprio_${member.id}`)) return message.channel.send(client.no + ' | Désolé, mais je ne retrouve pas ce bot sur ma liste. (Ce n\'est d\'ailleurs peut-être même un bot)')
+        if (client.dbProprio.get(`Proprio_${member.id}`) !== message.author.id && !message.member.roles.cache.get(verificator)) return message.channel.send(client.no + " | Désolé, mais vous n'avez pas la permission d'utiliser cette commande")
         if (!args[1]) return message.channel.send(client.no + ' | Il faudrai peut-être entrer un lien non ?')
         if (args[1] === 'none' && client.dbSupport.has(`Support_${member.id}`)) {
             client.channels.cache.get(botslogs).send(`<@${client.dbProprio.get(`Proprio_${member.id}`)}>`, {
