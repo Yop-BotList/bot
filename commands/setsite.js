@@ -2,7 +2,7 @@ const { botslogs } = require('../configs/channels.json'),
       { verificator } = require('../configs/roles.json');
 
 exports.run = async (client, message, args) => {
-    if (!args[0]) return message.channel.send('```y!setsupport <id bot> <invitation | none>```')
+    if (!args[0]) return message.channel.send('```y!setsite <id bot> <lien | none>```')
     
     if (args[0].length != 18 && !isNaN(parseInt(args[0]))) return message.channel.send(client.no + ' | Aïe ! Ton identifiant est invalide :confused:.')
         const member = await client.users.fetch(`${args[0]}`)
