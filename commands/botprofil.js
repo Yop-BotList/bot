@@ -9,6 +9,7 @@ exports.run = async (client, message, args) => {
     } else {
         if (!message.mentions.members.first()) return message.channel.send(client.no + " | Votre mention est invalide.")
        const member = message.mentions.members.first();
+        if (!client.dbProprio.has(`Proprio_${member.user.id}`)) return message.channel.send(client.no + " | Désolé, mais je ne retrouve pas ce bot sur ma liste (ce n’est d’ailleurs peut-être même pas un bot).")
         let prefix = client.dbPrefix.get(`Prefix_${member.user.id}`),
             description = client.dbDesc.get(`Desc_${member.user.id}`) || "_Aucune description définie..._",
             support = client.dbSupport.get(`Support_${member.user.id}`) || "_Aucun serveur support défini..._",
