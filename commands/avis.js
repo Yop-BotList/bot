@@ -15,7 +15,7 @@ exports.run = async (client, message, args) => {
         } else client.channels.cache.get(avischannel).send({
             embed: {
                 title: `Avis de ${message.author.username} sur la vérification de son robot :`,
-                color: config.color,
+                color: client.color,
                 footer: {
                     icon_url: message.author.displayAvatarURL(),
                 },
@@ -35,5 +35,6 @@ exports.run = async (client, message, args) => {
 
 exports.help = {
     name: "avis",
-    category: "utils"
+    category: "utils",
+    aliases: ["rate", "review"]
 }
