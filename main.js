@@ -26,7 +26,7 @@ client.commands = new Collection();
 client.events = new Collection();
 client.botlogs = botslogs;
 client.verificator = verificator;
-client.version = "1.9";
+client.version = "2.0";
 
 // database
 client.dbLikes = likesdb;
