@@ -10,7 +10,7 @@ exports.run = async (client, message, args) => {
                 },
                 color: client.color,
                 footer: {
-                    text: "YopBot | Version 1.8"
+                    text: "YopBot | Version " + client.version
                 },
                 timestamp: new Date(),
                 fields: [
