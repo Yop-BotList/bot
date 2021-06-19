@@ -13,7 +13,7 @@ exports.run = async (client, message, args) => {
         let prefix = client.dbPrefix.get(`Prefix_${member.user.id}`),
             description = client.dbDesc.get(`Desc_${member.user.id}`) || "_Aucune description définie..._",
             support = client.dbSupport.get(`Support_${member.user.id}`) || "_Aucun serveur support défini..._",
-            siteweb = client.dbSite.get(`Site_${member.user.id}`) || "_Aucu site web défini..._",
+            siteweb = client.dbSite.get(`Site_${member.user.id}`) || "_Aucun site web défini..._",
             likes = client.dbLikes.get(`Likes_${member.user.id}`) || "0",
             lastlike = client.dbLikes.get(`LastLike_${member.user.id}`) || "_Personne n'a récemment voté pour ce bot..._"
 
