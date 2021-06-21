@@ -4,7 +4,7 @@
 >
 > **⚠️ | Pour toutes les personnes souhaitant faire de mon robot un bot public, il va falloir le faire vous-mêmes car YopBot est adapté uniquement pour __un seul serveur__.**
 # Pré-requis :
-> • Posséder le logiciel [NodeJS](https://nodejs.orge) installé sur votre ordinateur.  
+> • Posséder le logiciel [NodeJS](https://nodejs.org) installé sur votre ordinateur.  
 > • Posséder un logiciel d’éditeurs de scripts ([Visual Studio Code](https://code.visualstudio.com/), [IntelliJ IDEA](https://www.jetbrains.com/idea), ...)
 # Modules requis :
 > • Pour installer un module, ouvrez un terminal, et tapez la commande `npm install <nom du module>`.  
