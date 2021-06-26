@@ -7,9 +7,9 @@ exports.run = async (client, message, args) => {
         return message.channel.send('```y!t-close <raison>```')
     }
     if (!message.member.roles.cache.get(ticketsaccess)) {
-        return message.channel.send(client.no + " | DÃ©solÃ©, mais vous n'avez pas la permission d'utiliser cette commande.")
+        return message.channel.send(client.no + " | Désolé, mais vous n'avez pas la permission d'utiliser cette commande.")
     }
-    if (!message.channel.name.startsWith('ðŸŽ«ãƒ»ticket-')) return message.channel.send(client.no + ' | Ce salon n\'est pas un ticket.')
+    if (!client.dbTickets(`User_${message.channel.id}`)) return message.channel.send(client.no + ' | Ce salon n\'est pas un ticket.')
         const member = await client.users.fetch(`${client.dbTickets.get(`User_${message.channel.id}`)}`);
         client.channels.cache.get(ticketslogs).send({
                         embed: {
