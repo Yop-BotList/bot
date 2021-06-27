@@ -1,9 +1,11 @@
 const { blue } = require('colors'),
       { botlogs } = require('../configs/channels.json'),
-      { online } = require('../configs/emojis.json');
+      { online } = require('../configs/emojis.json'),
+      moment = require("moment");
+moment.locale("fr");
 
 module.exports = (client) => {
-    console.log(blue(`- Connexion de ${client.user.tag} réussie.\n- Base de données connectée.`) + "\n==================================================================")
+    console.log(blue(`- Connexion de ${client.user.tag} réussie le ${moment().format('Do MMMM YYYY')} à ${moment().format('HH')}h${moment().format('mm')}\n- Base de données connectée.`) + "\n==================================================================")
     client.channels.cache.get(botlogs).send("**" + online + " | Je viens tout juste de me connecter !**")
     
     client.user.setActivity('hémerger d\'un profond sommeil...');
