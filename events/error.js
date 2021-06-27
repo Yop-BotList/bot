@@ -1,11 +1,11 @@
 const { red } = require('colors'),
       { botlogs } = require('../configs/channels.json'),
-      { owner } = require('../configs/channels.json');
+      { owner } = require('../configs/config.json');
 
 module.exports = (client, error) => {
     client.channels.cache.get(botlogs).send(`<@${owner}>`, {
         embed: {
-            title: "Un erreur est survenue !",
+            title: "Une erreur est survenue !",
             thumbnail: "https://i.imgur.com/WipCNgF.png",
             timestamp: new Date(),
             color: client.color,
@@ -17,6 +17,6 @@ module.exports = (client, error) => {
                 }
             ]
         }
-    })
+    });
     console.log(`${red("[ERRORS]")} ${error.message}`)
 }
