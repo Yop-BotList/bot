@@ -3,5 +3,6 @@
     "prefix": "!",
     "botsAllowed": false,
     "color": "#f2ac34",
-    "owner": "YOUR_ID"
+    "owner": "YOUR_ID",
+    "autokick": true
 }
