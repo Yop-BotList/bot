@@ -10,6 +10,7 @@ exports.run = async (client, message, args) => {
     } else {
                 let guild = message.guild;
                 let categorie = await message.guild.channels.cache.find(c => c.id === ticketcategory && c.type === "category");
+                if (!categorie) return message.channel.send(client.no + " | Mince, la catégorie est invalide !")
 
                 guild.channels.create(`🎫・ticket-${message.author.username}`, {
                     type: 'text',
