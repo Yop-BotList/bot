@@ -17,7 +17,6 @@ exports.run = async (client, message, args) => {
             likes = client.dbLikes.get(`Likes_${member.user.id}`) || "0",
             lastlike = client.dbLikes.get(`LastLike_${member.user.id}`) || "_Personne n'a récemment voté pour ce bot..._"
 
-            console.log(likes)
             //Message
             message.channel.send({
                 embed: {
