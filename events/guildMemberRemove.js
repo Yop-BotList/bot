@@ -19,6 +19,7 @@ module.exports = async (client, member) => {
             bot.kick("Bot supprimé de la liste.")
             client.dbProprio.delete(`Bot_${member.user.id}`)
             client.dbProprio.delete(`Proprio_${bot.user.id}`)
+            client.dbVerifStatut.delete(`Statut_${bot.user.id}`)
         }, 1000)
     }
 }
