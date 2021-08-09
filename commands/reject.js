@@ -28,6 +28,7 @@ exports.run = async (client, message, args) => {
                 // Suppressions des variables
                 client.dbVerifStatut.delete(`Statut_${member.user.id}`);
                 client.dbProprio.delete(`Proprio_${member.user.id}`);
+                client.dbProprio.delete(`Bot_${message.author.id}`);
                 client.dbLikes.delete(`Likes_${member.user.id}`);
                 // autokick
                 if (autokick === true) return member.kick("Bot supprimé de la liste.")
