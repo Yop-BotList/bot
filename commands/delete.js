@@ -7,7 +7,7 @@ exports.run = async (client, message, args) => {
     if (!member) return message.channel.send(client.no + " | Identifiant invalide ou alors, le membre n'est pas présent sur le serveur.");
     if (!member.user.bot) return message.channel.send(client.no + " Ce membre n'est pas un bot.");
     if (!client.dbProprio.has(`Proprio_${member.user.id}`)) return message.channel.send(client.no + ' | Ce bot n\'est pas sur la liste !')
-    if (client.dbVerifStatut.has(`Statut_${member.user.id}`)) return message.channel.send(client.no + ' | Ce bot n\'est pas sur la liste !')
+    if (client.dbVerifStatut.has(`Statut_${member.user.id}`)) return message.channel.send(client.no + ' | Ce bot n\'est pas encore sur la liste !')
     if (!args[1]) return message.channel.send(client.no + ' | Veuillez entrer un raison.')     
         // Messages
         client.channels.cache.get(client.botlogs).send(`<@${client.dbProprio.get(`Proprio_${member.user.id}`)}>`, {
