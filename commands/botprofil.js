@@ -1,22 +1,25 @@
 const Discord  = require('discord.js'),
       Database = require('easy-json-database'),
-      moment = require('moment');
+      moment = require('moment'),
+      likeshema = require("../database/models/likes");
 moment.locale('fr');
 
 exports.run = async (client, message, args) => {
     if (!args[0]) {
         return message.channel.send('```y!botprofil <mention bot>```')
     } else {
-        if (!message.mentions.members.first()) return message.channel.send(client.no + " | Votre mention est invalide.")
+        if (!message.mentions.members.first()) return message.channel.send(client.no + " | Votre mention est invalide, ou l'utilisateur n'est pas présent sur le serveur.")
        const member = message.mentions.members.first();
         if (!client.dbProprio.has(`Proprio_${member.user.id}`)) return message.channel.send(client.no + " | Désolé, mais je ne retrouve pas ce bot sur ma liste (ce n'est d'ailleurs peut-être même pas un bot)")
         let prefix = client.dbPrefix.get(`Prefix_${member.user.id}`),
             description = client.dbDesc.get(`Desc_${member.user.id}`) || "_Aucune description définie..._",
             support = client.dbSupport.get(`Support_${member.user.id}`) || "_Aucun serveur support défini..._",
-            siteweb = client.dbSite.get(`Site_${member.user.id}`) || "_Aucu site web défini..._",
-            likes = client.dbLikes.get(`Likes_${member.user.id}`) || "0",
-            lastlike = client.dbLikes.get(`LastLike_${member.user.id}`) || "_Personne n'a récemment voté pour ce bot..._"
+            siteweb = client.dbSite.get(`Site_${member.user.id}`) || "_Aucu site web défini..._";
 
+            const votesGet = await likeshema.findOne({ botID: member.user.id, serverID: message.guild.id });
+            const votes = votesGet ? votesGet.likesCount : 0,
+                  lastlike = votesGet ? votesGet.likeDate : "*Aucun vote...*"
+            
             //Message
             message.channel.send({
                 embed: {
@@ -67,7 +70,7 @@ exports.run = async (client, message, args) => {
                         },
                         {
                             name: '__:sparkling_heart: Vote(s) :__',
-                            value: `> ${likes} vote(s)`,
+                            value: `> ${votes} vote(s)`,
                             inline: true
                         },
                         {
