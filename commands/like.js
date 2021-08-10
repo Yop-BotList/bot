@@ -1,5 +1,6 @@
 const moment = require('moment'),
-      cooldown = new Set();
+      cooldown = new Set(),
+      likeshema = require("../database/models/likes")
 moment.locale('fr');
 
 exports.run = async (client, message) => {
@@ -13,17 +14,25 @@ exports.run = async (client, message) => {
         return message.channel.send(client.no + ' | Désolé, mais ce bot n\'est pas sur la liste.')
     } else {
     if (member.user.bot) {
-        let votes = Number(0)
-        if (client.dbLikes.has(`likes_${member.user.id}`)) {
-            votes = (Number(client.dbLikes.get(`likes_${member.user.id}`)) + 1)
-        } else if (!client.dbLikes.has(`Likes_${member.id}`)) {
-            votes = Number(1)
-        }
+    const verifyVotes = await likeshema.findOne({ botID: member.user.id, serverID: message.guild.id });
+    if (!verifyVotes) {
+        new likeshema({
+            botID: member.user.id,
+            serverID: message.guild.id,
+            likesCount: 1,
+            likeDate: `Le ${moment().format("Do MMMM YYYY")} à ${moment().format("HH")}h${moment().format("mm")}`
+        }).save();
+    }
+    else {
+        await likeshema.findOneAndUpdate({ botID: member.user.id, serverID: message.guild.id }, { likesCount: (verifyVotes.likesCount + 1), likeDate: `Le ${moment().format("Do MMMM YYYY")} à ${moment().format("HH")}h${moment().format("mm")}` }, { new: true });
+    }
+    
+    const votesGet = await likeshema.findOne({ botID: member.user.id, serverID: message.guild.id });
+    
+    const votes = votesGet ? votesGet.likesCount : 1;
         setTimeout(() => {
             message.channel.send(client.yes + ` | Vous avez bien voté pour <@${member.user.id}> ! Il a maintenant ${votes} vote(s).`);
-        client.channels.cache.get(client.botlogs).send(client.yes + `** | <@${message.author.id}> viens juste de voter pour <@${member.user.id}> !**`);
-        client.dbLikes.set(`likes_${member.user.id}`, `${votes}`)
-        client.dbLikes.set(`LastLike_${member.user.id}`, `Le ${moment().format('Do MMMM YYYY')} à ${moment().format('HH')}h${moment().format('mm')}`)
+        client.channels.cache.get(client.botlogs).send(client.yes + `** | <@${message.author.id}> viens juste de voter pour <@${member.user.id}> !**`)
         }, 1000)
         cooldown.add(message.author.id);
         setTimeout(() => {
