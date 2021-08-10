@@ -14,8 +14,8 @@ const { Client, Collection } = require('discord.js'),
       sitedb = new Database('./database/siteweb.json'),
       supportdb = new Database('./database/support.json'),
       verifstatutdb = new Database('./database/verifstatut.json'),
-      ticketsdb = new Database('./database/tickets.json');
-      
+      ticketsdb = new Database("./database/tickets.json"),
+      { version } = require('./package.json');
 
 client.prefix = config.prefix;
 client.color = config.color;
@@ -26,7 +26,8 @@ client.commands = new Collection();
 client.events = new Collection();
 client.botlogs = botslogs;
 client.verificator = verificator;
-client.version = "2.1";
+client.version = version;
+client.mongoose = require("./configs/mongoose.js");
 
 // database
 client.dbLikes = likesdb;
@@ -41,7 +42,11 @@ client.dbTickets = ticketsdb;
 ["aliases", "categories"].forEach(x => { client[x] = new Collection() });
 
 fs.readdir("./commands/", (err, files) => {
-    if (err) return console.error;
+    if (err) {
+        console.error
+        client.destroy()
+        return
+    };
     files.forEach(file => {
         if (!file.endsWith('.js')) return undefined;
         const props = require(`./commands/${file}`),
@@ -75,4 +80,23 @@ setTimeout(() => {
 }, 500)
 
 
+client.mongoose.init();
+client.on("error", (error, client) => {
+    client.channels.cache.get(botlogs).send(`<@${owner}>`, {
+        embed: {
+            title: "Un erreur est survenue !",
+            thumbnail: "https://i.imgur.com/WipCNgF.png",
+            timestamp: new Date(),
+            color: client.color,
+            fields: [
+                {
+                    name: "Erreur :",
+                    value: error.message,
+                    inline: true
+                }
+            ]
+        }
+    })
+    console.log(`${red("[ERRORS]")} ${error.message}`)
+})
 client.login(config.token)
