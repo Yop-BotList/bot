@@ -1,9 +1,0 @@
-{
-    "token": "",
-    "prefix": "!",
-    "botsAllowed": false,
-    "color": "#f2ac34",
-    "owner": "YOUR_ID",
-    "DBCONNECTION": "",
-    "autokick": true
-}
