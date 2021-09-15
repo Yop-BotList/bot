@@ -6,12 +6,12 @@ const { Client, Message, MessageEmbed } = require('discord.js'),
 
 module.exports = {
     name: 'botadd',
-    aliases: ['badd', 'bota'],
+    aliases: ['addbot'],
     categories : 'botlist', 
     permissions : ' ', 
     description: 'Permet de rajouter un bot à la liste.',
     cooldown : 5,
-    usage: 'botadd (id) (prefix)',
+    usage: 'botadd [id] [prefix]',
     /** 
      * @param {Client} client 
      * @param {Message} message
@@ -19,16 +19,13 @@ module.exports = {
      */
     run: async(client, message, args) => {
         /* Verification */
-        if (message.mentions.members.first() || message.mentions.users.first()) return message.reply({ content: `${client.no} | Désolé je ne prend pas en charge les mentions.` });
-        if (!args[0]) return message.reply({ content: `${client.no} | Il manque l'id du bot dans la commande: \`${prefix}botadd (id) (prefix)\`` });
-        if (args[0].length != 18 && !isNaN(parseInt(args[0]))) return message.reply({ content: `${client.no} | ${args[0]} n'est pas une id, raison: \`Ce n'est peut être pas un nombre ou la taille de l'id est trop petite.\`` });
+        if (message.mentions.members.first() || message.mentions.users.first()) return message.reply({ content: `**${client.no} ➜ Désolé je ne prend pas en charge les mentions.**` });
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Il manque l'id du bot dans la commande: \`${prefix}botadd [id] [prefix]\`**` });
+        const user = message.guild.members.get(args[0]);
+        if (!member) return message.reply({ content: `**${client.no} ➜ Membre introuvable !**` });
+        if (!user.user.bot) return message.reply({ content: `**${client.no} ➜ Ce membre n’est pas un bot !**` });
 
-        const user = await client.users.fetch(args[0]);
-
-        if (!user) return message.reply({ content: `${client.no} | Aucun bot avec l'id ${args[0]} trouvé sur discord.` });
-        if (!user.bot) return message.reply({ content: `${client.no} | ${args[0]} n'est pas un bot.` });
-
-        if (!args[1]) return message.reply({ content: `${client.no} | Il manque le prefix du bot dans la commande: \`${prefix}botadd (id) (prefix)\`` });
+        if (!args[1]) return message.reply({ content: `**${client.no} ➜ Préfixe introuvable !` });
 
         if (await bots.findOne({ botID: user.id })) return message.reply({ content: `${client.no} | ${user.tag} est déjà sur la liste.` });
 
