@@ -1,23 +1,19 @@
 const { Schema, model } = require("mongoose"),
 
 reqString = {
-    type: String, required: true
-},
-
-noReqString = {
     type: String, required: false
 },
 
-botsShema = new Schema({
-    botID: reqString,
+botShema = new Schema({
+    botID: { type: String, required: true },
     prefix: reqString,
     ownerID: reqString,
     verified: { type: Boolean, required: false },
-    serverInvite: noReqString,
-    site: noReqString,
-    desc: noReqString,
+    serverInvite: reqString,
+    site: reqString,
+    desc: reqString,
     likesCount: { type: Number, required: false },
-    likeDate: ReqString
+    likeDate: reqString
 }),
 
-botShema = module.exports = model("bots", botShema);
+botsShema = module.exports = model("bots", botShema);
