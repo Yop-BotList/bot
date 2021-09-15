@@ -8,7 +8,7 @@ noReqString = {
     type: String, required: false
 },
 
-botShema = new Schema({
+botsShema = new Schema({
     botID: reqString,
     prefix: reqString,
     ownerID: reqString,
@@ -17,7 +17,7 @@ botShema = new Schema({
     site: noReqString,
     desc: noReqString,
     likesCount: { type: Number, required: false },
-    likeDate: noReqString
+    likeDate: ReqString
 }),
 
-botsShema = module.exports = model("bots", botShema);
+botShema = module.exports = model("bots", botShema);
