@@ -1,5 +1,13 @@
 {
+  "name": "yopbot-v3",
   "version": "3.0",
+  "description": "YopBot est un bot discord d'un serveur botlist sur discord qui est à la fois OpenSource",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "YopBotList Staff",
+  "license": "ISC",
   "dependencies": {
     "ascii-table": "^0.0.9",
     "colors": "^1.4.0",
