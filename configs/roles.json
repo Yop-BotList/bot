@@ -1,6 +1,6 @@
 {
     "verificator": "LE ROLE VERIFICATEUR",
-    "client": "L'ID DU ROLE CLIENT",
+    "isclient": "L'ID DU ROLE CLIENT",
     "ticketsaccess": "LE ROLE POUR ACCEDER AU TICKETS",
     "mute": "LE ROLE MUTED",
     "botintests": "LE ROLE BOT EN TEST",
