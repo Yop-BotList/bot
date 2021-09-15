@@ -27,7 +27,7 @@ module.exports = {
 
         if (!args[1]) return message.reply({ content: `**${client.no} ➜ Préfixe introuvable !` });
 
-        if (await bots.findOne({ botID: user.id })) return message.reply({ content: `${client.no} | ${user.tag} est déjà sur la liste.` });
+        if (await bots.findOne({ botID: user.id })) return message.reply({ content: `**${client.no} ➜ ${user.tag} est déjà sur la liste !**` });
 
         new bots({
             botID: args[0],
@@ -43,13 +43,13 @@ module.exports = {
             embeds: [
                 new MessageEmbed()
                 .setTitle("Demande d'ajout...")
-                .setDescription(`<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&scope=bot&permissions=-1). Un vérificateur va bientôt s’occuper de lui.`)
+                .setDescription(`<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&scope=bot&permissions=0%20application.commands). Un vérificateur va bientôt s’occuper de lui.`)
                 .setColor("#66DA61")
-                .setThumbnail(user.displayAvatarURL())
+                .setThumbnail(user.user.displayAvatarURL())
                 .setTimestamp(new Date())
             ]
         });
 
-        message.reply({ content: `${client.yes} | Votre bot \`${user.tag}\` vient juste d'être ajouté à la liste.` });
+        message.reply({ content: `**${client.yes} ➜ Votre bot \`${user.tag}\` vient juste d'être ajouté à la liste d’attente !` });
     }
 }
