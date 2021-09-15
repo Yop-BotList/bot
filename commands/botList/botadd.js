@@ -43,7 +43,7 @@ module.exports = {
             embeds: [
                 new MessageEmbed()
                 .setTitle("Demande d'ajout...")
-                .setDescription(`<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&scope=bot&permissions=0%20application.commands). Un vérificateur va bientôt s’occuper de lui.`)
+                .setDescription(`<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&scope=bot%20application.commands&permissions=0). Un vérificateur va bientôt s’occuper de lui.`)
                 .setColor("#66DA61")
                 .setThumbnail(user.user.displayAvatarURL())
                 .setTimestamp(new Date())
