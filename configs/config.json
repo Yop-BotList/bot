@@ -1,0 +1,13 @@
+{
+    "token": "TOKEN DU BOT",
+    "prefix": "PREFIX",
+    "mongooseConnectionString": "MongoURI",
+    "color": "#f2ac34",
+    "autokick": true,
+    "owner": "ID DE L'OWNER",
+    "owners": [
+        "OWNER_1_ID",
+        "OWNER_2_ID",
+        "OWNER_3_ID"
+    ] 
+}
