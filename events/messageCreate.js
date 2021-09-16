@@ -2,9 +2,12 @@ const { MessageEmbed } = require("discord.js"),
   { prefix, owners, owner } = require("../configs/config.json"),
   client = require("../index"),
   { botlogs } = require('../configs/channels.json'),
-  { escapeRegex, onCoolDown } = require("../utils/function");
+  { escapeRegex, onCoolDown } = require("../utils/function"),
+  bumpChecker = require("../utils/bumpChecker");
 
 client.on("messageCreate", async (message) => {
+  bumpChecker(message);
+  
   if (message.channel.type === "DM" || message.author.bot) return;
   if (message.channel.partial) await message.channel.fetch();
   if (message.partial) await message.fetch();
