@@ -1,5 +1,6 @@
 const { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
     { prefix } = require("../../configs/config.json"),
+    { botslogs } = require("../../configs/channels.json"),
     { Client, Message, MessageEmbed } = require("discord.js"),
     bots = require("../../models/bots");
 
@@ -8,9 +9,9 @@ module.exports = {
     aliases: ["acc", "acpt"],
     categories : 'botlist', 
     permissions : `${verificator}`, 
-    description: 'Permet de rajouter un vote à un bot sur la liste.',
+    description: "Permet d'accepter un bot.",
     cooldown : 3600,
-    usage: 'like (bot)',
+    usage: 'accept (bot)',
 
     /**
      * @param {Client} client
@@ -37,7 +38,7 @@ module.exports = {
 
         botGet = await bots.findOne({ botID: member.user.id });
 
-        client.channels.cache.get().send({
+        client.channels.cache.get(botslogs).send({
             content: `<@${botGet.ownerID}>`,
             embeds: [
                 new MessageEmbed()
