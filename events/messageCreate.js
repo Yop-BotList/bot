@@ -2,7 +2,7 @@ const { MessageEmbed } = require("discord.js"),
   { prefix, owners, owner } = require("../configs/config.json"),
   client = require("../index"),
   { botlogs } = require('../configs/channels.json'),
-  { escapeRegex, onCoolDown } = require("../utils/function"),
+  { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
   bumpChecker = require("../utils/bumpChecker");
 
 client.on("messageCreate", async (message) => {
