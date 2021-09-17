@@ -6,10 +6,10 @@ const { Client, Message } = require('discord.js'),
 module.exports = {
     name: 'like',
     categories : 'botlist', 
-    permissions : ' ', 
+    permissions : '', 
     description: 'Permet de rajouter un vote à un bot sur la liste.',
     cooldown : 3600,
-    usage: 'like (bot)',
+    usage: 'like [bot]',
 
     /**
      * @param {Client} client

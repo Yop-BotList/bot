@@ -3,8 +3,7 @@ const { Client, Collection } = require("discord.js"),
   { version } = require("./package.json"),
   { yes, no } = require("./configs/emojis.json"),
   { token, mongooseConnectionString, color } = require("./configs/config.json"),
-  { connect } = require("mongoose"),
-  { error } = require("./fonctions/error");
+  { connect } = require("mongoose")
 
 client = new Client({
   messageCacheLifetime: 60,
@@ -35,7 +34,6 @@ client.color = color;
 client.version = version;
 client.yes = yes;
 client.no = no;
-client.error() = error;
 
 
 ["command"].forEach((handler) => {

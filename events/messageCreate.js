@@ -3,7 +3,7 @@ const { MessageEmbed } = require("discord.js"),
   client = require("../index"),
   { botlogs } = require('../configs/channels.json'),
   { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
-  bumpChecker = require("../utils/bumpChecker");
+  bumpChecker = require("../fonctions/bumpChecker");
 
 client.on("messageCreate", async (message) => {
   bumpChecker(message);
@@ -49,7 +49,7 @@ client.on("messageCreate", async (message) => {
     if(!message.member.permissions.has(command.permissions) || !message.member.roles.has(command.permissions)) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande !**` });
   }
 
-  if (onCoolDown(message, command)) return message.reply({ content: `**${client.no} ➜ Veuillez patienter encore ${onCoolDown(message, command)} seconde(s) avant de pouvoir réutiliser la commande \`${command.name}\` !**` });
+  if (onCoolDown(message, command)) return message.reply({ content: `**${client.no} ➜ Veuillez patienter encore ${onCoolDown(message, command)} avant de pouvoir réutiliser la commande \`${command.name}\` !**` });
   await command.run(client, message, args);
 
   if (message.content.includes(client.user.username)) return message.react("👀");

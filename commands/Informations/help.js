@@ -6,7 +6,7 @@ module.exports = {
   name: "help",
   aliases: ["h", "aide"],
   categories: "info",
-  permissions: " ",
+  permissions: "everyone",
   description: "Recevoir de l'aide sur le bot.",
   usage: "help [commande]",
   /**

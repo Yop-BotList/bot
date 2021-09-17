@@ -8,7 +8,7 @@ module.exports = {
     name: 'accept',
     aliases: ["acc", "acpt"],
     categories : 'botlist', 
-    permissions : `${verificator}`, 
+    permissions : `everyone`, 
     description: "Permet d'accepter un bot.",
     cooldown : 3600,
     usage: 'accept (bot)',

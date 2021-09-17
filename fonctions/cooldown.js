@@ -1,4 +1,5 @@
-const { Client, Message, MessageEmbed , Collection} = require('discord.js');
+const { Client, Message, MessageEmbed , Collection} = require('discord.js'),
+       prettyMilliseconds = require("pretty-ms");
 
 /** 
  * @param {Client} client 
@@ -37,7 +38,7 @@ function escapeRegex(str) {
     if (timestamps.has(message.author.id)) { //if the user is on cooldown
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount; //get the amount of time he needs to wait until he can run the cmd again
       if (now < expirationTime) { //if he is still on cooldonw
-        const timeLeft = (expirationTime - now) / 1000; //get the lefttime
+        const timeLeft = prettyMilliseconds(expirationTime - now, { compact: true }); //get the lefttime
         //return true
         return timeLeft
       }
