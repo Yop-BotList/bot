@@ -18,7 +18,7 @@ module.exports = {
      */
     run: async (client, message) => {
         const member = message.mentions.members.first();
-        if (!member?.user.bot) return message.reply({ content: `**${client.no}  ➜ Vous n'avez pas mentionné de bots.**` });
+        if (!member?.user.bot) return message.reply({ content: `**${client.no}  ➜ Vous n'avez pas mentionné de bots, ou alors, il n'est pas présent sur le serveur.**` });
 
         let botGet = await bots.findOne({ botID: member.user.id, verified: false });
 

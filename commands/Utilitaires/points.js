@@ -14,14 +14,15 @@ usage: 'points [user]',
 /** 
  * @param {Client} client 
  * @param {Message} message
+ * @param {String[]} args
  */
-run: async(client, message) => {
-    let member = message.mentions.members.first() ? message.mentions.members.first() : message.member;
+run: async(client, message, args) => {
+    let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
 
     let userGet = await bumps.findOne({ userId: member.user.id });
 
-    if (!userGet) return message.reply({ content: `${client.no} | **<@${member.user.id}> n'a pas bumpé le serveur pour le moment, réutilise cette commande une fois qu'il aura bumpé.**` });
+    if (!userGet) return message.reply({ content: `**${client.no} ➜ \`${member.user.username}\` n'a pas bumpé le serveur pour le moment, réutilise cette commande une fois qu'il aura bumpé.**` });
 
-    message.reply({ content: `<@${member.user.id}> à actuellement ${userGet.bumpCount} bump pour le serveur.` });
+    message.reply({ content: `**\`${member.user.username}\` a actuellement ${userGet.bumpCount} bump pour le serveur.**` });
 }
 }

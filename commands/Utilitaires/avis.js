@@ -1,5 +1,5 @@
 const { Client, Message, MessageEmbed } = require('discord.js'),
-    users = require("../../models/users"),
+    users = require("../../models/avis"),
     { avischannel } = require("../../configs/channels.json"),
     { isclient } = require("../../configs/roles.json"),
     { prefix } = require("../../configs/config.json");
@@ -11,7 +11,7 @@ module.exports = {
     permissions: isclient, 
     description: 'Donner un avis sur la vérification de votre robot.',
     cooldown : 5,
-    usage: 'avis [avis]',
+    usage: 'avis <avis>',
     /** 
      * @param {Client} client 
      * @param {Message} message
@@ -21,9 +21,9 @@ module.exports = {
         const userGet = await users.findOne({ userId: message.author.id, avis: true }),
               text = args.join(" ");
     
-        if (userGet) return message.reply({ content: `${client.no} | **Tu ne peux pas donner d'avis car tu en a déjà donné un.**` });
+        if (userGet) return message.reply({ content: `**${client.no} ➜ Tu ne peux pas donner d'avis car tu en a déjà donné un.**` });
     
-        if (!text) return message.reply({ content: `${client.no} | **Tu dois mettre un avis: \`${prefix}avis [avis]\`**`});
+        if (!text) return message.reply({ content: `**${client.no} ➜ Tu dois entrer un avis : \`${prefix}avis [avis]\`**`});
 
         const msg = await client.channels.cache.get(avischannel).send({
             content: null,
@@ -37,7 +37,7 @@ module.exports = {
             ]
         });
         msg.react('💜');
-        message.reply({ content: `${client.yes} | Votre avis a bien été envoyé !` });
+        message.reply({ content: `**${client.yes} ➜ Votre avis a bien été envoyé !**` });
         
         await users.findOneAndUpdate({
             userId: message.author.id

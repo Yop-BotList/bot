@@ -11,7 +11,7 @@ module.exports = {
     permissions : 'everyone', 
     description: 'Permet de rajouter un bot à la liste.',
     cooldown : 5,
-    usage: 'botadd [id] [prefix]',
+    usage: 'botadd <id> <prefix>',
     /** 
      * @param {Client} client 
      * @param {Message} message
@@ -20,10 +20,10 @@ module.exports = {
     run: async(client, message, args) => {
         /* Verification */
         if (message.mentions.members.first() || message.mentions.users.first()) return message.reply({ content: `**${client.no} ➜ Désolé je ne prend pas en charge les mentions.**` });
-        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Il manque l'id du bot dans la commande: \`${prefix}botadd [id] [prefix]\`**` });
-        const user = message.guild.members.cache.get(args[0]);
-        if (!user) return message.reply({ content: `**${client.no} ➜ Membre introuvable !**` });
-        if (!user.user.bot) return message.reply({ content: `**${client.no} ➜ Ce membre n’est pas un bot !**` });
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Il manque l'id du bot dans la commande : \`${prefix}botadd <id> <prefix>\`**` });
+        const user = client.users.cache.get(args[0]);
+        if (!user) return message.reply({ content: `**${client.no} ➜ Utilisateur introuvable !**` });
+        if (!user.bot) return message.reply({ content: `**${client.no} ➜ Cet utilisateur n’est pas un bot !**` });
 
         if (!args[1]) return message.reply({ content: `**${client.no} ➜ Préfixe introuvable !` });
 
@@ -43,13 +43,13 @@ module.exports = {
             embeds: [
                 new MessageEmbed()
                 .setTitle("Demande d'ajout...")
-                .setDescription(`<@${message.author.id}> a demandé à ajouter le bot [${user.user.username}#${user.user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.user.id}&scope=bot%20application.commands&permissions=0). Un vérificateur va bientôt s’occuper de lui.`)
+                .setDescription(`<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&scope=bot%20application.commands&permissions=0). Un vérificateur va bientôt s’occuper de lui.`)
                 .setColor("#66DA61")
-                .setThumbnail(user.user.displayAvatarURL())
+                .setThumbnail(user.displayAvatarURL())
                 .setTimestamp(new Date())
             ]
         });
 
-        message.reply({ content: `**${client.yes} ➜ Votre bot \`${user.user.tag}\` vient juste d'être ajouté à la liste d’attente !` });
+        message.reply({ content: `**${client.yes} ➜ Votre bot \`${user.tag}\` vient juste d'être ajouté à la liste d’attente !` });
     }
 }

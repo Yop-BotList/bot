@@ -5,4 +5,4 @@ userShema = new Schema({
     avis: { type: Boolean, required: false }
 }),
 
-usersShema = module.exports = model("users", userShema);
+usersShema = module.exports = model("avis", userShema);
