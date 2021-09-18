@@ -1,32 +1,28 @@
 const { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
     { prefix } = require("../../configs/config.json"),
-    { botslogs } = require("../../configs/channels.json"),
     { Client, Message, MessageEmbed } = require("discord.js"),
     bots = require("../../models/bots");
 
 module.exports = {
     name: 'accept',
-    aliases: ["acc", "acpt"],
-    categories : 'botlist', 
-    permissions : `everyone`, 
-    description: "Permet d'accepter un bot.",
+    aliases: [],
+    categories : 'staff', 
+    permissions : verificator, 
+    description: 'Permet d’accepter un bot sur la liste.',
     cooldown : 3600,
-    usage: 'accept (bot)',
+    usage: 'accept <user>',
 
     /**
      * @param {Client} client
      * @param {Message} message
      */
     run: async (client, message) => {
-        if (!message.member.roles.cache.get(verificator)) return message.reply({ content: `${client.no} | Vous n'avez pas le rôle vérificateur.` });
-
         const member = message.mentions.members.first();
-        if (!member?.user.bot) return message.reply({ content: `${client.no} | Vous n'avez pas mentionné de bots.` });
+        if (!member?.user.bot) return message.reply({ content: `**${client.no}  ➜ Vous n'avez pas mentionné de bots.**` });
 
-        let botGet = await bots.findOne({ botID: member.user.id });
+        let botGet = await bots.findOne({ botID: member.user.id, verified: false });
 
-        if (!botGet) return message.reply({ content: `${client.no} | ${member.user.tag} n'est pas sur la liste.` });
-        if (botGet.verified !== false) return message.reply({ content: `${client.no} | Ce bot est déjà vérifié.` });
+        if (!botGet) return message.reply({ content: `**${client.no} ➜ Aucune demande n’a été envoyée pour ${member.user.tag} !**` });
 
         await bots.findOneAndUpdate({
             botID: member.user.bot
@@ -38,7 +34,7 @@ module.exports = {
 
         botGet = await bots.findOne({ botID: member.user.id });
 
-        client.channels.cache.get(botslogs).send({
+        client.channels.cache.get().send({
             content: `<@${botGet.ownerID}>`,
             embeds: [
                 new MessageEmbed()
@@ -51,7 +47,7 @@ module.exports = {
             ]
         });
 
-        message.channel.send({ content: `${client.yes} | Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être accepté !` });
+        message.channel.send({ content: `**${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être accepté !**` });
         
         member.roles.remove(botintests);
         member.roles.add(listedbot);
