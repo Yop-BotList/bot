@@ -23,7 +23,7 @@ client.on("messageCreate", async (message) => {
   }
 
   /* Command Detection */
-  const command = client.commands.get(cmd.toLowerCase());
+  const command = client.commands.get(cmd.toLowerCase()) || client.aliases.get(cmd.toLowerCase());
 
   if (!command) return;
 
