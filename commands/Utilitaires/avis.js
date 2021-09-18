@@ -8,7 +8,7 @@ module.exports = {
     name: 'avis',
     aliases: ["rate", "review"],
     categories : 'utils', 
-    permissions : ' ', 
+    permissions: isclient, 
     description: 'Donner un avis sur la vérification de votre robot.',
     cooldown : 5,
     usage: 'avis [avis]',
@@ -19,9 +19,7 @@ module.exports = {
      */
     run: async(client, message, args) => {
         const userGet = await users.findOne({ userId: message.author.id, avis: true }),
-            text = args.join(" ");
-
-        if (!message.members.roles.cache.get(isclient)) return message.reply({ content: `${client.no} | **Tu ne peux pas laisser d'avis car tu n'as pas encore le rôle \`👤 • Client\`.**` });
+              text = args.join(" ");
     
         if (userGet) return message.reply({ content: `${client.no} | **Tu ne peux pas donner d'avis car tu en a déjà donné un.**` });
     
