@@ -6,7 +6,7 @@ const { verificator, isclient, botintests, listedbot } = require("../../configs/
 module.exports = {
     name: 'accept',
     aliases: [],
-    categories : 'botlist', 
+    categories : 'staff', 
     permissions : verificator, 
     description: 'Permet d’accepter un bot sur la liste.',
     cooldown : 3600,
