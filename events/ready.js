@@ -43,7 +43,7 @@ module.exports = async(client) => {
     }, 120000);
 
     setInterval(async () => {
-        const reminds = await remind.find({});
+        const reminds = await remind.find();
         if (!reminds || reminds.length == 0) return;
         reminds.forEach(x => {
             if (endsAt <= Date.now()) {
