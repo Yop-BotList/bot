@@ -19,12 +19,13 @@ module.exports = {
     run: async (client, message) => {
         if (!args[0]) return message.reply({ content: `**${client.no} ➜ Merci de me donner une ID de bot.**`});
         let botGet = await bots.findOne({ botID: args[0], verified: false });
-
+        
+        const member = message.guild.members.cache.get(botGet.botID);
+        
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Aucune demande n’a été envoyée pour ${member.user.tag} !**` });
 
         if (!args.slice(1).join(" ")) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné de raison de refus` });
         
-        const member = message.guild.members.cache.get(botGet.botID);
         
         client.channels.cache.get(botslogs).send({
             content: `<@${botGet.ownerID}>`,
