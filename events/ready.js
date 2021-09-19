@@ -2,7 +2,8 @@ const { blue, green } = require('colors'),
       { online, offline } = require("../configs/emojis.json"),
       { owner, prefix } = require("../configs/config.json"),
       { connection } = require("mongoose"),
-      { botlogs } = require('../configs/channels.json');
+      { botlogs } = require('../configs/channels.json'),
+      remind = require("../models/reminds");
 
 module.exports = async(client) => {
     console.log(`Connecté en tant que ${blue(`${client.user.tag}`)}`);
@@ -40,4 +41,20 @@ module.exports = async(client) => {
     setInterval(async () => {
         await client.user.setActivity(activities[Math.floor(Math.random() * activities.length)]);
     }, 120000);
+
+    setInterval(async () => {
+        const reminds = await remind.find({});
+        if (!reminds || reminds.length == 0) return;
+        reminds.forEach(x => {
+            if (endsAt <= Date.now()) {
+                const user = client.users.cache.get(x.userId);
+                if (!user) return await remind.deleteOne({ userId: x.userId });
+
+                client.channels.cache.get(x.chanId).send({
+                    content: `<@${x.userId}>, je vous ai rappelé pour que vous puissiez bumper le serveur.`
+                });
+                await remind.deleteOne({ userId: x.userId });
+            }
+        });
+    }, 5000);
 };
