@@ -1,5 +1,6 @@
 const { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
     { prefix } = require("../../configs/config.json"),
+    { botslogs } = require("../../configs/channels.json"),
     { Client, Message, MessageEmbed } = require("discord.js"),
     bots = require("../../models/bots");
 
@@ -34,7 +35,7 @@ module.exports = {
 
         botGet = await bots.findOne({ botID: member.user.id });
 
-        client.channels.cache.get().send({
+        client.channels.cache.get(botslogs).send({
             content: `<@${botGet.ownerID}>`,
             embeds: [
                 new MessageEmbed()
