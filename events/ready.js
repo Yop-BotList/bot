@@ -21,17 +21,17 @@ client.on("ready", async () => {
     /* mongoose verification */
     connection.on("disconnected", () => {
         console.log(red("[DATABASE] MongoDB déconnecté !"))
-        client.channels.cache.get(botlogs).send("**" + offline + " ➜ La base de donnée est déconnectée !**")
+        client.channels.cache.get(botlogs).send({ content: "**" + offline + " ➜ La base de donnée est déconnectée !**" })
     });
     connection.on("connected", () => {
         console.log(green("[DATABASE] MongoDB reconnecté ! !"))
-        client.channels.cache.get(botlogs).send("**" + online + " ➜ La base de donnée est reconnectée !**")
+        client.channels.cache.get(botlogs).send({ content: "**" + online + " ➜ La base de donnée est reconnectée !**" })
     });
     
 /* owner’s verification */
     if (!client.users.fetch(owner)) {
         console.log(red("[ERROR]") + " L'identifiant de l'owner est invalide.")
-        client.channels.cache.get(botlogs).send(client.no + ` ➜ Impossible de retrouver un utilisateur portant l'identifiant \`${owner}\` !`)
+        client.channels.cache.get(botlogs).send({ content: client.no + ` ➜ Impossible de retrouver un utilisateur portant l'identifiant \`${owner}\` !` })
         setTimeout(() => {
             client.destroy()
         }, 100)
