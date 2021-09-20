@@ -2,8 +2,7 @@ const { verificator, isclient, botintests, listedbot } = require("../../configs/
     { prefix } = require("../../configs/config.json"),
     { botslogs } = require("../../configs/channels.json"),
     { Client, Message, MessageEmbed } = require("discord.js"),
-    bots = require("../../models/bots"),
-    { botslogs } = require("../../configs/channels.json");
+    bots = require("../../models/bots");
 
 module.exports = {
     name: 'accept',
