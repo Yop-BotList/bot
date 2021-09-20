@@ -1,4 +1,5 @@
-const bots = require("../models/bots");
+const bots = require("../models/bots"),
+      { mainguildid } = require("../configs/config.json")
 
 module.exports = async (client, oldUser, newUser) => {
     if (oldUser.bot && newUser.bot) {
