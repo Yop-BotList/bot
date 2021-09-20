@@ -4,6 +4,7 @@
     "mongooseConnectionString": "MongoURI",
     "color": "#f2ac34",
     "autokick": true,
+    "staffGuildId": "ID DU SERVEUR STAFF",
     "owner": "ID DE L'OWNER",
     "owners": [
         "OWNER_1_ID",
