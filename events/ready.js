@@ -37,7 +37,7 @@ client.on("ready", async () => {
         const reminds = await remind.find();
         if (!reminds || reminds.length == 0) return;
         reminds.forEach(async x => {
-            if (endsAt <= Date.now()) {
+            if (x.endsAt <= Date.now()) {
                 const user = client.users.cache.get(x.userId);
                 if (!user) return await remind.deleteOne({ userId: x.userId });
 
