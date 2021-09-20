@@ -50,7 +50,7 @@ module.exports = {
 
         message.channel.send({ content: `**${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être accepté !**` });
         
-        const userGet = client.users.cache.get(botGet.ownerID)?.send({
+        client.users.cache.get(botGet.ownerID)?.send({
             content: null,
             embeds: [
                 new MessageEmbed()
