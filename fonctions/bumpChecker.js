@@ -50,7 +50,7 @@ bumpChecker = module.exports = async (message) => {
                 new reminds({
                     userId: user_id,
                     chanId: message.channel.id,
-                    endsAt: Date.now() - ms(desc)
+                    endsAt: Date.now() + ms(desc)
                 }).save();
                 await button.reply({
                     content: `${client.yes} ➜ Parfait, vous allez être rappelé dans ${desc} pour pouvoir bumper le serveur.`,
@@ -112,7 +112,7 @@ bumpChecker = module.exports = async (message) => {
             new reminds({
                 userId: user_id,
                 chanId: message.channel.id,
-                endsAt: Date.now() - ms(desc)
+                endsAt: Date.now() + ms(desc)
             }).save();
             await button.reply({
                 content: `${client.yes} ➜ Parfait, vous allez être rappelé dans ${desc} pour pouvoir bumper le serveur.`,
