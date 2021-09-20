@@ -3,9 +3,10 @@ const { blue, green } = require('colors'),
       { owner, prefix } = require("../configs/config.json"),
       { connection } = require("mongoose"),
       { botlogs } = require('../configs/channels.json'),
-      remind = require("../models/reminds");
+      remind = require("../models/reminds"),
+      client = require("../index");
 
-module.exports = async(client) => {
+client.on("ready", async () => {
     console.log(`Connecté en tant que ${blue(`${client.user.tag}`)}`);
     
     /* botlogs verification */
@@ -57,4 +58,4 @@ module.exports = async(client) => {
             }
         });
     }, 5000);
-};
+});
