@@ -1,7 +1,7 @@
-const { blue, green } = require('colors'),
-      { online, offline } = require("../configs/emojis.json"),
+const { blue } = require('colors'),
+      { online } = require("../configs/emojis.json"),
       { owner, prefix } = require("../configs/config.json"),
-      { connection } = require("mongoose"),
+      checkConnection = require("../fonctions/checkConnection"),
       { botlogs } = require('../configs/channels.json'),
       remind = require("../models/reminds"),
       client = require("../index");
@@ -17,18 +17,8 @@ client.on("ready", async () => {
         }, 100)
     }
     client.channels.cache.get(botlogs).send({ content: `**${online} ➜ Je suis maintenant connecté !**` });
-
-    /* mongoose verification */
-    connection.on("disconnected", () => {
-        console.log(red("[DATABASE] MongoDB déconnecté !"))
-        client.channels.cache.get(botlogs).send({ content: "**" + offline + " ➜ La base de donnée est déconnectée !**" })
-    });
-    connection.on("connected", () => {
-        console.log(green("[DATABASE] MongoDB reconnecté ! !"))
-        client.channels.cache.get(botlogs).send({ content: "**" + online + " ➜ La base de donnée est reconnectée !**" })
-    });
     
-/* owner’s verification */
+    /* owner’s verification */
     if (!client.users.fetch(owner)) {
         console.log(red("[ERROR]") + " L'identifiant de l'owner est invalide.")
         client.channels.cache.get(botlogs).send({ content: client.no + ` ➜ Impossible de retrouver un utilisateur portant l'identifiant \`${owner}\` !` })
@@ -41,9 +31,9 @@ client.on("ready", async () => {
     const activities = [`${prefix}help | Version ${client.version}`,'By Nolhan#2508'];
     setInterval(async () => {
         await client.user.setActivity(activities[Math.floor(Math.random() * activities.length)]);
-    }, 120000);
+        
+        checkConnection(client);
 
-    setInterval(async () => {
         const reminds = await remind.find();
         if (!reminds || reminds.length == 0) return;
         reminds.forEach(async x => {
@@ -57,5 +47,5 @@ client.on("ready", async () => {
                 await remind.deleteOne({ userId: x.userId });
             }
         });
-    }, 5000);
+    }, 120000);
 });
