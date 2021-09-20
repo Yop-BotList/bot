@@ -1,4 +1,6 @@
+### Files ###
+package-lock.json
 
-configs/channels.json
-configs/roles.json
-configs/config.json
+### Folders ###
+configs/
+node_modules/

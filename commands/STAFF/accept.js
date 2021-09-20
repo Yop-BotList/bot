@@ -1,5 +1,6 @@
 const { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
     { prefix } = require("../../configs/config.json"),
+    { botslogs } = require("../../configs/channels.json"),
     { Client, Message, MessageEmbed } = require("discord.js"),
     bots = require("../../models/bots"),
     { botslogs } = require("../../configs/channels.json");
@@ -50,6 +51,19 @@ module.exports = {
 
         message.channel.send({ content: `**${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être accepté !**` });
         
+        client.users.cache.get(botGet.ownerID)?.send({
+            content: null,
+            embeds: [
+                new MessageEmbed()
+                .setTitle("Acceptation...")
+                .setColor("#00FF2A")
+                .setDescription(`Votre bot \`${member.user.tag}\` vient juste d'être accepté par nos vérificateurs.\nN'oublie pas nous laisser un avis sur la vérification du bot.`)
+                .setFooter(`${client.user.username} de chez YopBot List`)
+                .setTimestamp(new Date())
+                .setThumbnail(member.user.displayAvatarURL())
+            ]
+        });
+
         member.roles.remove(botintests);
         member.roles.add(listedbot);
         message.guild.members.cache.get(botGet.ownerID).roles.add(isclient);
