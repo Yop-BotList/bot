@@ -42,7 +42,7 @@ module.exports = {
         await users.findOneAndUpdate({
             userId: message.author.id
         }, {
-            avis: true
+            avis: text
         }, {
             new: true
         })
