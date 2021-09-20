@@ -56,7 +56,7 @@ module.exports = {
                 new MessageEmbed()
                 .setTitle("Acceptation...")
                 .setColor("#00FF2A")
-                .setDescription(`Votre bot \`${member.user.tag}\` vient juste d'être accepté par nos vérificateurs.\nN'oublie pas nous laisser un avis sur la vérification du bot.`)
+                .setDescription(`Votre bot \`${member.user.tag}\` vient juste d'être accepté par nos vérificateurs.\nN'oublie pas nous laisser un avis via la commande \`${prefix}avis\` !`)
                 .setFooter(`${client.user.username} de chez YopBot List`)
                 .setTimestamp(new Date())
                 .setThumbnail(member.user.displayAvatarURL())
