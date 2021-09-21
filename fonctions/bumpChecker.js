@@ -100,14 +100,8 @@ bumpChecker = module.exports = async (message) => {
     const filter = i => i.customId === "confirmRemind" || i.customId === "cancelRemind" && i.user.id === user_id;
     const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
     collector.on("collect", async (button) => {
-        console.log(button);
         if (button.customId === "confirmRemind") {
-            desc = desc.slice(39).substr(0, 3);
-            if (desc.includes(" ")) {
-                desc = desc.substr(0, 2)
-                if (desc.includes(" ")) desc = desc.substr(0, 1)
-            }
-            desc = `${desc}m`;
+            desc = `120m`;
         
             new reminds({
                 userId: user_id,
