@@ -46,7 +46,7 @@ client.on("messageCreate", async (message) => {
   /* Perms */
   if(command.permissions === "owner") {
     if(!owners.includes(message.author.id) && owner != message.author.id) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas la permission d'exécuter cette commande !**` });
-  } else if(command.permissions !== 'everyone') {
+  }else if(command.permissions !== 'everyone') {
     if(!message.member.permissions.has(command.permissions) || !message.member.roles.cache.has(command.permissions)) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande !**` });
   }
 
