@@ -5,12 +5,12 @@ const { verificator, isclient, botintests, listedbot } = require("../../configs/
     bots = require("../../models/bots");
 
 module.exports = {
-    name: 'reject',
+    name: 'delete',
     categories : 'staff', 
     permissions : verificator, 
-    description: 'Permet de rejeter un bot de la liste.',
+    description: 'Permet de supprimer un bot de la liste.',
     cooldown : 3600,
-    usage: 'reject <id> <raison>',
+    usage: 'delete <id> <raison>',
 
     /**
      * @param {Client} client
@@ -22,7 +22,7 @@ module.exports = {
         
         const member = message.guild.members.cache.get(botGet.botID);
         
-        if (!botGet) return message.reply({ content: `**${client.no} ➜ Le bot ${member.user.tag} n'est peux pas être supprimé car il n'est pas vérifié.!**` });
+        if (!botGet) return message.reply({ content: `**${client.no} ➜ Le bot ${member.user.tag} ne peut pas être supprimé car il n'est pas vérifié !**` });
 
         if (!args.slice(1).join(" ")) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné de raison de suppresion.` });
         

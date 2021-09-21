@@ -1,4 +1,4 @@
-const { blue } = require('colors'),
+const { blue, red } = require('colors'),
       { online } = require("../configs/emojis.json"),
       { owner, prefix } = require("../configs/config.json"),
       checkConnection = require("../fonctions/checkConnection"),

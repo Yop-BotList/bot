@@ -19,7 +19,8 @@ client.on("messageCreate", async (message) => {
   
   /* Getting Mention for Prefix */
   if (cmd.length === 0) {
-    if (matchedPrefix.includes(client.user.id)) message.reply({ content: `<@${message.author.id}> Pour voir toutes les commandes, tapez \`${prefix}help\`` });
+    if (matchedPrefix.includes(client.user.id) && message.author.id !== "692374264476860507") return message.reply({ content: `<@${message.author.id}> Pour voir toutes les commandes, tapez \`${prefix}help\`` });
+    if (matchedPrefix.includes(client.user.id) && message.author.id !== "692374264476860507") return message.reply({ content: `Bonjour maître. Mon préfixe est \`${prefix}\`` });
   }
 
   /* Command Detection */
@@ -38,7 +39,7 @@ client.on("messageCreate", async (message) => {
       .setTimestamp(Date())
       .addField("➜ Utilisateur :", `\`\`\`${message.author.username}#${message.author.discriminator} (${message.author.id})\`\`\``)
       .addField("➜ Commande :", "```" + message.content + "```")
-      .addField("❱ Lien", `[Cliquez-ici](https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}) _Il se peut que cette personne aie supprimé ou édité son message._`)
+      .addField("➜ Lien", `[Cliquez-ici](https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}) _Il se peut que cette personne aie supprimé ou édité son message._`)
     ] 
   })
 
@@ -49,7 +50,8 @@ client.on("messageCreate", async (message) => {
     if(!message.member.permissions.has(command.permissions) || !message.member.roles.cache.has(command.permissions)) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande !**` });
   }
 
-  if (onCoolDown(message, command)) return message.reply({ content: `**${client.no} ➜ Veuillez patienter encore ${onCoolDown(message, command)} avant de pouvoir réutiliser la commande \`${command.name}\` !**` });
+  /* Cooldown */
+  if (onCoolDown(message, command) && !owners.includes(message.author.id) && owner !== message.author.id) return message.reply({ content: `**${client.no} ➜ Veuillez patienter encore ${onCoolDown(message, command)} avant de pouvoir réutiliser la commande \`${command.name}\` !**` });
   await command.run(client, message, args);
 
   if (message.content.includes(client.user.username)) return message.react("👀");
