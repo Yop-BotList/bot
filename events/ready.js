@@ -34,6 +34,7 @@ client.on("ready", async () => {
         
         checkConnection(client);
 
+        /* reminds */
         const reminds = await remind.find();
         if (!reminds || reminds.length == 0) return;
         reminds.forEach(async x => {
