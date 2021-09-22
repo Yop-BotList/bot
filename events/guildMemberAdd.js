@@ -9,10 +9,10 @@ client.on("guildMemberAdd", async(client, member, guild) => {
         client.channels.cache.get(welcomechannel).send(`**<a:entre:838336027616739338> ➜ Un \`${member.user.username}\` sauvage tape l'incruste dans le serveur !**`)
     }
     if (member.user.bot) {
-        const db = await bots.findOne({ serverID: mainguildid, BotID: member.user.id })
+        const db = await bots.findOne({ serverID: mainguildid, botID: member.user.id })
         // roles
-            if (db) member.roles.add(botintests);
-            member.roles.add(botrole);
+        if (db) member.roles.add(botintests);
+        member.roles.add(botrole);
         // autorename
         if (db) member.setNickname(`[${db.prefix}] ${member.user.username}`)
         // message
