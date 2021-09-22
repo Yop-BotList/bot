@@ -1,4 +1,5 @@
-const { Client, Message, MessageEmbed } = require('discord.js');
+const { Client, Message, MessageEmbed } = require('discord.js'),
+      { prefix } = require("../../configs/config.json");
 
 module.exports = {
     name: 'eval',
@@ -14,11 +15,12 @@ module.exports = {
      * @param {String[]} args 
      */
     run: async(client, message, args) => {
-        if (!args[0]) return message.channel.send("```y!eval <code>```")
-    	if (message.content.toLowerCase().match(`token`)) return message.channel.send({ content: client.no + " | Attention ! J'ai détecté le mot `token` dans ton message. Évite cela si tu veux garder ton accès à cette commande." });
-        if (message.content.toLowerCase().match('client.destroy()')) return message.channel.send({ content: client.no + " | Attention ! J'ai détecté le mot `client.destroy()` dans ton message. Évite cela si tu veux garder ton accès à cette commande." });
-        if (message.content.toLowerCase().match('roles.remove')) return message.channel.send({ content: client.no + " | Attention ! J'ai détecté le mot `roles.remove` dans ton message. Évite cela si tu veux garder ton accès à cette commande." });
-        if (message.content.toLowerCase().match("roles.add")) return message.channel.send({ content: client.no + " | Attention ! J'ai détecté le mot `roles.add` dans ton message. Évite cela si tu veux garder ton accès à cette commande." });
+        if (!args[0]) return message.channel.send(`\`\`\`${prefix}eval <code>\`\`\``)
+    	if (message.content.toLowerCase().match(`token`)) return message.channel.send({ content: "**" + client.no + " ➜ Attention ! J'ai détecté le mot `token` dans ton message. Évite cela si tu veux garder ton accès à cette commande.**" });
+        if (message.content.toLowerCase().match('client.destroy()')) return message.channel.send({ content: "**" + client.no + " ➜ Attention ! J'ai détecté le mot `client.destroy()` dans ton message. Évite cela si tu veux garder ton accès à cette commande.**" });
+        if (message.content.toLowerCase().match('roles.remove')) return message.channel.send({ content: "**" + client.no + " ➜ Attention ! J'ai détecté le mot `roles.remove` dans ton message. Évite cela si tu veux garder ton accès à cette commande.**" });
+        if (message.content.toLowerCase().match("roles.add")) return message.channel.send({ content: "**" + client.no + " ➜ Attention ! J'ai détecté le mot `roles.add` dans ton message. Évite cela si tu veux garder ton accès à cette commande.**" });
+        if (message.content.toLowerCase().match("mongooseConnectionString")) return message.channel.send({ content:"**" + client.no + " ➜ Attention ! J'ai détecté le mot `mongooseConnectionString` dans ton message. Évite cela si tu veux garder ton accès à cette commande.**" });
 
         let code;
         try {
