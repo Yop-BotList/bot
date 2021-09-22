@@ -5,6 +5,7 @@ reqString = {
 },
 
 botShema = new Schema({
+    serverID: { type: String, required: false },
     botID: { type: String, required: true },
     prefix: reqString,
     ownerID: reqString,

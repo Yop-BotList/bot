@@ -11,8 +11,8 @@ client.on("guildMemberAdd", async(client, member, guild) => {
     if (member.user.bot) {
         const db = await bots.findOne({ serverID: mainguildid, botID: member.user.id })
         // roles
-            if (db) member.roles.add(botintests);
-            member.roles.add(botrole);
+        if (db) member.roles.add(botintests);
+        member.roles.add(botrole);
         // autorename
         if (db) member.setNickname(`[${db.prefix}] ${member.user.username}`)
         // message
