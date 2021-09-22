@@ -1,4 +1,7 @@
-const { Client, Message, MessageEmbed } = require("discord.js")
+const { Client, Message, MessageEmbed } = require("discord.js"),
+      { bof } = require("../../configs/emojis.json"),
+      { suggests } = require("../../configs/channels.json"),
+      { prefix } = require("../../configs/config.json");
       
 module.exports = {
     name: "suggest",
@@ -14,7 +17,7 @@ module.exports = {
      */
 
     run: async(client, message) => {
-        if (!args[1]) return message.channel.send('```y!suggest <suggestion>```')
+        if (!args[1]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion>\`\`\``)
 
         const e = new MessageEmbed()
         .setTitle(`Nouvelle suggestion de ${message.author.username} !`)
@@ -26,7 +29,7 @@ module.exports = {
             msg.react('838334340618256384')
             msg.react('838334339820945419')
             msg.react('838334340160815104')
-            message.channel.send(client.yes + ` | Votre suggestion a bien été envoyée. Allez voir dans le <#${suggests}>.`)
+            message.channel.send(`**${client.yes} ➜ Votre suggestion a bien été envoyée. Allez voir dans le <#${suggests}>.**`)
         });
     }
 }
