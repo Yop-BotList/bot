@@ -1,7 +1,8 @@
 const { welcomechannel } = require("../configs/channels.json"),
       { botintests, botrole } = require("../configs/roles.json"),
       { mainguildid } = require("../configs/config.json"),
-      bots = require("../models/bots");
+      bots = require("../models/bots"),
+      client = require("../index");
 
 client.on("guildMemberAdd", async(client, member, guild) => {
     if (guild.id !== mainguildid) return;
