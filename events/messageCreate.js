@@ -8,7 +8,7 @@ const { MessageEmbed } = require("discord.js"),
 client.on("messageCreate", async (message) => {
   bumpChecker(message);
   
-  if (message.channel.type === "DM" || message.author.bot) return;
+  if (message.author.bot) return;
   if (message.channel.partial) await message.channel.fetch();
   if (message.partial) await message.fetch();
   const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${escapeRegex(prefix)})\\s*`);
@@ -25,8 +25,6 @@ client.on("messageCreate", async (message) => {
 
   /* Command Detection */
   const command = client.commands.get(cmd.toLowerCase()) || client.aliases.get(cmd.toLowerCase());
-
-  if (!command) return;
 
   /* Commands Log */
   client.channels.cache.get(botlogs).send({

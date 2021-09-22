@@ -20,7 +20,7 @@ client.on("guildMemberRemove", async(client, member, guild) => {
                 description: `<@${member.user.id}> vient juste de quiter le serveur. Son robot <@${robot.user.id}> a donc été supprimé !`
             }
         });
-        setTimeout(() => {
+        setTimeout(async() => {
             if (autokick === true) robot.kick("Bot supprimé de la liste.")
             await bots.findOneAndDelete({ serverID: mainguildid, ownerID: member.user.id })
         }, 1000)
