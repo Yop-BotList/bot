@@ -25,6 +25,7 @@ client.on("ready", async () => {
 
     /* Bot’s Activity */
     const activities = [`${prefix}help | Version ${client.version}`,'By Nolhan#2508'];
+    client.user.setActivity("Démarrage en cours...");
     setInterval(async () => {
         await client.user.setActivity(activities[Math.floor(Math.random() * activities.length)]);
         
