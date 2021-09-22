@@ -6,5 +6,6 @@
     "botintests": "LE ROLE BOT EN TEST",
     "listedbot": "LE ROLE BOT VERIFIE",
     "botrole": "LE ROLE BOT",
-    "premium": "LE ROLE PREMIUM"
+    "premium": "LE ROLE PREMIUM",
+    "premiumbot": "LE ROLE BOT PREMIUM"
 }
