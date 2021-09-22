@@ -4,13 +4,13 @@ const { autokick } = require("../configs/config.json"),
       client = require("../index"),
       bots = require("../models/bots");
 
-client.on("guildMemberRemove", async(client, member, guild) => {
+client.on("guildMemberRemove", async (client, member, guild) => {
     if (guild.id !== mainguildid) return
     const botget = await bots.find({ serverID: mainguildid, ownerID: member.user.id })
     if (botget) {
-        botget.forEach(x => {
+        botget.forEach(async x => {
             const robot = guild.members.cache.get(x.botID)
-            client.channels.cache.get(client.botlogs).send({
+            client.channels.cache.get(botlogs).send({
                 embed:{
                     title: 'Auto-expultion...',
                     timestamp: new Date(),
