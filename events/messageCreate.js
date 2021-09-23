@@ -38,7 +38,7 @@ client.on("messageCreate", async (message) => {
 
   if (message.channel.type === "DM") {
     const guild = client.guilds.cache.get(mainguildid),
-      ticket = guild?.channels.cache.find(x => x.name === `🎫・ticket-${message.author.tag}` && x.topic === `${message.author.id}`);
+      ticket = guild?.channels.cache.find(x => x.name === `🎫・ticket-${message.author.discriminator}` && x.topic === `${message.author.id}`);
 
     if (ticket) {
       const webhooks = await ticket.fetchWebhooks();
@@ -61,7 +61,7 @@ client.on("messageCreate", async (message) => {
       if (button.user.id === message.author.id) {
         if (button.customId === "confirmMpMessage") {        
           if (!ticket) {
-            guild.channels.create(`🎫・ticket-${message.author.tag}`, {
+            guild.channels.create(`🎫・ticket-${message.author.discriminator}`, {
               type: 'GUILD_TEXT',
               permissionOverwrites: [
                 {
@@ -85,9 +85,23 @@ client.on("messageCreate", async (message) => {
                 components: [rowDelete]
               });
 
-              await hook.send({
-                content: message.content
-              });
+              if (message.attachments) {
+                if (message.content) {
+                  await hook.send({
+                    content: message.content,
+                    files: [message.attachments.values()]
+                  });
+                } else {
+                  await hook.send({
+                    content: null,
+                    files: [message.attachments.values()]
+                  });
+                }
+              } else {
+                await hook.send({
+                  content: message.content
+                });
+              }
 
               const ticketsChannel = client.channels.cache.get(ticketslogs);
               ticketsChannel?.send({
@@ -122,15 +136,37 @@ client.on("messageCreate", async (message) => {
   if (message.channel.name.startsWith("🎫・ticket-")) {
     const user = await client.users.fetch(message.channel.topic);
 
-    const sendSupportMp = new MessageEmbed()
+    const supportMp = new MessageEmbed()
     .setTitle(message.author.tag)
     .setThumbnail(message.author.displayAvatarURL())
-    .setDescription(message.content)
+    .setDescription(message.content),
+      noContentSupportMp = new MessageEmbed()
+    .setTitle(message.author.tag)
+    .setThumbnail(message.author.displayAvatarURL())
 
-    return await user?.send({
-      content: null,
-      embeds: [sendSupportMp]
-    });
+
+    if (message.attachments) {
+      if (message.content) {
+        await user?.send({
+          content: null,
+          embeds: [supportMp],
+          files: [message.attachments.values()]
+        });
+      } else {
+        await user?.send({
+          content: null,
+          embeds: [noContentSupportMp],
+          files: [message.attachments.values()]
+        });
+      }
+    } else {
+      await user?.send({
+        content: null,
+        embeds: [sendSupportMp]
+      });
+    }
+
+    return;
   }
 
   /* Guild System */
