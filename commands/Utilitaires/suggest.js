@@ -17,7 +17,7 @@ module.exports = {
      */
 
     run: async(client, message) => {
-        if (!args[1]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion>\`\`\``)
+        if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion>\`\`\``)
 
         const e = new MessageEmbed()
         .setTitle(`Nouvelle suggestion de ${message.author.username} !`)
@@ -25,7 +25,7 @@ module.exports = {
         .setColor(client.color)
         .setTimestamp(new Date())
         .setDescription(`\`\`\`md\n# ${args.join(' ')}\n\`\`\`\n**Réagissez :**\n${client.yes} = Oui\n${bof} = Pourquoi pas ?\n${client.no} = Non`)
-            client.channels.cache.get(suggests).send({ embeds: [e] }).then(msg => {
+        client.channels.cache.get(suggests).send({ embeds: [e] }).then(msg => {
             msg.react('838334340618256384')
             msg.react('838334339820945419')
             msg.react('838334340160815104')
