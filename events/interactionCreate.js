@@ -23,6 +23,10 @@ client.on("interactionCreate", async (interaction) => {
         cmd.run(client, interaction, args);
     }
 
+    if (interaction.isButton()) {
+        if (interaction.customId === "deleteMpTicket") return interaction.channel.delete();
+    }
+
     //Context menu handling
     if(interaction.isContextMenu()) {
         await interaction.deferReply({ ephemeral: false });
