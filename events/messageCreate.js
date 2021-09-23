@@ -60,7 +60,7 @@ client.on("messageCreate", async (message) => {
           content: message.content
         });
       }
-      return;
+      return message.react("📨");
     }
 
     const msg = await message.author?.send({
@@ -183,7 +183,7 @@ client.on("messageCreate", async (message) => {
       });
     }
 
-    return;
+    return message.react("📨");
   }
 
   /* Guild System */
