@@ -48,7 +48,7 @@ client.on("interactionCreate", async (interaction) => {
             });
 
             await user.send({
-                content: `> 🇫🇷 Votre ticket sur le YopBot list à été fermé.\n> 🇺🇸 Your ticket on YopBot list has been closed.`
+                content: `> **🇫🇷 ➜ Votre ticket sur le YopBot list à été fermé.\n> 🇺🇸 ➜ Your ticket on YopBot list has been closed.**`
             });
 
             return interaction.channel.delete();
