@@ -1,7 +1,7 @@
 const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
   { prefix, owners, owner, mainguildid } = require("../configs/config.json"),
   client = require("../index"),
-  { botlogs, ticketcategory } = require('../configs/channels.json'),
+  { botlogs, ticketcategory, ticketslogs } = require('../configs/channels.json'),
   { ticketsaccess } = require("../configs/roles.json"),
   { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
   bumpChecker = require("../fonctions/bumpChecker"),
@@ -38,7 +38,7 @@ client.on("messageCreate", async (message) => {
 
   if (message.channel.type === "DM") {
     const guild = client.guilds.cache.get(mainguildid),
-      ticket = guild?.channels.cache.find(x => x.name === `${message.author.tag}-ticket` && x.topic === `${message.author.id}`);
+      ticket = guild?.channels.cache.find(x => x.name === `🎫・ticket-${message.author.tag}` && x.topic === `${message.author.id}`);
 
     if (ticket) {
       const webhooks = await ticket.fetchWebhooks();
@@ -61,7 +61,7 @@ client.on("messageCreate", async (message) => {
       if (button.user.id === message.author.id) {
         if (button.customId === "confirmMpMessage") {        
           if (!ticket) {
-            guild.channels.create(`${message.author.tag}-ticket`, {
+            guild.channels.create(`🎫・ticket-${message.author.tag}`, {
               type: 'GUILD_TEXT',
               permissionOverwrites: [
                 {
@@ -80,13 +80,28 @@ client.on("messageCreate", async (message) => {
               });
 
               ch.send({
-                content: null,
+                content: "@here",
                 embeds: [deleteMpEmbed],
                 components: [rowDelete]
               });
 
               await hook.send({
                 content: message.content
+              });
+
+              const ticketsChannel = client.channels.cache.get(ticketslogs);
+              ticketsChannel?.send({
+                content: null,
+                embeds: [
+                  new MessageEmbed()
+                  .setTitle(`Nouveau ticket de ${message.author.username}#${message.author.discriminator}`)
+                  .setTimestamp(new Date())
+                  .setColor(client.color)
+                  .addFields(
+                    { name: ":id: ID :", value: `\`\`\`${message.author.id}\`\`\``, inline: false},
+                    { name: ":newspaper2: Raison :", value: `\`\`\`Ticket MP de ${message.author.tag}\`\`\``, inline: false },
+                  )
+                ]
               });
             });
 
@@ -102,6 +117,20 @@ client.on("messageCreate", async (message) => {
     });
 
     return;
+  }
+
+  if (message.channel.name.startsWith("🎫・ticket-")) {
+    const user = await client.users.fetch(message.channel.topic);
+
+    const sendSupportMp = new MessageEmbed()
+    .setTitle(message.author.tag)
+    .setThumbnail(message.author.displayAvatarURL())
+    .setDescription(message.content)
+
+    return await user?.send({
+      content: null,
+      embeds: [sendSupportMp]
+    });
   }
 
   /* Guild System */
