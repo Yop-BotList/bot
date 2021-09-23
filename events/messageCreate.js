@@ -22,11 +22,11 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
   mpEmbed = new MessageEmbed()
   .setTitle("Support en MP")
   .setColor(client.color)
-  .setDescription(`> 🇫🇷 Bonjour,\n> Voulez vous envoyer un message au support ?\n> Si oui, cliquez sur le bouton ci dessous.\n\n> 🇺🇸 Hello,\n> Do you want to tell support ?\n> If yes, click on the button below.`)
+  .setDescription(`> 🇫🇷 ➜ Bonjour,\n> Voulez vous envoyer un message au support ?\n> Si oui, cliquez sur le bouton ci dessous.\n\n> 🇺🇸 ➜ Hello,\n> Do you want to tell support ?\n> If yes, click on the button below.`)
   .setFooter(`YopBot Support System`),
   deleteMpEmbed = new MessageEmbed()
   .setTitle("Support en MP")
-  .setDescription("> 🇫🇷 Pour pouvoir supprimer le ticket, cliquez sur le bouton ci-dessous.\n> 🇺🇸 To dolete the ticket, click on the button below.")
+  .setDescription("> 🇫🇷 ➜ Pour pouvoir supprimer le ticket, cliquez sur le bouton ci-dessous.\n> 🇺🇸 ➜ To delete the ticket, click on the button below.")
   .setFooter("YopBot Support System");
 
 client.on("messageCreate", async (message) => {
@@ -127,15 +127,15 @@ client.on("messageCreate", async (message) => {
                   .setTimestamp(new Date())
                   .setColor(client.color)
                   .addFields(
-                    { name: ":id: ID :", value: `\`\`\`${message.author.id}\`\`\``, inline: false},
-                    { name: ":newspaper2: Raison :", value: `\`\`\`Ticket MP de ${message.author.tag}\`\`\``, inline: false },
+                    { name: ":id: ➜ ID :", value: `\`\`\`${message.author.id}\`\`\``, inline: false},
+                    { name: ":newspaper2: ➜ Raison :", value: `\`\`\`md\n# ${message.content}\`\`\``, inline: false },
                   )
                 ]
               });
             });
 
             await button.update({
-              content: "> 🇫🇷 Votre message à bien été envoyé au support.\n> 🇺🇸 Your message has been succefully sent to the support",
+              content: "> 🇫🇷 ➜ Votre message à bien été envoyé au support.\n> 🇺🇸 ➜ Your message has been succefully sent to the support",
               embeds: [],
               components: []
             });
@@ -150,6 +150,7 @@ client.on("messageCreate", async (message) => {
 
   if (message.channel.name.startsWith("🎫・ticket-")) {
     const user = await client.users.fetch(message.channel.topic);
+    if (message.content.startsWith("!")) return
 
     const supportMp = new MessageEmbed()
     .setTitle(message.author.tag)
