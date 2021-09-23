@@ -36,7 +36,7 @@ client.on("interactionCreate", async (interaction) => {
                 content: null,
                 embeds: [
                     new MessageEmbed()
-                    .setTitle(`Fermeture du ticket de ${member.username}#${member.discriminator}`)
+                    .setTitle(`Fermeture du ticket de ${user.username}#${user.discriminator}`)
                     .setTimestamp(new Date())
                     .setColor(client.color)
                     .addFields(
