@@ -151,6 +151,7 @@ client.on("messageCreate", async (message) => {
   if (message.channel.name.startsWith("🎫・ticket-")) {
     const user = await client.users.fetch(message.channel.topic);
     if (message.content.startsWith("!")) return
+    if (message.author.bot) return
 
     const supportMp = new MessageEmbed()
     .setTitle(message.author.tag)
