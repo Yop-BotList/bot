@@ -22,7 +22,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
   mpEmbed = new MessageEmbed()
   .setTitle("Support en MP")
   .setColor(client.color)
-  .setDescription(`> **🇫🇷 ➜ Bonjour,\n> Voulez vous envoyer un message au support ?\n> Si oui, cliquez sur le bouton ci dessous.\n\n> 🇺🇸 ➜ Hello,\n> Do you want to tell support ?\n> If yes, click on the button below.**`)
+  .setDescription(`> **🇫🇷 ➜ Bonjour,\n> Voulez vous envoyer un message au support ?\n> Si oui, cliquez sur le bouton ci dessous.**\n\n> **🇺🇸 ➜ Hello,\n> Do you want to tell support ?\n> If yes, click on the button below.**`)
   .setFooter(`YopBot Support System`),
   deleteMpEmbed = new MessageEmbed()
   .setTitle("Support en MP")
