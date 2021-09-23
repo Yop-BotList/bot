@@ -41,7 +41,6 @@ client.on("interactionCreate", async (interaction) => {
                     .setColor(client.color)
                     .addFields(
                         { name: `:id: ID :`, value: `\`\`\`${user.id}\`\`\``, inline: false },
-                        { name: `:newspaper2: Raison :`, value: `\`\`\`Support en MP terminé\`\`\``, inline: false},
                         { name: `:man_police_officer: Modérateur :`, value: `\`\`\`${user.username}#${user.discriminator}\`\`\``, inline: false }
                     )
                 ]
@@ -50,8 +49,10 @@ client.on("interactionCreate", async (interaction) => {
             await user.send({
                 content: `> **🇫🇷 ➜ Votre ticket sur YopBot List à été fermé.\n> 🇺🇸 ➜ Your ticket on YopBot list has been closed.**`
             });
-
-            return interaction.channel.delete();
+            interaction.channel.send(`**${client.yes} ➜ Fermeture du ticket dans 10 secondes...**`)
+            return setTimeout(() => {
+                interaction.channel.delete()
+            }, 10000);
         }
     }
 
