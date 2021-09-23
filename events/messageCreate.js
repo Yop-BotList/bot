@@ -17,7 +17,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
   rowMp = new MessageActionRow()
   .addComponents(confirmMp),
   rowDelete = new MessageActionRow()
-  .addComponents(confirmMp),
+  .addComponents(deleteMp),
   
   mpEmbed = new MessageEmbed()
   .setTitle("Support en MP")
@@ -42,10 +42,25 @@ client.on("messageCreate", async (message) => {
 
     if (ticket) {
       const webhooks = await ticket.fetchWebhooks();
-		  const webhook = webhooks.first();
-      return await webhook.send({
-        content: message.content
-      });
+		  const hook = webhooks.first();
+      if (message.attachments) {
+        if (message.content) {
+          await hook.send({
+            content: message.content,
+            files: [...message.attachments.values()]
+          });
+        } else {
+          await hook.send({
+            content: null,
+            files: [...message.attachments.values()]
+          });
+        }
+      } else {
+        await hook.send({
+          content: message.content
+        });
+      }
+      return;
     }
 
     const msg = await message.author?.send({
@@ -89,12 +104,12 @@ client.on("messageCreate", async (message) => {
                 if (message.content) {
                   await hook.send({
                     content: message.content,
-                    files: [message.attachments.values()]
+                    files: [...message.attachments.values()]
                   });
                 } else {
                   await hook.send({
                     content: null,
-                    files: [message.attachments.values()]
+                    files: [...message.attachments.values()]
                   });
                 }
               } else {
@@ -150,13 +165,13 @@ client.on("messageCreate", async (message) => {
         await user?.send({
           content: null,
           embeds: [supportMp],
-          files: [message.attachments.values()]
+          files: [...message.attachments.values()]
         });
       } else {
         await user?.send({
           content: null,
           embeds: [noContentSupportMp],
-          files: [message.attachments.values()]
+          files: [...message.attachments.values()]
         });
       }
     } else {
