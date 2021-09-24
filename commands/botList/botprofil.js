@@ -62,7 +62,7 @@ module.exports = {
                 },
                 {
                     name: '__:nut_and_bolt: Lien d\'invitation :__',
-                    value: `> [Clique ici](https://discord.com/oauth2/authorize?client_id=${member.user.id}&scope=bot%20application.commands&permissions=-1)`,
+                    value: `> [Clique ici](https://discord.com/oauth2/authorize?client_id=${member.user.id}&scope=bot%20applications.commands&permissions=-1)`,
                     inline: false
                 },
                 {

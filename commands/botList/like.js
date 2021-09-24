@@ -23,9 +23,7 @@ module.exports = {
 
         if (!botGet) return message.reply({ content: `**${client.no} ➜ ${member.user.tag} n'est pas sur la liste.**`});
 
-        console.log(botGet);
-
-        if (botGet.verified === true) return message.reply({ content: `**${client.no} ➜ ${member.user.tag} n'est pas encore vérifié, donc vous ne pouvez pas voter pour lui.**` });
+        if (botGet.verified !== true) return message.reply({ content: `**${client.no} ➜ ${member.user.tag} n'est pas encore vérifié, donc vous ne pouvez pas voter pour lui.**` });
 
         await bots.findOneAndUpdate({
             botID: member.user.id
@@ -41,6 +39,6 @@ module.exports = {
         botGet = await bots.findOne({ botID: member.user.id });
 
         client.channels.cache.get(botslogs).send({ content: `**${client.yes} ➜ <@${message.author.id}> vient juste de voter pour <@${member.user.id}> !\n➜ Votes: ${botGet.likesCount}**` });
-        message.reply({ content: `**${client.yes} ➜ Vous avez bien voté pour ${member.user.tag}, il a maintenant ${botGet.likesCount}.**` });
+        message.reply({ content: `**${client.yes} ➜ Vous avez bien voté pour ${member.user.tag}, il a maintenant ${botGet.likesCount} votes.**` });
     }
 }
