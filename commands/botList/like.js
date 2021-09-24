@@ -6,7 +6,7 @@ const { Client, Message } = require('discord.js'),
 module.exports = {
     name: 'like',
     categories : 'botlist', 
-    permissions : '', 
+    permissions : 'everyone', 
     description: 'Permet de rajouter un vote à un bot sur la liste.',
     cooldown : 3600,
     usage: 'like [bot]',
@@ -23,7 +23,9 @@ module.exports = {
 
         if (!botGet) return message.reply({ content: `**${client.no} ➜ ${member.user.tag} n'est pas sur la liste.**`});
 
-        if (botGet.verified !== true) return message.reply({ content: `**${client.no} ➜ ${member.user.tag} n'est pas encore vérifié, donc vous ne pouvez pas voter pour lui.**` });
+        console.log(botGet);
+
+        if (botGet.verified === true) return message.reply({ content: `**${client.no} ➜ ${member.user.tag} n'est pas encore vérifié, donc vous ne pouvez pas voter pour lui.**` });
 
         await bots.findOneAndUpdate({
             botID: member.user.id
@@ -33,7 +35,7 @@ module.exports = {
                 likeDate: `Le ${moment().format("Do MMMM YYYY")} à ${moment().format("HH")}h${moment().format("mm")}`
             }
         }, {
-            new: true
+            upsert: true
         });
 
         botGet = await bots.findOne({ botID: member.user.id });
