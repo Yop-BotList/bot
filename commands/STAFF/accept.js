@@ -21,16 +21,20 @@ module.exports = {
         const member = message.mentions.members.first();
         if (!member?.user.bot) return message.reply({ content: `**${client.no}  ➜ Vous n'avez pas mentionné de bots, ou alors, il n'est pas présent sur le serveur.**` });
 
-        let botGet = await bots.findOne({ botID: member.user.id, verified: false });
+        let botGet = await bots.findOne({ botID: member.user.id });
 
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Aucune demande n’a été envoyée pour ${member.user.tag} !**` });
 
+        if (botGet.verified === true) return message.reply({ content: `${client.no} ➜ \`${member.user.tag}\` est déjà vérifié.` });
+
         await bots.findOneAndUpdate({
-            botID: member.user.bot
+            botID: member.user.id
         }, {
-            verified: true
+            $set: {
+                verified: true
+            }
         }, {
-            new: true
+            upsert: true
         });
 
         botGet = await bots.findOne({ botID: member.user.id });
@@ -65,6 +69,6 @@ module.exports = {
 
         member.roles.remove(botintests);
         member.roles.add(listedbot);
-        message.guild.members.cache.get(botGet.ownerID).roles.add(isclient);
+        message.guild.members.cache.get(botGet.ownerID)?.roles.add(isclient);
     }
 }

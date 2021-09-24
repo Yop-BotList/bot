@@ -6,7 +6,7 @@ const { Client, Message } = require('discord.js'),
 module.exports = {
     name: 'like',
     categories : 'botlist', 
-    permissions : '', 
+    permissions : 'everyone', 
     description: 'Permet de rajouter un vote à un bot sur la liste.',
     cooldown : 3600,
     usage: 'like [bot]',
@@ -33,12 +33,12 @@ module.exports = {
                 likeDate: `Le ${moment().format("Do MMMM YYYY")} à ${moment().format("HH")}h${moment().format("mm")}`
             }
         }, {
-            new: true
+            upsert: true
         });
 
         botGet = await bots.findOne({ botID: member.user.id });
 
         client.channels.cache.get(botslogs).send({ content: `**${client.yes} ➜ <@${message.author.id}> vient juste de voter pour <@${member.user.id}> !\n➜ Votes: ${botGet.likesCount}**` });
-        message.reply({ content: `**${client.yes} ➜ Vous avez bien voté pour ${member.user.tag}, il a maintenant ${botGet.likesCount}.**` });
+        message.reply({ content: `**${client.yes} ➜ Vous avez bien voté pour ${member.user.tag}, il a maintenant ${botGet.likesCount} votes.**` });
     }
 }
