@@ -1,0 +1,10 @@
+{
+    "yes": "<a:oui:838334340618256384>",
+    "no": "<a:non:838334340160815104>",
+    "bof": "<a:bof:838334339820945419>",
+    "offline": "<a:statut_offline:840515785012936714>",
+    "online": "<a:statut_online:840512366713765909>",
+    "streaming": "<a:statut_streaming:840512517162663956>",
+    "idle": "<a:statut_idle:840510494363746304>",
+    "dnd": "<a:statut_dnd:840510494862344205>"
+} 
