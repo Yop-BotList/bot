@@ -13,7 +13,7 @@ module.exports = {
     categories: "info",
     permissions: "everyone",
     cooldown: 15,
-    usage: "suggest <suggestion | accept | reject | delete>",
+    usage: "suggest <suggestion | accept | reject | delete |  list>",
     /**
      *  @param {Client} client
      *  @param {Message} message
@@ -21,8 +21,8 @@ module.exports = {
      */
 
     run: async(client, message, args) => {
-        if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | delete>\`\`\``)
-        if (args[0] !== "accept" && "reject" && "delete") {
+        if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | delete | list>\`\`\``)
+        if (args[0] !== "accept" && "reject" && "delete" && "list") {
             const db = await bot.findOne()
             if (!db) new bot({ suggests: 0 })
     
@@ -53,7 +53,12 @@ module.exports = {
             });
         }
         if (args[0] === "accept") {
-            if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.`)
+            if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`)
+            if (!args[1]) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion.**`)
+            const db = await bot.findOne({ suggestID: parseInt(args[1]), accepted: false, deleted: false });
+            if (!db) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion valide ou sur laquelle aucune action n'a été effectuée.**`)
+            const msg = await message.guild.channels.cache.get(channels.suggests).messages.fetch(db.messageID);
+            msg.edit({ content: "yo" })
         }
     }
 }
