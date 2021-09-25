@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "YopBotList Staff",
+  "author": "YopBotList's Staff",
   "license": "ISC",
   "dependencies": {
     "ascii-table": "^0.0.9",
