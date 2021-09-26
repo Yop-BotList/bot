@@ -5,6 +5,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
   { ticketsaccess } = require("../configs/roles.json"),
   { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
   bumpChecker = require("../fonctions/bumpChecker"),
+  { boost } = require("../configs/emojis.json");
   
   confirmMp = new MessageButton()
   .setStyle("SUCCESS")
@@ -165,21 +166,18 @@ client.on("messageCreate", async (message) => {
     if (message.attachments) {
       if (message.content) {
         await user?.send({
-          content: null,
-          embeds: [supportMp],
+          content: `**${boost} ${message.author.username} ➜ **${message.content}`,
           files: [...message.attachments.values()]
         });
       } else {
         await user?.send({
-          content: null,
-          embeds: [noContentSupportMp],
+          content: `**${boost} ${message.author.username} ➜ **`,
           files: [...message.attachments.values()]
         });
       }
     } else {
       await user?.send({
-        content: null,
-        embeds: [sendSupportMp]
+        content: `**${boost} ${message.author.username} ➜ **${message.content}`
       });
     }
 
