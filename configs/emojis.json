@@ -6,5 +6,6 @@
     "online": "<a:statut_online:840512366713765909>",
     "streaming": "<a:statut_streaming:840512517162663956>",
     "idle": "<a:statut_idle:840510494363746304>",
-    "dnd": "<a:statut_dnd:840510494862344205>"
+    "dnd": "<a:statut_dnd:840510494862344205>",
+    "boost": "<a:boost:891621411100180490>"
 } 
