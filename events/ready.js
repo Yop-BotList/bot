@@ -2,7 +2,7 @@ const { blue, red } = require('colors'),
       { online } = require("../configs/emojis.json"),
       { owner, prefix } = require("../configs/config.json"),
       checkConnection = require("../fonctions/checkConnection"),
-      { botlogs } = require('../configs/channels.json'),
+      { botlogs, testsroom } = require('../configs/channels.json'),
       remind = require("../models/reminds"),
       client = require("../index");
 
@@ -46,4 +46,6 @@ client.on("ready", async () => {
             }
         });
     }, 120000);
+    /* message automatique /*
+    setTimeout(() => { setInterval(() => { client.channels.cache.get(testsroom).send(``) }, 43200000) }, 43200000)
 });
