@@ -5,5 +5,6 @@
     "ticketslogs": "LE CHANNEL DE LOGS DES TICKETS",
     "ticketcategory": "LA CATEGORIE POUR LES TICKETS",
     "avischannel": "LE CHANNEL DES AVIS",
-    "welcomechannel": "LE CHANNEL DE BIENVENUE"
+    "welcomechannel": "LE CHANNEL DE BIENVENUE",
+"testsroom": "LE CHANNEL DES COMMANDES"
 }
