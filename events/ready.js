@@ -47,5 +47,5 @@ client.on("ready", async () => {
         });
     }, 120000);
     /* message automatique /*
-    setTimeout(() => { setInterval(() => { client.channels.cache.get(testsroom).send(`**Message automatique de rappels :**\n\n__Noubliez surtout pas les commandes suivantes :__\n\n• `y!help` : Voir toutes les commandes de YopBot.\n • `y!like` : Voter pour un bot.\n • `y!leaderboard` : Voir le classement des bots.\n• `!d bump` : Voter pour **Yop BotList** sur <https://disboard.org/> !`) }, 43200000) }, 43200000)
+    setTimeout(() => { setInterval(() => { y!e client.channels.cache.get(message.channel.id).send(`**Message automatique de rappels :**\n\n__Noubliez surtout pas les commandes suivantes :__\n\n• \`y!help\` : Voir toutes les commandes de YopBot.\n • \`y!like\` : Voter pour un bot.\n • \`y!leaderboard\` : Voir le classement des bots.\n• \`!d bump\` : Voter pour **Yop BotList** sur <https://disboard.org/> !`) }, 43200000) }, 43200000)
 });
