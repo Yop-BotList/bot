@@ -5,7 +5,6 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
   { ticketsaccess } = require("../configs/roles.json"),
   { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
   bumpChecker = require("../fonctions/bumpChecker"),
-  { boost } = require("../configs/emojis.json");
   
   confirmMp = new MessageButton()
   .setStyle("SUCCESS")
@@ -166,18 +165,21 @@ client.on("messageCreate", async (message) => {
     if (message.attachments) {
       if (message.content) {
         await user?.send({
-          content: `**${boost} ${message.author.username} ➜ **${message.content}`,
+          content: null,
+          embeds: [supportMp],
           files: [...message.attachments.values()]
         });
       } else {
         await user?.send({
-          content: `**${boost} ${message.author.username} ➜ **`,
+          content: null,
+          embeds: [noContentSupportMp],
           files: [...message.attachments.values()]
         });
       }
     } else {
       await user?.send({
-        content: `**${boost} ${message.author.username} ➜ **${message.content}`
+        content: null,
+        embeds: [sendSupportMp]
       });
     }
 
@@ -197,7 +199,7 @@ client.on("messageCreate", async (message) => {
   /* Getting Mention for Prefix */
   if (cmd.length === 0) {
     if (matchedPrefix.includes(client.user.id) && message.author.id !== "692374264476860507") return message.reply({ content: `<@${message.author.id}> Pour voir toutes les commandes, tapez \`${prefix}help\`` });
-    if (matchedPrefix.includes(client.user.id) && message.author.id !== "692374264476860507") return message.reply({ content: `Bonjour maître. Mon préfixe est \`${prefix}\`` });
+    if (matchedPrefix.includes(client.user.id) && message.author.id == "692374264476860507") return message.reply({ content: `Bonjour maître. Mon préfixe est \`${prefix}\`` });
   }
 
   /* Command Detection */

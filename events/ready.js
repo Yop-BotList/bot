@@ -2,7 +2,7 @@ const { blue, red } = require('colors'),
       { online } = require("../configs/emojis.json"),
       { owner, prefix } = require("../configs/config.json"),
       checkConnection = require("../fonctions/checkConnection"),
-      { botlogs, testsroom } = require('../configs/channels.json'),
+      { botlogs } = require('../configs/channels.json'),
       remind = require("../models/reminds"),
       client = require("../index");
 
@@ -46,6 +46,4 @@ client.on("ready", async () => {
             }
         });
     }, 120000);
-    /* message automatique /*
-    setTimeout(() => { setInterval(() => { y!e client.channels.cache.get(message.channel.id).send(`**Message automatique de rappels :**\n\n__Noubliez surtout pas les commandes suivantes :__\n\n• \`y!help\` : Voir toutes les commandes de YopBot.\n • \`y!like\` : Voter pour un bot.\n • \`y!leaderboard\` : Voir le classement des bots.\n• \`!d bump\` : Voter pour **Yop BotList** sur <https://disboard.org/> !`) }, 43200000) }, 43200000)
 });
