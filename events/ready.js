@@ -25,7 +25,7 @@ client.on("ready", async () => {
     }
 
     /* botsconfig verification */
-    const db = bot.find()
+    const db = await bot.find()
     if (!db) new bot({ suggests: 0, warns: 0 }).save();
 
     /* Bot’s Activity */
