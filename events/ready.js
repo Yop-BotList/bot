@@ -25,8 +25,8 @@ client.on("ready", async () => {
     }
 
     /* botsconfig verification */
-    const db = bot.findOne()
-    if (!db) new bot({ suggests: 0, warns: 0 })
+    const db = bot.find()
+    if (!db) new bot({ suggests: 0, warns: 0 }).save();
 
     /* Bot’s Activity */
     const activities = [`${prefix}help | Version ${client.version}`,'By Nolhan#2508'];
