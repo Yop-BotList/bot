@@ -25,10 +25,8 @@ module.exports = {
         // create
         if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | mask | list>\`\`\``)
         if (args[0] !== "accept" && args[0] !== "reject" && args[0] !== "mask" && args[0] !== "list") {
-            const db1 = await bot.findOne()
-            if (!db1) new bot({ suggests: 0 }).save()
             const db = await bot.findOne()
-    
+                
             const e = new MessageEmbed()
             .setTitle(`Nouvelle suggestion de ${message.author.username} ! (N°${db.suggests + 1})`)
             .setThumbnail(message.author.displayAvatarURL({ dynamic: true }))
