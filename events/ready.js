@@ -4,7 +4,8 @@ const { blue, red } = require('colors'),
       checkConnection = require("../fonctions/checkConnection"),
       { botlogs } = require('../configs/channels.json'),
       remind = require("../models/reminds"),
-      client = require("../index");
+      client = require("../index"),
+      bot = require("../models/botconfig");
 
 client.on("ready", async () => {
     console.log(`Connecté en tant que ${blue(`${client.user.tag}`)}`);
@@ -22,6 +23,10 @@ client.on("ready", async () => {
         client.channels.cache.get(botlogs).send({ content: client.no + ` ➜ Impossible de retrouver un utilisateur portant l'identifiant \`${owner}\` !` })
             return client.destroy()
     }
+
+    /* botsconfig verification */
+    const db = bot.findOne()
+    if (!db) new bot({ suggests: 0, warns: 0 })
 
     /* Bot’s Activity */
     const activities = [`${prefix}help | Version ${client.version}`,'By Nolhan#2508'];
