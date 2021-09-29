@@ -6,8 +6,7 @@ wrnshema = new Schema({
     wrnID: { type: Number, required: false },
     reason: { type: String, required: false },
     date: { type: Number, required: false },
-    type: { type: String, required: false },
-    accepted: { type: Boolean, required: false }
+    type: { type: String, required: false }
 }),
 
 warnshema = module.exports = model("warns", wrnshema);

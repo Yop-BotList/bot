@@ -1,4 +1,4 @@
-const { Client, Message, MessageEmbed } = require("discord.js"),
+const { Client, Message, MessageEmbed, MessageActionRow, MessageButton } = require("discord.js"),
       { bof } = require("../../configs/emojis.json"),
       channels = require("../../configs/channels.json"),
       { prefix } = require("../../configs/config.json"),
@@ -148,6 +148,108 @@ module.exports = {
 
                 message.channel.send(`**${client.yes} ➜ La suggestion a bien été masquée !**`)
             })
+        }
+
+        // list
+        if (args[0] === "list") {
+            if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`)
+            let suggGet = await suggests.find();
+            if (!suggGet) return message.reply(`**${client.no} ➜ Aucune suggestion n'éxiste sur le serveur.**`);
+            
+            let i0 = 0;
+            let i1 = 10;
+            let page = 1;
+
+            let leftPage = new MessageButton()
+            .setStyle(1)
+            .setEmoji("◀️")
+            .setCustomId("suggLeftPage")
+            .setDisabled()
+            
+            let deleteMsg = new MessageButton()
+            .setStyle(4)
+            .setEmoji("🗑️")
+            .setCustomId("suggDeleteMsg")
+            
+            let rightPage = new MessageButton()
+            .setStyle(1)
+            .setEmoji("▶️")
+            .setCustomId("suggRightPage")
+            if (page === Math.ceil(suggGet.length/10)) rightPage.setDisabled();
+
+            let buttons = new MessageActionRow()
+            .addComponents(leftPage, deleteMsg, rightPage)
+
+            let array = suggGet.sort((a, b) => (a.suggID < b.suggID) ? 1 : -1),
+                description = `${array.map((r, i) => `**${i + 1}** ➜ ID ${r.suggID} - \`${client.users.cache.get(r.userID)?.tag} (${r.userID})\``).slice(0, 10).join("\n")}`,
+                footer = `Page ${page}/${Math.ceil(suggGet.length/10)}`,
+                embed = new MessageEmbed()
+                .setTitle(`Suggestions du serveur.`)
+                .setDescription(description)
+                .setFooter(footer)
+
+            const msg = await message.channel.send({
+                content: null,
+                embeds: [embed],
+                components: [buttons]
+            });
+
+            const filter = i => i.customId === "suggLeftPage" || i.customId === "suggDeleteMsg" || i.customId === "suggRightPage" && i.user.id === message.author.id;
+            const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
+
+            collector.on("collect", async (button) => {
+                // delete
+                if (button.customId === "suggDeleteMsg") {
+                    if (button.user.id === message.author.id) {
+                        collector.stop();
+                        await msg.delete();
+                    }
+                }
+                // left
+                if (button.customId === "suggLeftPage") {
+                    i0 = i0 - 10;
+                    i1 = i1 - 10;
+                    page = page - 1;
+
+                    if (page < Math.ceil(suggGet.length/10)) return await msg.delete();
+
+                    if (page === Math.ceil(suggGet.length/10)) leftPage.setDisabled();
+                    else leftPage.setDisabled(false);
+                    rightPage.setDisabled(false);
+
+                    buttons = new MessageActionRow()
+                    .addComponents(leftPage, deleteMsg, rightPage);
+
+                    description = `${array.map((r, i) => `**${i + 1}** ➜ ID ${r.suggID} - \`${client.users.cache.get(r.userID)?.tag} (${r.userID})\``).slice(i0, i1).join("\n")}`;
+                    footer = `Page ${page}/${Math.ceil(suggGet.length/10)}`;
+
+                    embed.setDescription(description).setFooter(footer);
+
+                    await button.update({ content: null, embeds: [embed], components: [buttons] });
+                }
+                // right
+                if (button.customId === "suggRightPage") {
+                    i0 = i0 + 10;
+                    i1 = i1 + 10;
+                    page = page + 1;
+
+                    if (page > Math.ceil(suggGet.length/10)) return await msg.delete();
+
+                    if (page === Math.ceil(suggGet.length/10)) leftPage.setDisabled();
+                    else leftPage.setDisabled(false);
+                    rightPage.setDisabled(false);
+
+                    buttons = new MessageActionRow()
+                    .addComponents(leftPage, deleteMsg, rightPage);
+
+                    description = `${array.map((r, i) => `**${i + 1}** ➜ ID ${r.suggID} - \`${client.users.cache.get(r.userID)?.tag} (${r.userID})\``).slice(i0, i1).join("\n")}`;
+                    footer = `Page ${page}/${Math.ceil(suggGet.length/10)}`;
+                    
+                    embed.setDescription(description).setFooter(footer);
+
+                    await button.update({ content: null, embeds: [embed], components: [buttons] });
+                }
+            });
         }
     }
 }
