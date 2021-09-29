@@ -13,7 +13,7 @@ module.exports = {
     categories: "info",
     permissions: "everyone",
     cooldown: 15,
-    usage: "suggest <suggestion | accept | reject | delete |  list>",
+    usage: "suggest <suggestion | accept | reject | mask |  list>",
     /**
      *  @param {Client} client
      *  @param {Message} message
@@ -23,8 +23,8 @@ module.exports = {
     run: async(client, message, args) => {
 
         // create
-        if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | delete | list>\`\`\``)
-        if (args[0] !== "accept" && args[0] !== "reject" && args[0] !== "delete") {
+        if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | mask | list>\`\`\``)
+        if (args[0] !== "accept" && args[0] !== "reject" && args[0] !== "mask" && args[0] !== "list") {
             const db1 = await bot.findOne()
             if (!db1) new bot({ suggests: 0 }).save()
             const db = await bot.findOne()
@@ -119,6 +119,36 @@ module.exports = {
                 message.guild.channels.cache.get(channels.sugglogs).send({ content: `<@${db.userID}>`, embeds: [e2] })
 
                 message.channel.send(`**${client.yes} ➜ La suggestion a bien été refusée !**`)
+            })
+        }
+
+        // mask
+        if (args[0] === "mask") {
+            if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`)
+            if (!args[1]) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion.**`)
+            const db = await suggests.findOne({ suggestID: args[1], accepted: false, deleted: false });
+            if (!db) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion valide ou sur laquelle aucune action n'a été effectuée.**`)
+            const member = message.guild.members.cache.get(db.userID)
+
+            message.guild.channels.cache.get(channels.suggests).messages.fetch(db.msgID).then(async (msg) => {
+                const e1 = new MessageEmbed()
+                .setTitle(`Suggestion de ${member.user.username} masquée par ${message.author.username} !`)
+                .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+                .setColor(client.color)
+                .setTimestamp(new Date())
+                .setDescription(`\`\`\`md\n# Contenu masqué\n\`\`\``)
+
+                msg.edit({ embeds: [e1] });
+
+                await suggests.findOneAndUpdate({ suggID: db.suggID }, { $set: { deleted: true } }, { upsert: true });
+
+                const e2 = new MessageEmbed()
+                .setColor(client.color)
+                .setDescription(`<@${message.author.id}> vient tout juste de masquer votre [suggestion](https://discord.com/channels/${msg.guild.id}/${msg.channel.id}/${msg.id}) ! Veuillez faire attention à l'avenir !`)
+
+                message.guild.channels.cache.get(channels.sugglogs).send({ content: `<@${db.userID}>`, embeds: [e2] })
+
+                message.channel.send(`**${client.yes} ➜ La suggestion a bien été masquée !**`)
             })
         }
     }
