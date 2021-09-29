@@ -153,8 +153,8 @@ module.exports = {
         // list
         if (args[0] === "list") {
             if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`)
-            let suggGet = await suggests.find();
-            if (!suggGet) return message.reply(`**${client.no} ➜ Aucune suggestion n'éxiste sur le serveur.**`);
+            let suggGet = await suggests.find({ accepted: false, deleted: false });
+            if (!suggGet) return message.reply(`**${client.no} ➜ Aucune suggestion n'est en attente de réponse sur le serveur.**`);
             
             let i0 = 0;
             let i1 = 10;
@@ -184,7 +184,7 @@ module.exports = {
                 description = `${array.map((r, i) => `**${i + 1}** ➜ ID ${r.suggID} - \`${client.users.cache.get(r.userID)?.tag} (${r.userID})\``).slice(0, 10).join("\n")}`,
                 footer = `Page ${page}/${Math.ceil(suggGet.length/10)}`,
                 embed = new MessageEmbed()
-                .setTitle(`Suggestions du serveur.`)
+                .setTitle(`Suggestions en attente sur le serveur.`)
                 .setDescription(description)
                 .setFooter(footer)
 
