@@ -28,7 +28,8 @@ module.exports = {
             modID: message.author.id,
             wrnID: db.warns + 1,
             reason: args.slice(1).join(" "),
-            type: "WARN"
+            type: "WARN",
+            date: Date()
         }).save()
         
         const e = new MessageEmbed()
