@@ -1,4 +1,4 @@
-const { Client, Message, MessageEmbed } = requier("discord.js");
+const { Client, Message, MessageEmbed } = require("discord.js");
 
 module.exports = {
     name: "dataja",

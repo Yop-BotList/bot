@@ -7,5 +7,7 @@
     "listedbot": "LE ROLE BOT VERIFIE",
     "botrole": "LE ROLE BOT",
     "premium": "LE ROLE PREMIUM",
-    "premiumbot": "LE ROLE BOT PREMIUM"
+    "premiumbot": "LE ROLE BOT PREMIUM",
+    "bypass": "LE ROLE QUI BYPASS LA MODERATION",
+    "modrole": "LE ROLE DE MODERATION"
 }

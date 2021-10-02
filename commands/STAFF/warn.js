@@ -1,13 +1,14 @@
 const { Client, Message, MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs } = require("../../configs/channels.json"),
-      bot = require("../../models/botconfig")
+      bot = require("../../models/botconfig"),
+      { modrole, bypass } = require("../../configs/roles.json");
 
 module.exports = {
     name: 'warn',
     aliases: ['w'],
     categories : 'staff', 
-    permissions : 'MANAGE_MESSAGES', 
+    permissions : modrole, 
     description: 'Avertir un membre.',
     cooldown : 5,
     usage: 'warn <id> <raison>',

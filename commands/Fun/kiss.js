@@ -1,4 +1,4 @@
-const { Client, Message, MessageEmbed } = requier("discord.js");
+const { Client, Message, MessageEmbed } = require("discord.js");
 
 module.exports = {
     name: "kiss",
@@ -20,7 +20,7 @@ module.exports = {
               e = new MessageEmbed()
         .setTitle(`${message.author.id} embrasse ${member.user.username}`)
         .setTimestamp(new Date())
-        .setImage(kiss[Math.floor(Math.random() * activities.length)])
+        .setImage(kiss[Math.floor(Math.random() * kiss.length)])
         
         message.reply({ content: `<@${member.user.id}>`, embeds: [e] });
     }
