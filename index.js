@@ -1,4 +1,4 @@
-Bonjour const { Client, Collection } = require("discord.js"),
+const { Client, Collection } = require("discord.js"),
   { readdirSync } = require("fs"),
   { version } = require("./package.json"),
   { yes, no } = require("./configs/emojis.json"),
