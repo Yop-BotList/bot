@@ -1,4 +1,4 @@
-const { Client, Collection } = require("discord.js"),
+Bonjour const { Client, Collection } = require("discord.js"),
   { readdirSync } = require("fs"),
   { version } = require("./package.json"),
   { yes, no } = require("./configs/emojis.json"),
@@ -37,7 +37,7 @@ client.no = no;
 
 
 ["command"].forEach((handler) => {
-  require(`./handler/${handler}`)(client);
+  require(`./utils/${handler}`)(client);
 });
 
 client.login(token);
