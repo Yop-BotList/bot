@@ -9,15 +9,10 @@ module.exports = {
      * @param {ContextMenuInteraction} interaction
      */
     run: async(client, interaction) => {
-        try {
             let ping = new MessageEmbed()
             .setDescription(`🏓 Ping : ${client.ws.ping}`)
             .setColor('RANDOM')
-            .setTimestamp()
 
             interaction.followUp({ content: null, embeds : [ping] })
-        } catch (e) {
-            new Error(e);
-        };
     },
 };
