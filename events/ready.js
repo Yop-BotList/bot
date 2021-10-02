@@ -5,7 +5,7 @@ const { blue, red } = require('colors'),
       { botlogs } = require('../configs/channels.json'),
       remind = require("../models/reminds"),
       client = require("../index"),
-      bot = require("../models/botconfig");
+      botconfig = require("../models/botconfig");
 
 client.on("ready", async () => {
     console.log(`Connecté en tant que ${blue(`${client.user.tag}`)}`);
@@ -25,8 +25,8 @@ client.on("ready", async () => {
     }
 
     /* botsconfig verification */
-    const db = await bot.find()
-    if (!db) new bot({ suggests: 0, warns: 0 }).save();
+    const db = await botconfig.findOne()
+    if (!db) new botconfig({ suggests: 0, warns: 0 }).save();
 
     /* Bot’s Activity */
     const activities = [`${prefix}help | Version ${client.version}`,'By Nolhan#2508'];

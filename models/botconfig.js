@@ -1,8 +1,8 @@
 const { Schema, model } = require("mongoose");
 
-botShema = new Schema({
+botconfigShema = new Schema({
     suggests: { type: Number, required: false },
     warns: { type: Number, required: false }
-})
+}),
 
-robotShema = module.exports = model("botconfig", botShema)
+botconfigshema = module.exports = model("botconfig", botconfigShema)

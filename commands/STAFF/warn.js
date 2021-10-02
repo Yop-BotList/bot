@@ -1,7 +1,7 @@
 const { Client, Message, MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs } = require("../../configs/channels.json"),
-      bot = require("../../models/botconfig"),
+      botconfig = require("../../models/botconfig"),
       { modrole, bypass } = require("../../configs/roles.json");
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.bot) return message.reply(`**${client.no} ➜ Ce membre n’est pas humain.**`)
         if (!args[1]) return message.reply(`**${client.no} ➜ Veuillez entrer une raison.**`)
-       const db = bot.findOne()
+       const db = botconfig.findOne()
         
         new warns({
             userID: member.id,
@@ -30,7 +30,7 @@ module.exports = {
             wrnID: db.warns + 1,
             reason: args.slice(1).join(" "),
             type: "WARN",
-            date: Date()
+            date: Date.now()
         }).save()
         
         const e = new MessageEmbed()

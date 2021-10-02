@@ -4,7 +4,7 @@ const { Client, Message, MessageEmbed, MessageActionRow, MessageButton } = requi
       { prefix } = require("../../configs/config.json"),
       suggests = require("../../models/suggests"),
       packages = require("../../package.json"),
-      bot = require("../../models/botconfig");
+      botconfig = require("../../models/botconfig");
 
       
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
         // create
         if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | mask | list>\`\`\``)
         if (args[0] !== "accept" && args[0] !== "reject" && args[0] !== "mask" && args[0] !== "list") {
-            const db = await bot.findOne()
+            const db = await botconfig.findOne()
                 
             const e = new MessageEmbed()
             .setTitle(`Nouvelle suggestion de ${message.author.username} ! (N°${db.suggests + 1})`)
@@ -47,7 +47,7 @@ module.exports = {
                     deleted: false,
                     content: args.join(" ")
                 }).save()
-                if (db) await bot.findOneAndUpdate({ suggests: db.suggests + 1 })
+                if (db) await botconfig.findOneAndUpdate({ suggests: db.suggests + 1 })
                 
     
                 return message.channel.send(`**${client.yes} ➜ Votre suggestion a bien été envoyée. Allez voir dans le <#${channels.suggests}>.**`)
