@@ -13,8 +13,8 @@ module.exports = {
               e = new MessageEmbed()
         .setTitle(`<@${message.author.id} chiale comme un gros bébé ! Venez ||pas|| le consoler !`)
         .setTimestamp(new Date())
-        .setImage(cry[Math.floor(Math.random() * activities.length)])
+        .setImage(cry[Math.floor(Math.random() * cry.length)])
 
-         interaction.followUp({ content: null, embeds: [e] })
+         interaction.reply({ content: null, embeds: [e] })
     },
 };

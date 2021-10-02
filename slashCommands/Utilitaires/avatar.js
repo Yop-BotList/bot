@@ -11,36 +11,35 @@ module.exports = {
    */
   run: async (client, interaction) => {
 
-    let user = interaction.author,
-    avs = new MessageEmbed()
+    let avs = new MessageEmbed()
       .setAuthor(
-        `Avatar de : ${user.tag}`,
-        user.displayAvatarURL({ dynamic: true }),
+        `Avatar de : ${interaction.author.tag}`,
+        interaction.author.displayAvatarURL({ dynamic: true }),
         "https://discord.gg/3dQeTg9Vz3"
       )
       .setColor(client.color)
       .addField(
         "➜ PNG",
-        `[\`Lien\`](${user.displayAvatarURL({ format: "png" })})`,
+        `[\`Lien\`](${interaction.author.displayAvatarURL({ format: "png" })})`,
         true
       )
       .addField(
         "➜ JPEG",
-        `[\`Lien\`](${user.displayAvatarURL({ format: "jpg" })})`,
+        `[\`Lien\`](${interaction.author.displayAvatarURL({ format: "jpg" })})`,
         true
       )
       .addField(
         "➜ WEBP",
-        `[\`Lien\`](${user.displayAvatarURL({ format: "webp" })})`,
+        `[\`Lien\`](${interaction.author.displayAvatarURL({ format: "webp" })})`,
         true
       )
       .setURL(
-        user.displayAvatarURL({
+        interaction.author.displayAvatarURL({
           dynamic: true,
         })
       )
       .setImage(
-        user.displayAvatarURL({
+        interaction.author.displayAvatarURL({
           dynamic: true,
           size: 512,
         })

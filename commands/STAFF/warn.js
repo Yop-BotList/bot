@@ -27,7 +27,7 @@ module.exports = {
         new warns({
             userID: member.id,
             modID: message.author.id,
-            wrnID: db.warns + 1,
+            wrnID: Number(db.warns) + 1,
             reason: args.slice(1).join(" "),
             type: "WARN",
             date: Date.now()

@@ -9,6 +9,6 @@ module.exports = {
      * @param {ContextMenuInteraction} interaction
      */
     run: async(client, interaction) => {
-         interaction.followUp({ content: '"Ne demande pas si tu peux demander, mais demande directement. Ça nous fait gagner du temps."\n*Source : <https://dontasktoask.com/>*' })
+         interaction.reply({ content: '"Ne demande pas si tu peux demander, mais demande directement. Ça nous fait gagner du temps."\n*Source : <https://dontasktoask.com/>*' })
     },
 };
