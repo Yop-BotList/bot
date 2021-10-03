@@ -103,13 +103,13 @@ client.no = no;
                         try {
                             client.reloadCommand(c.replace('.js',''));
                         } catch (error) {
-                            console.log(`${red('[Commands Reload]')} Failed to reload command ${c}: ${error.stack || error}`)
-                            throw new Error(`${red('[Commands Reload]')} Failed to load event ${e}: ${error.stack || error}`)
+                            console.log(`${red('[COMMANDS]')} Impossible de recharger la commande ${c} : ${error.stack || error}`)
                         }
                     }
                 }
-                console.log(`${green('[Commands Reload]')} Reloaded ${client.commands.size}/${count} commands`);
-                resolve(`> Reloaded \`${client.commands.size}\`/\`${count}\` commands`)
+                console.log(`${green('[COMMANDS]')} ${client.commands.size}/${count} Commandes rechargées !`);
+                resolve(`**${yes} ➜ \`${client.commands.size}\`/\`${count}\` commandes rechargées !`)
+                client.channels.cache.get(botlogs).send(`**${yes} ➜ \`${client.commands.size}\`/\`${count}\` commandes rechargées !`)
             })
         }
         client.reloadAllEvents = function() {
@@ -122,11 +122,12 @@ client.no = no;
                         const fileName = e.split('.')[0];
                         client.reloadEvent(fileName);
                     } catch (error) {
-                        throw new Error(`${red('[Events Reload]')} Failed to load event ${e}: ${error.stack || error}`)
+                        console.log(`${red('[EVENTS]')} Impossible de recharger l’évènement ${e} : ${error.stack || error}`)
                     }
                 });
-                console.log(`${green('[Events Reload]')} Loaded ${count}/${files.length} events`);
-                resolve(`> Reloaded \`${count}\`/\`${files.length}\` events`)
+                console.log(`${green('[EVENTS]')} ${count}/${files.length} évènements rechargés !`);
+                resolve(`**${yes} ➜ \`${count}\`/\`${files.length}\` évènements rechargés !**`)
+                client.channels.cache.get(botlogs).send(`**${yes} ➜ \`${count}\`/\`${files.length}\` évènements rechargés !**`)
             })
         }
 
