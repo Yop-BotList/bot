@@ -47,12 +47,12 @@ module.exports = {
         
                 let button7 = new MessageButton()
                 .setStyle('blurple')
-                .setEmoji('4️⃣')
+                .setEmoji('1️⃣')
                 .setCustomId('six')
         
                 let button8 = new MessageButton()
                 .setStyle('blurple')
-                .setEmoji('5️⃣')
+                .setEmoji('2️⃣')
                 .setCustomId('seven')
                 
                 let button9 = new MessageButton()
@@ -64,10 +64,15 @@ module.exports = {
                 .setStyle('blurple')
                 .setEmoji('2️⃣') 
                 .setCustomId('nine')
+                
+                let button11 = new MessageButton()
+                .setStyle('blurple')
+                .setEmoji('3️⃣')
+                .setCustomeId('ten')
         
                 // rows
                 let row = new MessageActionRow()
-                .addComponents(button, button2, button3, button7, button8)
+                .addComponents(button, button2, button3, button4)
         
                 let row2 = new MessageActionRow()
                 .addComponents(button5, button6, button4);
@@ -75,13 +80,13 @@ module.exports = {
                 let row3 = new MessageActionRow()
                 .addComponents(button9, button10, button4);
         
-                let row4 = new MessageActionRow()
-                .addComponents(button4);
+        let row4 = new MessageActionRow()
+        .addComponents(button7, button8, button11, button4)
         
                 // embeds
                 const e = new MessageEmbed()
                 .setTitle("Gérer le bot :")
-                .setDescription(":one: Gérer les commandes.\n:two: Gérer les évènements.\n:three: Gérer le bot.\n:four: Entrer une commande dans la console.\n:five:Lancer/Arrêter une maintenance.\n:x: Annuler la commande.")
+                .setDescription(":one: Gérer les commandes.\n:two: Gérer les évènements.\n:three: Gérer le bot.\n:x: Annuler la commande.")
                 .setColor(client.color)
                 .setThumbnail(message.guild.iconURL())
         
@@ -120,10 +125,18 @@ module.exports = {
                 .setDescription("Veuillez entrer le nom de l'évènement à désactiver.")
                 .setColor(client.color)
                 .setThumbnail(message.guild.iconURL())
+                
+                const e8 = new MessageEmbed()
+                .setTitle("Gérer le bot :")
+                .setDescription(":one: Redémarrer le bot.\n:four: Exécuter une commande dans la console.\n:three: Démarrer/Arrêter un maintenance.\n:x: Annuler la commande.")
+                .setColor(client.color)
+                .setThumbnail(message.guild.iconURL())
         
-                const msg = await message.channel.send({ embeds: [e], components: [row, row4] });
+                const msg = await message.channel.send({ embeds: [e], components: [row] });
         
-                const collector = msg.createButtonCollector((button) => button.clicker.user.id === message.author.id)
+        
+        
+        const collector = msg.createButtonCollector((button) => button.clicker.user.id === message.author.id)
         
                 collector.on("collect", async button => {
                     if (button.id === "cancel") return msg.edit(`**${client.yes} ➜ Commande annulée avec succès !**`, { components: null })
@@ -176,15 +189,6 @@ module.exports = {
                             });
                         })
                     }
-        
-        
-        
-        
-        
-        
-        
-        
-        
                     if (button.id === "two") msg.edit({ embeds: e5, components: row3 })
                     if (button.id === "eight") {
                         msg.edit({ embeds: [e6] }, button4)
@@ -216,11 +220,12 @@ module.exports = {
                         collector.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) {
-                                    if(!client.commands.has(value.content)) {
+                                    if(!client.events.has(value.content)) {
                                         message.channel.send(`**${client.no} ➜ Évènement introuvable !**`)
                                         return msg.delete();
                                     }
-                                    client.commands.delete(value.content).then(() => {
+                                    const res = client.listeners(fileName)
+                            client.off(fileName, res[0]).then(() => {
                                         message.channel.send(`**${client.yes} ➜ Évènement \`${value.content}\` désactivé jusqu'au prochain redémarrage du bot.**`)
                                         value.delete()
                                         return msg.delete();
@@ -231,6 +236,16 @@ module.exports = {
                                     })
                                 }
                             });
+                        })
+                    }
+                    if (button.id === "three") {
+                        msg.edit({ embeds: [e8], components: [row4] })
+                    }
+                    if (button.id === "six") {
+                        msg.edit({ content: `**${client.yes} ➜ Redémarrage en cours...**`, components: null })
+                            client.channels.cache.get(botlogs).send(`**${loading} ➜ Redémarrage en cours...**`).then(() => {
+                            client.destroy()
+                            return process.exit()
                         })
                     }
                 });

@@ -4,30 +4,23 @@ const prefix = require("../../configs/config.json").prefix;
 
 module.exports = {
   name: "help",
-  description: "Show All Commands",
+  description: "Voir toutes les commandes du bot.",
   /**
    * @param {Client} client
    * @param {ContextMenuInteraction} interaction
    * @param {String[]} args
    */
   run: async (client, interaction, args) => {
-    const roleColor =
-    interaction.guild.me.displayHexColor === "#000000"
-        ? "#ffffff"
-        : interaction.guild.me.displayHexColor;
-
     if (!args[0]) {
       let categories = [];
 
       readdirSync("./commands/").forEach((dir) => {
-        const commands = readdirSync(`./commands/${dir}/`).filter((file) =>
-          file.endsWith(".js")
-        );
+        const commands = readdirSync(`./commands/${dir}/`).filter(file => file.endsWith(".js")),
 
-        const cmds = commands.map((command) => {
+        cmds = commands.map((command) => {
           let file = require(`../../commands/${dir}/${command}`);
 
-          if (!file.name) return "No command name.";
+          if (!file.name) return "Aucunes commandes";
 
           let name = file.name.replace(".js", "");
 
@@ -37,25 +30,23 @@ module.exports = {
         let data = new Object();
 
         data = {
-          name: dir.toUpperCase(),
-          value: cmds.length === 0 ? "In progress." : cmds.join(" "),
+          name: `➜ ${dir} :`,
+          value: cmds.length === 0 ? "Aucunes commandes dans cette catégorie..." : cmds.join(", "),
         };
 
         categories.push(data);
       });
 
       const embed = new MessageEmbed()
-        .setTitle("📬 Need help? Here are all of my commands:")
+        .setTitle(`Menu d'aide de ${client.user.username}`)
         .addFields(categories)
-        .setDescription(
-          `Use \`${prefix}help\` followed by a command name to get more additional information on a command. For example: \`${prefix}help invite\`.`
-        )
-        .setFooter(
-          `Requested by ${interaction.user.tag}`,
-        )
+        .addField("➜ Liens :", "[GitHub](https://github.com/Nonolanlan1007/Yop-Bot) • [Serveur Support](https://discord.gg/3dQeTg9Vz3) • [Trello](https://trello.com/b/KHmaXsL4/yopbot) • [Signaler un bug](https://github.com/Nonolanlan1007/Yop-Bot/issues/new)")
+        .setThumbnail(interaction.guild.iconURL({ dynamic: true }))
+        .setDescription(`Envoyez \`${prefix}help [commande]\` pour obtenir plus d'informations !`)
+        .setFooter(`YopBot | Version ${client.version}`)
         .setTimestamp()
-        .setColor(roleColor);
-      return interaction.followUp({ content: null, embeds: [embed] });
+        .setColor(client.color);
+      return interaction.channel.send({ content: null, embeds: [embed] });
     } else {
       const command =
         client.commands.get(args[0].toLowerCase()) ||
@@ -63,45 +54,45 @@ module.exports = {
           (c) => c.aliases && c.aliases.includes(args[0].toLowerCase())
         );
 
-      if (!command) {
-        const embed = new MessageEmbed()
-          .setTitle(
-            `Invalid command! Use \`${prefix}help\` for all of my commands!`
-          )
-          .setColor("FF0000");
-        return interaction.followUp({ content: null, embeds: [embed] });
-      }
+        let slashCommands;
+        const scmd = client.slashCommands.get(command.name)
+
+        if (!scmd) slashCommands = "Non"
+        if (scmd) slashCommands = "Oui"
+
+      if (!command) return interaction.followUp({ content: `${client.no} ➜ Impossible de retrouver une commande nommée \`${prefix}${args[0]}\`` });
 
       const embed = new MessageEmbed()
-        .setTitle("Command Details:")
-        .addField("PREFIX:", `\`${prefix}\``)
+        .setTitle(`Informations sur la commande ${command.name}`)
+        .setDescription(" <> sont des arguments requis\nEt [] sont des arguments optionnels.")
         .addField(
-          "COMMAND:",
-          command.name ? `\`${command.name}\`` : "No name for this command."
+          "❱ Commande :",
+          command.name ? `\`${command.name}\`` : "*Aucun nom défini.*"
         )
         .addField(
-          "ALIASES:",
+          "❱ Aliases :",
           command.aliases
             ? `\`${command.aliases.join("` `")}\``
-            : "No aliases for this command."
+            : "*Aucuns aliases enregitrés pour cette commande.*"
         )
         .addField(
-          "USAGE:",
+          "❱ Utilisation :",
           command.usage
-            ? `\`${prefix}${command.name} ${command.usage}\``
+            ? `\`${prefix}${command.usage}\``
             : `\`${prefix}${command.name}\``
         )
         .addField(
-          "DESCRIPTION:",
+          "❱ Description :",
           command.description
             ? command.description
-            : "No description for this command."
+            : "*Aucune description définie.*"
         )
-        .setFooter(
-            `Requested by ${interaction.user.tag}`,
-          )
+        .addField(
+          "❱ Commande slash :",
+          slashCommands
+        )
         .setTimestamp()
-        .setColor(roleColor);
+        .setColor(client.color);
       return interaction.followUp({ content: null, embeds: [embed] });
     }
   },
