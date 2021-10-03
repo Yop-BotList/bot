@@ -1,4 +1,6 @@
-const { Client, Message, MessageEmbed, MessageButton, MessageActionRow } = require("discord.js");
+const { Client, Message, MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
+      { loading } = require("../../configs/emojis.json"),
+      { botlogs } = require("../../configs/channels.json");
 
 module.exports = {
     name: "manage",
@@ -16,59 +18,59 @@ module.exports = {
     run: async(client, message, args) => {
                 // buttons
                 let button = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('1️⃣') 
                 .setCustomId('one') 
         
                 let button2 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('2️⃣') 
                 .setCustomId('two')
         
                 let button3 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('3️⃣') 
                 .setCustomId('three') 
         
                 let button4 = new MessageButton()
-                .setStyle('red')
+                .setStyle('DANGER')
                 .setEmoji('❌') 
                 .setCustomId('cancel')
         
                 let button5 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('1️⃣') 
                 .setCustomId('four') 
         
                 let button6 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('2️⃣') 
                 .setCustomId('five')
         
                 let button7 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('1️⃣')
                 .setCustomId('six')
         
                 let button8 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('2️⃣')
                 .setCustomId('seven')
                 
                 let button9 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('1️⃣') 
                 .setCustomId('eight') 
         
                 let button10 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('2️⃣') 
                 .setCustomId('nine')
                 
                 let button11 = new MessageButton()
-                .setStyle('blurple')
+                .setStyle('PRIMARY')
                 .setEmoji('3️⃣')
-                .setCustomeId('ten')
+                .setCustomId('ten')
         
                 // rows
                 let row = new MessageActionRow()
@@ -80,8 +82,8 @@ module.exports = {
                 let row3 = new MessageActionRow()
                 .addComponents(button9, button10, button4);
         
-        let row4 = new MessageActionRow()
-        .addComponents(button7, button8, button11, button4)
+                let row4 = new MessageActionRow()
+                .addComponents(button7, button8, button11, button4)
         
                 // embeds
                 const e = new MessageEmbed()

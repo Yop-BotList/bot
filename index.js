@@ -1,12 +1,13 @@
 const { Client, Collection } = require("discord.js"),
-  { readdirSync } = require("fs"),
-  { version } = require("./package.json"),
-  { yes, no } = require("./configs/emojis.json"),
-  { token, mongooseConnectionString, color } = require("./configs/config.json"),
-  { connect } = require("mongoose"),
-  { join } = require("path"),
-  { red, green } = require("colors"),
-  { botlogs } = require("./configs/channels.json");
+      { readdirSync } = require("fs"),
+      { version } = require("./package.json"),
+      { yes, no } = require("./configs/emojis.json"),
+      { token, mongooseConnectionString, color } = require("./configs/config.json"),
+      { connect } = require("mongoose"),
+      { join } = require("path"),
+      { red, green } = require("colors"),
+      { botlogs } = require("./configs/channels.json");
+
 client = new Client({
   messageCacheLifetime: 60,
   fetchAllMembers: false,
@@ -36,12 +37,20 @@ client.color = color;
 client.version = version;
 client.yes = yes;
 client.no = no;
+
+["command"].forEach((handler) => {
+  require(`./utils/${handler}`)(client);
+});
+
+client.login(token);
+
+
         //Reload Command Function
         /**
          * @param {String} reload_command - Command file name without .js
          * @return {Promise<String>}
          */
-        client.reloadCommand = function(reload_command) {
+         client.reloadCommand = function(reload_command) {
             return new Promise((resolve) => {
                 const folders = readdirSync(join(__dirname, "commands"));
                 for (let i = 0; i < folders.length; i++) {
@@ -129,10 +138,4 @@ client.no = no;
                 resolve(`**${yes} ➜ \`${count}\`/\`${files.length}\` évènements rechargés !**`)
                 client.channels.cache.get(botlogs).send(`**${yes} ➜ \`${count}\`/\`${files.length}\` évènements rechargés !**`)
             })
-        }
-
-["command"].forEach((handler) => {
-  require(`./utils/${handler}`)(client);
-});
-
-client.login(token);
+        };

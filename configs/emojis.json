@@ -7,5 +7,6 @@
     "streaming": "<a:statut_streaming:840512517162663956>",
     "idle": "<a:statut_idle:840510494363746304>",
     "dnd": "<a:statut_dnd:840510494862344205>",
-    "boost": "<a:boost:891621411100180490>"
+    "boost": "<a:boost:891621411100180490>",
+    "loading": "<a:loading:873958611540398080>"
 } 
