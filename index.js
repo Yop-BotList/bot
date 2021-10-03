@@ -80,13 +80,16 @@ client.no = no;
                             client.off(fileName, res[0]);
                             client.on(fileName, file.bind(null, this));
                             delete require.cache[require.resolve(join(__dirname, "events", e))];
-                            resolve(`> Reloaded \`${reload_event}\``)
+                            console.log(`${green('[EVENTS]')} Évenèment ${reload_event} rechargé avec succès !`)
+                            client.channels.cache.get(botlogs).send(`**${yes} ➜ Évènement \`${reload_event}\` rechargé avec succès !**`);
+                            resolve(`**${yes} ➜ Évènement \`${reload_event}\` rechargé avec succès !**`)
                         }
                     } catch (error) {
-                        throw new Error(`${red('[Events]')} Failed to load event ${e}: ${error.stack || error}`)
+                        console.log(`${red('[EVENTS]')} Une erreur est survenue lors du rechargement de l’évènement ${e} : ${error.stack || error}`)
+                        resolve(`**${no} ➜ Impossible de recharger l’évènement \`${reload_event}\` !**`)
                     }
                 });
-                resolve(`> Event named: \`${reload_event}\` not found`)
+                resolve(`**${no} ➜ Évènement \`${reload_event}\` introuvable !**`)
             })
         }
         client.reloadAllCommands = function() {
