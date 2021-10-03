@@ -1,6 +1,7 @@
 const { Client, Message, MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       { loading } = require("../../configs/emojis.json"),
-      { botlogs } = require("../../configs/channels.json");
+      { botlogs } = require("../../configs/channels.json"),
+      { exec } = require("child_process");
 
 module.exports = {
     name: "manage",
@@ -130,7 +131,13 @@ module.exports = {
                 
                 const e8 = new MessageEmbed()
                 .setTitle("Gérer le bot :")
-                .setDescription(":one: Redémarrer le bot.\n:four: Exécuter une commande dans la console.\n:three: Démarrer/Arrêter un maintenance.\n:x: Annuler la commande.")
+                .setDescription(":one: Redémarrer le bot.\n:two: Exécuter une commande dans la console.\n:three: Démarrer/Arrêter un maintenance.\n:x: Annuler la commande.")
+                .setColor(client.color)
+                .setThumbnail(message.guild.iconURL())
+
+                const e9 = new MessageEmbed()
+                .setTitle("Exécuter une commande dans la console :")
+                .setDescription("Veuillez entrer une commande à exécuter.")
                 .setColor(client.color)
                 .setThumbnail(message.guild.iconURL())
         
@@ -138,13 +145,17 @@ module.exports = {
         
         
         
-        const collector = msg.createButtonCollector((button) => button.clicker.user.id === message.author.id)
+                const filter = i => i.user.id === message.author.id;
+                const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
         
                 collector.on("collect", async button => {
-                    if (button.id === "cancel") return msg.edit(`**${client.yes} ➜ Commande annulée avec succès !**`, { components: null })
-                    if (button.id === "one") msg.edit({ embeds: [e2], components: [row2] })
+                    if (button.customId === "cancel") {
+                        msg.edit({ content: `**${client.yes} ➜ Commande annulée avec succès !**`, embeds: [], components: [] })
+                        collector.stop()
+                    }
+                    if (button.customId === "one") msg.edit({ embeds: [e2], components: [row2] })
                     await button.reply.defer();
-                    if (button.id === "four") {
+                    if (button.customId === "four") {
                         msg.edit({ embeds: [e3] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
                         const collector = new MessageCollector(message.channel, filter, {
@@ -163,7 +174,7 @@ module.exports = {
                             });
                         })
                     }
-                    if (button.id === "five") {
+                    if (button.customId === "five") {
                         msg.edit({embeds: [e4] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
                         const collector = new MessageCollector(message.channel, filter, {
@@ -191,8 +202,8 @@ module.exports = {
                             });
                         })
                     }
-                    if (button.id === "two") msg.edit({ embeds: e5, components: row3 })
-                    if (button.id === "eight") {
+                    if (button.customId === "two") msg.edit({ embeds: e5, components: row3 })
+                    if (button.customId === "eight") {
                         msg.edit({ embeds: [e6] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
                         const collector = new MessageCollector(message.channel, filter, {
@@ -211,7 +222,7 @@ module.exports = {
                             });
                         })
                     }
-                    if (button.id === "nine") {
+                    if (button.customId === "nine") {
                         msg.edit({ embeds: [e7] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
                         const collector = new MessageCollector(message.channel, filter, {
@@ -240,14 +251,30 @@ module.exports = {
                             });
                         })
                     }
-                    if (button.id === "three") {
+                    if (button.customId === "three") {
                         msg.edit({ embeds: [e8], components: [row4] })
                     }
-                    if (button.id === "six") {
+                    if (button.customId === "six") {
                         msg.edit({ content: `**${client.yes} ➜ Redémarrage en cours...**`, components: null })
                             client.channels.cache.get(botlogs).send(`**${loading} ➜ Redémarrage en cours...**`).then(() => {
                             client.destroy()
                             return process.exit()
+                        })
+                    }
+                    if (button.customId === "seven") {
+                        msg.edit({ embeds: [e9] }, button4)
+                        const filter = (m) => m.author.id === message.author.id;
+                        const collector = new MessageCollector(message.channel, filter, {
+                            max: 1,
+                            time: 15000
+                        })
+                        collector.on("collect", (m) => {})
+                        collector.on("end", (collected) => {
+                            collected.forEach((value) => {
+                                if (value) {
+
+                                }
+                            });
                         })
                     }
                 });
