@@ -1,4 +1,4 @@
-const { Client, Message, MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
+const { Client, Message, MessageEmbed, MessageButton, MessageActionRow, MessageCollector } = require("discord.js"),
       { loading } = require("../../configs/emojis.json"),
       { botlogs } = require("../../configs/channels.json"),
       { exec } = require("child_process");
@@ -154,7 +154,6 @@ module.exports = {
                         collector.stop()
                     }
                     if (button.customId === "one") msg.edit({ embeds: [e2], components: [row2] })
-                    await button.reply.defer();
                     if (button.customId === "four") {
                         msg.edit({ embeds: [e3] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
@@ -166,10 +165,9 @@ module.exports = {
                         collector.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) client.reloadCommand(value.content).then(async res => {
-                                    await message.channel.send(res);
+                                    await msg.edit({ content: res, embeds: [], components: [] });
                                     value.delete()
-                                    msg.delete()
-                                    return;
+                                    return collector.stop();
                                 });
                             });
                         })
@@ -186,17 +184,19 @@ module.exports = {
                             collected.forEach((value) => {
                                 if (value) {
                                     if(!client.commands.has(value.content)) {
-                                        message.channel.send(`**${client.no} ➜ Commande introuvable !**`)
-                                        return msg.delete();
+                                        msg.edit({ content: `**${client.no} ➜ Commande introuvable !**`, embeds: []})
+                                        return collector.stop()
                                     }
                                     client.commands.delete(value.content).then(() => {
                                         message.channel.send(`**${client.yes} ➜ Commande \`${value.content}\` désactivée jusqu'au prochain redémarrage du bot.**`)
                                         value.delete()
-                                        return msg.delete();
+                                        msg.delete()
+                                        return collector.stop()
                                     }).catch(() => {
                                         message.channel.send(`**${client.no} ➜ Impossible de désactiver la commande \`${value.content}\`.**`)
                                         value.delete()
-                                        return msg.delete();
+                                        msg.delete()
+                                        return collector.stop()
                                     })
                                 }
                             });
@@ -217,7 +217,7 @@ module.exports = {
                                     await message.channel.send(res);
                                     value.delete()
                                     msg.delete()
-                                    return;
+                                    return collector.stop();
                                 });
                             });
                         })
@@ -235,17 +235,20 @@ module.exports = {
                                 if (value) {
                                     if(!client.events.has(value.content)) {
                                         message.channel.send(`**${client.no} ➜ Évènement introuvable !**`)
-                                        return msg.delete();
+                                        msg.delete()
+                                        return collector.stop()
                                     }
                                     const res = client.listeners(fileName)
                             client.off(fileName, res[0]).then(() => {
                                         message.channel.send(`**${client.yes} ➜ Évènement \`${value.content}\` désactivé jusqu'au prochain redémarrage du bot.**`)
                                         value.delete()
-                                        return msg.delete();
+                                        msg.delete()
+                                        return collector.stop()
                                     }).catch(() => {
                                         message.channel.send(`**${client.no} ➜ Impossible de désactiver l'évènement \`${value.content}\`.**`)
                                         value.delete()
-                                        return msg.delete();
+                                        msg.delete()
+                                        return collector.stop()
                                     })
                                 }
                             });
@@ -258,6 +261,7 @@ module.exports = {
                         msg.edit({ content: `**${client.yes} ➜ Redémarrage en cours...**`, components: null })
                             client.channels.cache.get(botlogs).send(`**${loading} ➜ Redémarrage en cours...**`).then(() => {
                             client.destroy()
+                            collector.stop()
                             return process.exit()
                         })
                     }
