@@ -29,10 +29,10 @@ client.on("ready", async () => {
     if (!db) new botconfig({ suggests: 0, warns: 0 }).save();
 
     /* Bot’s Activity */
-    const activities = [`${prefix}help | Version ${client.version}`,'By Nolhan#2508'];
-    client.user.setActivity("Démarrage en cours...");
+    const activities = [`${prefix}help`, `Version ${client.version}`,'By Nolhan#2508'];
+    client.user.setActivity("Démarrage en cours...", { type: "STREAMING", url: "https://twitch.tv/discord" });
     setInterval(async () => {
-        await client.user.setActivity(activities[Math.floor(Math.random() * activities.length)]);
+        await client.user.setActivity(activities[Math.floor(Math.random() * activities.length)], { type: "STREAMING", url: "https://twitch.tv/discord" });
         
         checkConnection(client);
 
