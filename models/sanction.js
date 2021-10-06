@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose"),
 
 wrnshema = new Schema({
-    userID: { type: Number, required: false },
+    userID: { type: String, required: false },
     modID: { type: String, required: false },
     wrnID: { type: Number, required: false },
     reason: { type: String, required: false },
