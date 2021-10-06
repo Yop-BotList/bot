@@ -25,11 +25,12 @@ module.exports = {
         if (!user) return message.reply({ content: `**${client.no} ➜ Utilisateur introuvable !**` });
         if (!user.bot) return message.reply({ content: `**${client.no} ➜ Cet utilisateur n’est pas un bot !**` });
 
-        if (!args[1]) return message.reply({ content: `**${client.no} ➜ Préfixe introuvable !` });
+        if (!args[1]) return message.reply({ content: `**${client.no} ➜ Préfixe introuvable !**` });
 
         if (await bots.findOne({ botID: user.id })) return message.reply({ content: `**${client.no} ➜ ${user.tag} est déjà sur la liste !**` });
 
         new bots({
+            serverID: mainguildid,
             botID: args[0],
             prefix: args[1],
             ownerID: message.author.id,
@@ -43,7 +44,7 @@ module.exports = {
             embeds: [
                 new MessageEmbed()
                 .setTitle("Demande d'ajout...")
-                .setDescription(`<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&scope=bot%20application.commands&permissions=0). Un vérificateur va bientôt s’occuper de lui.`)
+                .setDescription(`<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&scope=bot%20applications.commands&permissions=0). Un vérificateur va bientôt s’occuper de lui.`)
                 .setColor("#66DA61")
                 .setThumbnail(user.displayAvatarURL())
                 .setTimestamp(new Date())
