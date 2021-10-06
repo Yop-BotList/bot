@@ -12,7 +12,7 @@
     "ascii-table": "^0.0.9",
     "child_process": "^1.0.2",
     "colors": "^1.4.0",
-    "discord.js": "^13.1.0",
+    "discord.js": "^13.2.0",
     "fs": "^0.0.1-security",
     "glob": "^7.1.7",
     "moment": "^2.29.1",
