@@ -15,16 +15,15 @@ module.exports = {
     /**
      * @param {Client} client
      * @param {Message} message
+     * @param {String[]} args
      */
-    run: async (client, message) => {
-        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Merci de me donner une ID de bot.**`});
+    run: async (client, message, args) => {
+        const member = message.guild.members.cache.get(args[0]);
+        if (!member) return message.reply({ content: `**${client.no} ➜ Merci de me donner un ID de bot valide et présent sur le serveur.**`})
         let botGet = await bots.findOne({ botID: args[0], verified: false });
-        
-        const member = message.guild.members.cache.get(botGet.botID);
-        
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Aucune demande n’a été envoyée pour ${member.user.tag} !**` });
 
-        if (!args.slice(1).join(" ")) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné de raison de refus` });
+        if (!args.slice(1).join(" ")) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné de raison de refus.**` });
         
         
         client.channels.cache.get(botslogs).send({
@@ -40,7 +39,7 @@ module.exports = {
             ]
         });
 
-        message.channel.send({ content: `${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être refusé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`` });
+        message.channel.send({ content: `**${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être refusé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`**` });
 
         await bots.deleteOne({ botID: args[0] });
 
