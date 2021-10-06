@@ -1,6 +1,7 @@
 const client = require('../index'),
     { MessageEmbed } = require("discord.js"),
-    { ticketslogs } = require("../configs/channels.json");
+    { ticketslogs } = require("../configs/channels.json"),
+    { ticketsaccess } = require("../configs/roles.json");
 
 
 client.on("interactionCreate", async (interaction) => {
@@ -28,9 +29,10 @@ client.on("interactionCreate", async (interaction) => {
     if (interaction.isButton()) {
         if (interaction.customId === "deleteMpTicket") {
             if (!interaction.channel.name.startsWith("🎫・ticket-")) return;
+            if (!interaction.member.roles.has(ticketsaccess)) return interaction.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation de fermer ce ticket.**`)
 
             const user = await client.users.fetch(interaction.channel.topic),
-                channelLogs = client.channels.cache.get(ticketslogs);
+                  channelLogs = client.channels.cache.get(ticketslogs);
             
             channelLogs.send({
                 content: null,
@@ -41,7 +43,7 @@ client.on("interactionCreate", async (interaction) => {
                     .setColor(client.color)
                     .addFields(
                         { name: `:id: ID :`, value: `\`\`\`${user.id}\`\`\``, inline: false },
-                        { name: `:man_police_officer: Modérateur :`, value: `\`\`\`${user.username}#${user.discriminator}\`\`\``, inline: false }
+                        { name: `:man_police_officer: Modérateur :`, value: `\`\`\`${interaction.user.username}#${interaction.user.discriminator}\`\`\``, inline: false }
                     )
                 ]
             });
