@@ -152,6 +152,10 @@ client.on("messageCreate", async (message) => {
     const user = await client.users.fetch(message.channel.topic);
     if (message.content.startsWith("!")) return
     if (message.author.bot) return
+    if (!message.member.roles.cache.has(ticketsaccess)) {
+      message.react("❌")
+      return message.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation d'envoyer un message dans ce ticket.**`)
+    }
 
     const supportMp = new MessageEmbed()
     .setTitle(message.author.tag)
