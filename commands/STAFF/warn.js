@@ -22,7 +22,7 @@ module.exports = {
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.bot) return message.reply(`**${client.no} ➜ Ce membre n’est pas humain.**`)
         if (!args[1]) return message.reply(`**${client.no} ➜ Veuillez entrer une raison.**`)
-       const db = botconfig.findOne()
+        const db = await botconfig.findOne()
         
         new warns({
             userID: member.id,
