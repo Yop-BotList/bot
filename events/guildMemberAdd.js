@@ -5,8 +5,8 @@ const { welcomechannel } = require("../configs/channels.json"),
       client = require("../index"),
       { MessageEmbed } = require("discord.js");
 
-client.on("guildMemberAdd", async(client, member, guild) => {
-    if (guild.id !== mainguildid) return;
+client.on("guildMemberAdd", async(client, member) => {
+    if (member.guild.id !== mainguildid) return;
     if (!member.user.bot) {
         client.channels.cache.get(welcomechannel).send(`**<a:entre:838336027616739338> ➜ Un \`${member.user.username}\` sauvage tape l'incruste dans le serveur !**`)
         const e = new MessageEmbed()
@@ -14,7 +14,7 @@ client.on("guildMemberAdd", async(client, member, guild) => {
         .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
         .setColor(client.color)
         .setTimestamp(new Date())
-        .setDescription(`🇫🇷 ➜ Bienvenue à toi **${member.user.username}** sur **${guild.name}** !\n • Pense à __lire__ <#782659401672425482> et à faire fonctionner notre <#782659487706120192>.\n • Si tu est **développeur de bots**, jette un coup d’œil au <#782659940678369350>.\n\n • Passe un bon moment avec nous !\n\n🇺🇸 ➜ Welcome to you **${member.user.username}** on **${guild.name}** !\n • Think __to read__ the <#782659401672425482> and use the <#782659487706120192>.\n • If you’re a **bot developer**, read the <#782659940678369350>.\n\n • Have a good moment with us !`)
+        .setDescription(`🇫🇷 ➜ Bienvenue à toi **${member.user.username}** sur **${member.guild.name}** !\n • Pense à __lire__ <#782659401672425482> et à faire fonctionner notre <#782659487706120192>.\n • Si tu est **développeur de bots**, jette un coup d’œil au <#782659940678369350>.\n\n • Passe un bon moment avec nous !\n\n🇺🇸 ➜ Welcome to you **${member.user.username}** on **${member.guild.name}** !\n • Think __to read__ the <#782659401672425482> and use the <#782659487706120192>.\n • If you’re a **bot developer**, read the <#782659940678369350>.\n\n • Have a good moment with us !`)
         client.users.cache.get(member.user.id).send({ embeds: [e] });
     }
     if (member.user.bot) {
