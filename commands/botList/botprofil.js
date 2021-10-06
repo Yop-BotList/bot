@@ -17,27 +17,30 @@ module.exports = {
      */
 
     run: async (client, message, args) => {
-        const ownerdb = await bots.findOne({ serverID: mainguildid, owerID: message.author.id })
-        const member = message.mentions.members.first() || message.guild.members.cache.get(ownerdb.ownerID);
-        let db = await bots.findOne({ serverID: mainguildid, botID: member.user.id })
+        const member = message.mentions.members.first();
+        if (!member) return message.channel.send(`**${client.no} ➜ Veuillez entrer la mention d'un robot présent sur ce serveur.**`)
+        let db = await bots.findOne({ botID: member.user.id })
         if (!db) return message.channel.send("**" + client.no + " ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste (ce n'est d'ailleurs peut-être même pas un bot)**")
 
             const votes = db.likesCount || 0,
                     lastlike = db.likeDate || "*Aucun vote...*",
+                    site = db.site || "*Aucun site web...*",
+                    support = db.serverInvite || "*Aucun support...*",
+                    description = db.desc || "*Aucune description...*",
                     e = new MessageEmbed()
                     .setTitle(`Informations sur le robot ${member.user.username}`)
                     .setColor(client.color)
                     .setThumbnail(member.user.displayAvatarURL())
                     .setTimestamp(new Date())
                     .setFooter(`${member.user.username} a rejoint la liste le ${moment(member.joinedAt).format('Do MMMM YYYY')}`)
-                    .addFields(                        {
+                    .addFields({
                         name: '__:robot: Nom :__',
                         value: `> <@${member.user.id}>`,
                         inline: true
                     },
                     {
                         name: '__:key: Propriétaire :__',
-                        value: `> <@${db.owerID}>`,
+                        value: `> <@${db.ownerID}>`,
                         inline: true
                     },
                     {
@@ -47,17 +50,17 @@ module.exports = {
                     },
                     {
                         name: '__:pencil: Description :__',
-                        value: `> ${db.desc}`,
+                        value: `> ${description}`,
                         inline: false
                     },
                     {
                         name: '__:question: Serveur support : __',
-                        value: `> ${db.serverInvite}`,
+                        value: `> ${support}`,
                         inline: true
                     },
                     {
                         name: '__:globe_with_meridians: Site web :__',
-                        value: `> ${db.site}`,
+                        value: `> ${site}`,
                         inline: true
                     },
                     {
