@@ -50,6 +50,7 @@ module.exports = {
         .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
         .setColor(client.color)
         .setTimestamp(new Date())
+        .setFooter("En cas d'erreur, tu peux me répondre pour contacter le STAFF.")
         .addField(`:dividers: ➜ Type :`, `\`\`\`md\n# WARN\`\`\``)
         .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# ${args.slice(1).join(" ")}\`\`\``)
         member.user.send({ embeds: [e2] }).catch(() => {
