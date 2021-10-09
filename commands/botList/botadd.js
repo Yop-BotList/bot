@@ -1,6 +1,6 @@
 const { Client, Message, MessageEmbed } = require('discord.js'),
     bots = require("../../models/bots"),
-    { prefix } = require("../../configs/config.json"),
+    { prefix, mainguildid } = require("../../configs/config.json"),
     { botslogs } = require("../../configs/channels.json"),
     { verificator } = require("../../configs/roles.json");
 

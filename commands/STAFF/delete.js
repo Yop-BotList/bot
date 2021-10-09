@@ -15,14 +15,15 @@ module.exports = {
     /**
      * @param {Client} client
      * @param {Message} message
+     * @param {String[]} args
      */
-    run: async (client, message) => {
+    run: async (client, message, args) => {
         if (!args[0]) return message.reply({ content: `**${client.no} ➜ Merci de me donner une ID de bot.**`});
         let botGet = await bots.findOne({ botID: args[0], verified: true });
-        
+        if (!botGet) return message.reply({ content: `**${client.no} ➜ Le bot ${member.user.tag} ne peut pas être supprimé car il n'est pas vérifié !**` });
         const member = message.guild.members.cache.get(botGet.botID);
         
-        if (!botGet) return message.reply({ content: `**${client.no} ➜ Le bot ${member.user.tag} ne peut pas être supprimé car il n'est pas vérifié !**` });
+
 
         if (!args.slice(1).join(" ")) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné de raison de suppresion.` });
         

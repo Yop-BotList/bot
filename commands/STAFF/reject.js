@@ -1,8 +1,10 @@
 const { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
     { autokick } = require("../../configs/config.json"),
-    { botslogs } = require("../../configs/channels.json"),
-    { Client, Message, MessageEmbed } = require("discord.js"),
-    bots = require("../../models/bots");
+    { botslogs, modlogs } = require("../../configs/channels.json"),
+    { Client, Message, MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
+    bots = require("../../models/bots"),
+    botconfig = require("../../models/botconfig"),
+    warns = require("../../models/sanction")
 
 module.exports = {
     name: 'reject',
@@ -38,8 +40,60 @@ module.exports = {
                 .setDescription(`<@${message.author.id}> vient juste de refuser le bot ${member.user.username} pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\``)
             ]
         });
+        const button = new MessageButton()
+        .setCustomId("button")
+        .setEmoji("⚠️")
+        .setLabel(" ➜ Avertir l'utilisateur")
+        .setStyle("PRIMARY")
+        const row = new MessageActionRow()
+        .addComponents(button)
 
-        message.channel.send({ content: `**${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être refusé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`**` });
+        message.channel.send({ content: `**${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être refusé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`**`, components: [row] });
+
+        
+        const filter = i => i.user.id === message.author.id;
+        const collector = await message.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
+
+        collector.on("collect", async button => {
+            if (button.customId === "button") {
+                const db = await botconfig.findOne()
+        
+                new warns({
+                    userID: member.user.id,
+                    modID: message.author.id,
+                    wrnID: Number(db.warns) + 1,
+                    reason: args.slice(1).join(" "),
+                    type: "WARN",
+                    date: Date.now()
+                }).save()
+                await botconfig.findOneAndUpdate({ $set: { warns: db.warns + 1 } }, { upsert: true })
+                
+                const e = new MessageEmbed()
+                .setTitle("Nouvelle sanction :")
+                .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+                .setColor(client.color)
+                .setTimestamp(new Date())
+                .addField(`:busts_in_silhouette: ➜ Utilisateur :`, `\`\`\`md\n# ${member.user.tag} ➜ ${member.user.id}\`\`\``)
+                .addField(`:dividers: ➜ Type :`, `\`\`\`md\n# WARN\`\`\``)
+                .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# ${args.slice(1).join(" ")}\`\`\``)
+                .addField(`:man_police_officer: ➜ Modérateur :`, `\`\`\`md\n# ${message.author.tag} ➜ ${message.author.id}\`\`\``)
+                .addField(`:1234: Code`, `\`\`\`md\n# ${db.warns + 1}\`\`\``)
+                const e2 = new MessageEmbed()
+                .setTitle("Nouvelle sanction :")
+                .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+                .setColor(client.color)
+                .setTimestamp(new Date())
+                .setFooter("En cas d'erreur, tu peux me répondre pour contacter le STAFF.")
+                .addField(`:dividers: ➜ Type :`, `\`\`\`md\n# WARN\`\`\``)
+                .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# ${args.slice(1).join(" ")}\`\`\``)
+                member.user.send({ embeds: [e2] }).catch(() => {
+                    e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de sa santion !")
+                })
+                client.channels.cache.get(modlogs).send({ embeds: [e] })
+                message.reply(`**${client.yes} ➜ Utilisateur avertis avec succès.**`)
+                return collector.stop()
+            }
+        });
 
         await bots.deleteOne({ botID: args[0] });
 

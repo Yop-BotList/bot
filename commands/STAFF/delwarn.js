@@ -4,12 +4,12 @@ const { Client, Message, MessageEmbed } = require('discord.js'),
       { modrole } = require("../../configs/roles.json");
 
 module.exports = {
-    name: 'unwarn',
+    name: 'delwarn',
     categories : 'staff', 
     permissions : modrole, 
     description: 'Supprimer un avertissement.',
     cooldown : 5,
-    usage: 'unwarn <warn id>',
+    usage: 'delwarn <warn id>',
     /** 
      * @param {Client} client 
      * @param {Message} message
@@ -29,7 +29,6 @@ module.exports = {
         .addField(`:dividers: ➜ Type :`, `\`\`\`md\n# WARN\`\`\``)
         .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# ${db.reason}\`\`\``)
         .addField(`:man_police_officer: ➜ Modérateur :`, `\`\`\`md\n# ${message.author.tag} ➜ ${message.author.id}\`\`\``)
-        .addField(`:1234: Code`, `\`\`\`md\n# ${db.warns + 1}\`\`\``)
         const e2 = new MessageEmbed()
         .setTitle("Suppression de sanction :")
         .setThumbnail(member.displayAvatarURL({ dynamic: true }))

@@ -4,7 +4,7 @@ const { Client, Message, MessageEmbed } = require('discord.js'),
       botconfig = require("../../models/botconfig"),
       { modrole, bypass, mute } = require("../../configs/roles.json"),
       bots = require("../../models/bots");
-const { findOne } = require('../../models/sanction');
+const { findOne } = require('../../models/bots');
 
 module.exports = {
     name: 'mute',
@@ -27,7 +27,7 @@ module.exports = {
         if (!args[1]) return message.reply(`**${client.no} ➜ Veuillez entrer une raison.**`)
         const db = await botconfig.findOne();
         if (member.user.bot) {
-            const db2 = await findOne({ botID: member.user.id })
+            const db2 = await bots.findOne({ botID: member.user.id })
             if (!db2) return message.reply(`**${client.no} ➜ Ce bot n'est pas sur ma liste.**`)
             try {
                 member.roles.add(mute)
@@ -92,7 +92,7 @@ module.exports = {
                 e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de sa santion !")
             })
             client.channels.cache.get(modlogs).send({ embeds: [e] })
-            message.reply(`**${client.yes} ➜ ${member.user.tag} a été averti avec succès !**`)
+            message.reply(`**${client.yes} ➜ ${member.user.tag} a été rendu muet avec succès !**`)
             return await botconfig.findOneAndUpdate({ $set: { warns: db.warns + 1 } }, { upsert: true })
         }
     }
