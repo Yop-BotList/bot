@@ -35,7 +35,7 @@ module.exports = {
                 .setTimestamp(new Date())
                 .setThumbnail(member.user.displayAvatarURL())
                 .setColor("#FF0000")
-                .setFooter(`Vous pensez que c'est une erreur ? Ouvrez un ticket !`)
+                .setFooter(`Vous pensez que c'est une erreur ? Envoyez-moi un Message Privé !`)
                 .setDescription(`<@${message.author.id}> vient juste de supprimer le bot ${member.user.username} pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\``)
             ]
         });
