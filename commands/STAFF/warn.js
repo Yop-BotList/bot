@@ -33,7 +33,7 @@ module.exports = {
             type: "WARN",
             date: Date.now()
         }).save()
-        await botconfig.findOneAndUpdate({ $set: { warns: db.warns + 1 } }, { upsert: true })
+        await botconfig.findOneAndUpdate({}, { $set: { warns: db.warns + 1 } }, { upsert: true })
         
         const e = new MessageEmbed()
         .setTitle("Nouvelle sanction :")
