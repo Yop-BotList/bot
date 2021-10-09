@@ -19,10 +19,10 @@ module.exports = {
         if (!parseInt(args[0])) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         const db = await warns.findOne({ wrnID: Number(args[0]) });
         if (!db) return message.reply(`**${client.no} ➜ Sanction introuvable !**`)
-        const member = client.users.fetch(db.userID);       
+        const member = await client.users.fetch(db.userID);       
         const e = new MessageEmbed()
         .setTitle("Suppression de sanction :")
-        .setThumbnail((await member).displayAvatarURL({ dynamic: true }))
+        .setThumbnail(member.displayAvatarURL({ dynamic: true }))
         .setColor(client.color)
         .setTimestamp(new Date())
         .addField(`:busts_in_silhouette: ➜ Utilisateur :`, `\`\`\`md\n# ${member.tag} ➜ ${member.id}\`\`\``)
