@@ -8,7 +8,7 @@ module.exports = {
     permissions: verificator,
     description: "Générer une invitation.",
     aliases: ["ig"],
-    usage: "invitegen <membre>",
+    usage: "invitegen <utilisateur>",
     
     /**
     * @param {Message} message
@@ -16,13 +16,15 @@ module.exports = {
     * @param {String[]} args
     */
     run: async (client, message, args) => { 
-        const member = await client.users.fetch(args[0]);
-        if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
-       if (!member.bot) return message.reply(`**${client.no} ➜ Cet utilisateur n’est pas un robot.**`)
+       let member = await client.users.fetch(args[0]);
+       if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
+       if (member.bot === false) return message.reply(`**${client.no} ➜ Cet utilisateur n’est pas un robot.**`)
        const e = new MessageEmbed()
        .setTitle("Générateur de liens d’invitation :")
        .setThumbnail(member.displayAvatarURL({ dynamic: true }))
        .setTimestamp(new Date())
+       .setColor(client.color)
        .setDescription(`Pour obtenir le lien d’invitation de ${member.tag}, [cliquez ici](https://discord.com/oauth2/authorize?client_id=${member.id}&permissions=0&scope=bot%20applications.commands)`)
+       message.reply({ embeds: [e] })
     }
 }
