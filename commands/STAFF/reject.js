@@ -62,31 +62,32 @@ module.exports = {
                     userID: member.user.id,
                     modID: message.author.id,
                     wrnID: Number(db.warns) + 1,
-                    reason: args.slice(1).join(" "),
+                    reason: "Non respect des conditions d'ajout de bots.",
                     type: "WARN",
                     date: Date.now()
                 }).save()
-                await botconfig.findOneAndUpdate({ $set: { warns: db.warns + 1 } }, { upsert: true })
+                await botconfig.findOneAndUpdate({}, { $set: { warns: db.warns + 1 } }, { upsert: true })
                 
+                const proprio = await client.users.fetch(botGet.ownerID)
                 const e = new MessageEmbed()
                 .setTitle("Nouvelle sanction :")
-                .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+                .setThumbnail(proprio.displayAvatarURL({ dynamic: true }))
                 .setColor(client.color)
                 .setTimestamp(new Date())
-                .addField(`:busts_in_silhouette: ➜ Utilisateur :`, `\`\`\`md\n# ${member.user.tag} ➜ ${member.user.id}\`\`\``)
+                .addField(`:busts_in_silhouette: ➜ Utilisateur :`, `\`\`\`md\n# ${proprio.tag} ➜ ${proprio.id}\`\`\``)
                 .addField(`:dividers: ➜ Type :`, `\`\`\`md\n# WARN\`\`\``)
-                .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# ${args.slice(1).join(" ")}\`\`\``)
+                .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# Non respect des conditions d'ajout de bots.\`\`\``)
                 .addField(`:man_police_officer: ➜ Modérateur :`, `\`\`\`md\n# ${message.author.tag} ➜ ${message.author.id}\`\`\``)
                 .addField(`:1234: Code`, `\`\`\`md\n# ${db.warns + 1}\`\`\``)
                 const e2 = new MessageEmbed()
                 .setTitle("Nouvelle sanction :")
-                .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+                .setThumbnail(proprio.displayAvatarURL({ dynamic: true }))
                 .setColor(client.color)
                 .setTimestamp(new Date())
                 .setFooter("En cas d'erreur, tu peux me répondre pour contacter le STAFF.")
                 .addField(`:dividers: ➜ Type :`, `\`\`\`md\n# WARN\`\`\``)
-                .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# ${args.slice(1).join(" ")}\`\`\``)
-                member.user.send({ embeds: [e2] }).catch(() => {
+                .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# Non respect des conditions d'ajout de bots.\`\`\``)
+                proprio.send({ embeds: [e2] }).catch(() => {
                     e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de sa santion !")
                 })
                 client.channels.cache.get(modlogs).send({ embeds: [e] })
