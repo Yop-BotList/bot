@@ -21,7 +21,7 @@ module.exports = {
         if (!args[0]) return message.reply({ content: `**${client.no} ➜ Merci de me donner une ID de bot.**`});
         let botGet = await bots.findOne({ botID: args[0], verified: true });
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Le bot ${member.user.tag} ne peut pas être supprimé car il n'est pas vérifié !**` });
-        const member = message.guild.members.cache.get(botGet.botID);
+        const member = message.guild.members.fetch(botGet.botID);
         
 
 
