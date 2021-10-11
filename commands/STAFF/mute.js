@@ -20,7 +20,7 @@ module.exports = {
      * @param {String[]} args
      */
     run: async(client, message, args) => {
-        const member = message.guild.members.cache.get(args[0]);
+        const member = message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.roles.cache.has(bypass)) return message.reply(`**${client.no} ➜ Ce membre est imunisé contre les sanctions.**`)
         if (member.roles.cache.has(mute)) return message.reply(`**${client.no} ➜ Ce membre est déjà muet.**`)
