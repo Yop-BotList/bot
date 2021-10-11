@@ -20,7 +20,7 @@ module.exports = {
      * @param {String[]} args
      */
     run: async (client, message, args) => {
-        const member = message.guild.members.cache.get(args[0]);
+        const member = message.guild.members.fetch(args[0]);
         if (!member) return message.reply({ content: `**${client.no} ➜ Merci de me donner un ID de bot valide et présent sur le serveur.**`})
         let botGet = await bots.findOne({ botID: args[0], verified: false });
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Aucune demande n’a été envoyée pour ${member.user.tag} !**` });
