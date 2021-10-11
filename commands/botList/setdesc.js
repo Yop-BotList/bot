@@ -19,7 +19,7 @@ module.exports = {
      */
     run: async(client, message, args) => {
         if (!args[0]) return message.channel.send(`\`\`\`${prefix}setdesc <id bot> <description | none>\`\`\``)
-        const member = message.guild.members.cache.get(`${args[0]}`);
+        const member = message.guild.members.fetch(`${args[0]}`);
         if (!member) return message.channel.send(`**${client.no} ➜ Veuillez entrer l'indentifiant valide d'un bot présent sur ce serveur.**`)
         const db = await bots.findOne({ botID: member.user.id });
         if (!db) return message.channel.send("**" + client.no + ' ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste. (Ce n\'est d\'ailleurs peut-être même un bot)**')
