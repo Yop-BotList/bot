@@ -1,5 +1,5 @@
 const { Client, Message, MessageEmbed } = require('discord.js'),
-    users = require("../../models/avis"),
+    user = require("../../models/avis"),
     { avischannel } = require("../../configs/channels.json"),
     { isclient } = require("../../configs/roles.json"),
     { prefix } = require("../../configs/config.json");
@@ -18,7 +18,7 @@ module.exports = {
      * @param {String[]} args
      */
     run: async(client, message, args) => {
-        const userGet = await users.findOne({ userId: message.author.id, avis: true }),
+        const userGet = await user.findOne({ userID: message.author.id, avis: true }),
               text = args.join(" ");
     
         if (userGet) return message.reply({ content: `**${client.no} ➜ Tu ne peux pas donner d'avis car tu en a déjà donné un.**` });
@@ -39,12 +39,12 @@ module.exports = {
         msg.react('💜');
         message.reply({ content: `**${client.yes} ➜ Votre avis a bien été envoyé !**` });
         
-        await users.findOneAndUpdate({
-            userId: message.author.id
+        await user.findOneAndUpdate({
+            userID: message.author.id
         }, {
             avis: text
         }, {
-            new: true
+            upsert: true
         })
     }
 }

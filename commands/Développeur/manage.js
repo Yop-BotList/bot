@@ -1,7 +1,9 @@
-const { Client, Message, MessageEmbed, MessageButton, MessageActionRow, MessageCollector } = require("discord.js"),
+const { Client, Message, MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       { loading } = require("../../configs/emojis.json"),
       { botlogs } = require("../../configs/channels.json"),
-      { exec } = require("child_process");
+      { exec } = require("child_process"),
+      { owner } = require("../../configs/config.json"),
+      user = require("../../models/user");
 
 module.exports = {
     name: "manage",
@@ -72,10 +74,26 @@ module.exports = {
                 .setStyle('PRIMARY')
                 .setEmoji('3️⃣')
                 .setCustomId('ten')
+
+                let button12 = new MessageButton()
+                .setStyle('PRIMARY')
+                .setEmoji('')
+                .setCustomId('eleven')
+
+                let button13 = new MessageButton()
+                .setStyle('PRIMARY')
+                .setEmoji('1️⃣')
+                .setCustomId('twelve')
+
+                let button14 = new MessageButton()
+                .setStyle('PRIMARY')
+                .setEmoji('2️⃣')
+                .setCustomId('thirteen')
+
         
                 // rows
                 let row = new MessageActionRow()
-                .addComponents(button, button2, button3, button4)
+                .addComponents(button, button2, button3, button12,button4)
         
                 let row2 = new MessageActionRow()
                 .addComponents(button5, button6, button4);
@@ -85,11 +103,14 @@ module.exports = {
         
                 let row4 = new MessageActionRow()
                 .addComponents(button7, button8, button11, button4)
+
+                let row5 = new MessageActionRow()
+                .addComponents(button13, button14, button4)
         
                 // embeds
                 const e = new MessageEmbed()
                 .setTitle("Gérer le bot :")
-                .setDescription(":one: Gérer les commandes.\n:two: Gérer les évènements.\n:three: Gérer le bot.\n:x: Annuler la commande.")
+                .setDescription(":one: Gérer les commandes.\n:two: Gérer les évènements.\n:three: Gérer le bot.\n:four: Gérer la liste noire.\n:x: Annuler la commande.")
                 .setColor(client.color)
                 .setThumbnail(message.guild.iconURL())
         
@@ -140,10 +161,20 @@ module.exports = {
                 .setDescription("Veuillez entrer une commande à exécuter.")
                 .setColor(client.color)
                 .setThumbnail(message.guild.iconURL())
+
+                const e10 = new MessageEmbed()
+                .setTitle("Gérer la liste noire :")
+                .setDescription("Veuillez entrer l'identifiant de l'utilisateur à gérer.")
+                .setColor(client.color)
+                .setThumbnail(message.guild.iconURL())
+
+                const e11 = new MessageEmbed()
+                .setTitle("Gérer la liste noire :")
+                .setColor(client.color)
+                .setThumbnail(message.guild.iconURL())
+                .setDescription(":one: Ajouter/Retirer l'utilisateur à la liste noire des tickets.\n:two: Ajouter/Retirer l'utilisateur à la liste noire des commandes.\n:x: Annuler la commande.")
         
                 const msg = await message.channel.send({ embeds: [e], components: [row] });
-        
-        
         
                 const filter = i => i.user.id === message.author.id;
                 const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
@@ -157,10 +188,7 @@ module.exports = {
                     if (button.customId === "four") {
                         msg.edit({ embeds: [e3] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = new MessageCollector(message.channel, filter, {
-                            max: 1,
-                            time: 15000
-                        })
+                        const collector = await msg.channel.createMessageCollector({ filter })
                         collector.on("collect", (m) => {})
                         collector.on("end", (collected) => {
                             collected.forEach((value) => {
@@ -175,25 +203,22 @@ module.exports = {
                     if (button.customId === "five") {
                         msg.edit({embeds: [e4] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = new MessageCollector(message.channel, filter, {
-                            max: 1,
-                            time: 15000
-                        })
+                        const collector = await msg.channel.createMessageCollector({ filter })
                         collector.on("collect", (m) => {})
                         collector.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) {
                                     if(!client.commands.has(value.content)) {
-                                        msg.edit({ content: `**${client.no} ➜ Commande introuvable !**`, embeds: []})
+                                        msg.edit({ content: `**${client.no} ➜ Commande introuvable !**`, embeds: [], components: [] })
                                         return collector.stop()
                                     }
                                     client.commands.delete(value.content).then(() => {
-                                        message.channel.send(`**${client.yes} ➜ Commande \`${value.content}\` désactivée jusqu'au prochain redémarrage du bot.**`)
+                                        msg.edit({ content: `**${client.yes} ➜ Commande \`${value.content}\` désactivée jusqu'au prochain redémarrage du bot.**`, embeds: [], components: [] })
                                         value.delete()
                                         msg.delete()
                                         return collector.stop()
                                     }).catch(() => {
-                                        message.channel.send(`**${client.no} ➜ Impossible de désactiver la commande \`${value.content}\`.**`)
+                                        msg.edit({ content: `**${client.no} ➜ Impossible de désactiver la commande \`${value.content}\`.**`, embeds: [], components: [] })
                                         value.delete()
                                         msg.delete()
                                         return collector.stop()
@@ -202,19 +227,16 @@ module.exports = {
                             });
                         })
                     }
-                    if (button.customId === "two") msg.edit({ embeds: e5, components: row3 })
+                    if (button.customId === "two") msg.edit({ embeds: [e5], components: [row3] })
                     if (button.customId === "eight") {
                         msg.edit({ embeds: [e6] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = new MessageCollector(message.channel, filter, {
-                            max: 1,
-                            time: 15000
-                        })
+                        const collector = await msg.channel.createMessageCollector({ filter })
                         collector.on("collect", (m) => {})
                         collector.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) client.reloadEvent(value.content).then(async res => {
-                                    await message.channel.send(res);
+                                    await msg.edit({ content: res, embeds: [], components: [] });
                                     value.delete()
                                     msg.delete()
                                     return collector.stop();
@@ -225,27 +247,24 @@ module.exports = {
                     if (button.customId === "nine") {
                         msg.edit({ embeds: [e7] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = new MessageCollector(message.channel, filter, {
-                            max: 1,
-                            time: 15000
-                        })
+                        const collector = await msg.channel.createMessageCollector({ filter })
                         collector.on("collect", (m) => {})
                         collector.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) {
                                     if(!client.events.has(value.content)) {
-                                        message.channel.send(`**${client.no} ➜ Évènement introuvable !**`)
+                                        msg.edit({ content: `**${client.no} ➜ Évènement introuvable !**`, embeds: [], components: [] })
                                         msg.delete()
                                         return collector.stop()
                                     }
                                     const res = client.listeners(fileName)
                             client.off(fileName, res[0]).then(() => {
-                                        message.channel.send(`**${client.yes} ➜ Évènement \`${value.content}\` désactivé jusqu'au prochain redémarrage du bot.**`)
+                                        msg.edit({ content: `**${client.yes} ➜ Évènement \`${value.content}\` désactivé jusqu'au prochain redémarrage du bot.**`, embeds: [], components: [] })
                                         value.delete()
                                         msg.delete()
                                         return collector.stop()
                                     }).catch(() => {
-                                        message.channel.send(`**${client.no} ➜ Impossible de désactiver l'évènement \`${value.content}\`.**`)
+                                        msg.edit({ content: `**${client.no} ➜ Impossible de désactiver l'évènement \`${value.content}\`.**`, embeds: [], components: [] })
                                         value.delete()
                                         msg.delete()
                                         return collector.stop()
@@ -268,10 +287,7 @@ module.exports = {
                     if (button.customId === "seven") {
                         msg.edit({ embeds: [e9] }, button4)
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = new MessageCollector(message.channel, filter, {
-                            max: 1,
-                            time: 15000
-                        })
+                        const collector = await msg.channel.createMessageCollector({ filter })
                         collector.on("collect", (m) => {})
                         collector.on("end", (collected) => {
                             collected.forEach((value) => {
@@ -280,6 +296,10 @@ module.exports = {
                                 }
                             });
                         })
+                    }
+                    if (button.customId === "eleven") msg.edit({ embeds: [e11], components: [row5]})
+                    if (button.customId === "twelve") {
+                        
                     }
                 });
     }
