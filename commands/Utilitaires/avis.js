@@ -1,5 +1,5 @@
 const { Client, Message, MessageEmbed } = require('discord.js'),
-    user = require("../../models/avis"),
+    user = require("../../models/user"),
     { avischannel } = require("../../configs/channels.json"),
     { isclient } = require("../../configs/roles.json"),
     { prefix } = require("../../configs/config.json");
