@@ -77,7 +77,7 @@ module.exports = {
 
                 let button12 = new MessageButton()
                 .setStyle('PRIMARY')
-                .setEmoji('')
+                .setEmoji('4️⃣')
                 .setCustomId('eleven')
 
                 let button13 = new MessageButton()
@@ -106,6 +106,9 @@ module.exports = {
 
                 let row5 = new MessageActionRow()
                 .addComponents(button13, button14, button4)
+
+                let row6 = new MessageActionRow()
+                .addComponents(button4)
         
                 // embeds
                 const e = new MessageEmbed()
@@ -173,55 +176,62 @@ module.exports = {
                 .setColor(client.color)
                 .setThumbnail(message.guild.iconURL())
                 .setDescription(":one: Ajouter/Retirer l'utilisateur à la liste noire des tickets.\n:two: Ajouter/Retirer l'utilisateur à la liste noire des commandes.\n:x: Annuler la commande.")
-        
+
+                const e12 = new MessageEmbed()
+                .setTitle("Gérer la liste noire :")
+                .setDescription("Veuillez entrer l'identifiant de l'utilisateur à modifier.")
+                .setColor(client.color)
+                .setThumbnail(message.guild.iconURL())
+                
                 const msg = await message.channel.send({ embeds: [e], components: [row] });
         
                 const filter = i => i.user.id === message.author.id;
                 const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
         
                 collector.on("collect", async button => {
+
                     if (button.customId === "cancel") {
                         msg.edit({ content: `**${client.yes} ➜ Commande annulée avec succès !**`, embeds: [], components: [] })
                         collector.stop()
                     }
                     if (button.customId === "one") msg.edit({ embeds: [e2], components: [row2] })
                     if (button.customId === "four") {
-                        msg.edit({ embeds: [e3] }, button4)
+                        msg.edit({ embeds: [e3], components: [row6] })
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = await msg.channel.createMessageCollector({ filter })
-                        collector.on("collect", (m) => {})
-                        collector.on("end", (collected) => {
+                        const collector1 = await msg.channel.createMessageCollector({ filter })
+                        collector1.on("collect", (m) => {})
+                        collector1.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) client.reloadCommand(value.content).then(async res => {
                                     await msg.edit({ content: res, embeds: [], components: [] });
                                     value.delete()
-                                    return collector.stop();
+                                    return collector1.stop();
                                 });
                             });
                         })
                     }
                     if (button.customId === "five") {
-                        msg.edit({embeds: [e4] }, button4)
+                        msg.edit({embeds: [e4], components: [row6] })
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = await msg.channel.createMessageCollector({ filter })
-                        collector.on("collect", (m) => {})
-                        collector.on("end", (collected) => {
+                        const collector1 = await msg.channel.createMessageCollector({ filter })
+                        collector1.on("collect", (m) => {})
+                        collector1.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) {
                                     if(!client.commands.has(value.content)) {
                                         msg.edit({ content: `**${client.no} ➜ Commande introuvable !**`, embeds: [], components: [] })
-                                        return collector.stop()
+                                        return collector1.stop()
                                     }
                                     client.commands.delete(value.content).then(() => {
                                         msg.edit({ content: `**${client.yes} ➜ Commande \`${value.content}\` désactivée jusqu'au prochain redémarrage du bot.**`, embeds: [], components: [] })
                                         value.delete()
                                         msg.delete()
-                                        return collector.stop()
+                                        return collector1.stop()
                                     }).catch(() => {
                                         msg.edit({ content: `**${client.no} ➜ Impossible de désactiver la commande \`${value.content}\`.**`, embeds: [], components: [] })
                                         value.delete()
                                         msg.delete()
-                                        return collector.stop()
+                                        return collector1.stop()
                                     })
                                 }
                             });
@@ -229,45 +239,45 @@ module.exports = {
                     }
                     if (button.customId === "two") msg.edit({ embeds: [e5], components: [row3] })
                     if (button.customId === "eight") {
-                        msg.edit({ embeds: [e6] }, button4)
+                        msg.edit({ embeds: [e6], components: [row6] })
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = await msg.channel.createMessageCollector({ filter })
-                        collector.on("collect", (m) => {})
-                        collector.on("end", (collected) => {
+                        const collector1 = await msg.channel.createMessageCollector({ filter })
+                        collector1.on("collect", (m) => {})
+                        collector1.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) client.reloadEvent(value.content).then(async res => {
                                     await msg.edit({ content: res, embeds: [], components: [] });
                                     value.delete()
                                     msg.delete()
-                                    return collector.stop();
+                                    return collector1.stop();
                                 });
                             });
                         })
                     }
                     if (button.customId === "nine") {
-                        msg.edit({ embeds: [e7] }, button4)
+                        msg.edit({ embeds: [e7], components: [row6] })
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = await msg.channel.createMessageCollector({ filter })
-                        collector.on("collect", (m) => {})
-                        collector.on("end", (collected) => {
+                        const collector1 = await msg.channel.createMessageCollector({ filter })
+                        collector1.on("collect", (m) => {})
+                        collector1.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) {
                                     if(!client.events.has(value.content)) {
                                         msg.edit({ content: `**${client.no} ➜ Évènement introuvable !**`, embeds: [], components: [] })
                                         msg.delete()
-                                        return collector.stop()
+                                        return collector1.stop()
                                     }
                                     const res = client.listeners(fileName)
                             client.off(fileName, res[0]).then(() => {
                                         msg.edit({ content: `**${client.yes} ➜ Évènement \`${value.content}\` désactivé jusqu'au prochain redémarrage du bot.**`, embeds: [], components: [] })
                                         value.delete()
                                         msg.delete()
-                                        return collector.stop()
+                                        return collector1.stop()
                                     }).catch(() => {
                                         msg.edit({ content: `**${client.no} ➜ Impossible de désactiver l'évènement \`${value.content}\`.**`, embeds: [], components: [] })
                                         value.delete()
                                         msg.delete()
-                                        return collector.stop()
+                                        return collector1.stop()
                                     })
                                 }
                             });
@@ -285,11 +295,11 @@ module.exports = {
                         })
                     }
                     if (button.customId === "seven") {
-                        msg.edit({ embeds: [e9] }, button4)
+                        msg.edit({ embeds: [e9], components: [row6] })
                         const filter = (m) => m.author.id === message.author.id;
-                        const collector = await msg.channel.createMessageCollector({ filter })
-                        collector.on("collect", (m) => {})
-                        collector.on("end", (collected) => {
+                        const collector1 = await msg.channel.createMessageCollector({ filter })
+                        collector1.on("collect", (m) => {})
+                        collector1.on("end", (collected) => {
                             collected.forEach((value) => {
                                 if (value) {
 
@@ -299,7 +309,49 @@ module.exports = {
                     }
                     if (button.customId === "eleven") msg.edit({ embeds: [e11], components: [row5]})
                     if (button.customId === "twelve") {
-                        
+                        msg.edit({ embeds: [e12], components: [row6] })
+                        const filter = (m) => m.author.id === message.author.id;
+                        const collector1 = await msg.channel.createMessageCollector({ filter })
+                        collector1.on("collect", (m) => {})
+                        collector1.on("end", (collected) => {
+                            collected.forEach(async (value) => {
+                                if (value) {
+                                    const member = await client.users.fetch(value.content)
+                                    if (!member) {
+                                        msg.edit({ content: `**${client.no} ➜ Cet utilisateur est introuvable.**`, embeds: [], components: [] })
+                                        value.delete()
+                                        return collector.stop()
+                                    }
+                                    if (member.id === owner) {
+                                        msg.edit({ content: `**${client.no} ➜ Vous ne pouvez pas ajouter mon propriétaire à la liste noire.**`, embeds: [], components: [] })
+                                        value.delete()
+                                        return collector.stop()
+                                    }
+                                    const db = await user.findOne({ userID: member.id })
+                                    if (!db) {
+                                        new user({
+                                            userID: member.id,
+                                            ticketsbl: true
+                                        }).save()
+                                        msg.edit({ content: `**${client.no} ➜ \`${member.tag}\` a bien été ajouté à la liste noire des tickets.**`, embeds: [], components: [] })
+                                        value.delete()
+                                        return collector.stop()
+                                    }
+                                    if (db.ticketsbl === true) {
+                                        await user.findOneAndUpdate({ userID: member.id }, { $set: { ticketsbl: false } }, { upsert: true })
+                                        msg.edit({ content: `**${client.no} ➜ \`${member.tag}\` a bien été retiré de la liste noire des tickets.**`, embeds: [], components: [] })
+                                        value.delete()
+                                        return collector.stop()
+                                    }
+                                    if (db.ticketsbl === false || !db.ticketsbl) {
+                                        await user.findOneAndUpdate({ userID: member.id }, { $set: { ticketsbl: true } }, { upsert: true })
+                                        msg.edit({ content: `**${client.no} ➜ \`${member.tag}\` a bien été ajouté à la liste noire des tickets.**`, embeds: [], components: [] })
+                                        value.delete()
+                                        return collector.stop()
+                                    }
+                                }
+                            });
+                        })
                     }
                 });
     }
