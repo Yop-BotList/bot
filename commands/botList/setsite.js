@@ -1,23 +1,26 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       { botslogs } = require('../../configs/channels.json'),
       { verificator } = require('../../configs/roles.json'),
       { prefix } = require("../../configs/config.json"),
       bots = require("../../models/bots");
 
-module.exports = {
-    name: 'setsite',
-    aliases: ['botsite'],
-    categories : 'botlist', 
-    permissions : "everyone", 
-    description: 'Modifier le site web d\'un bot.',
-    cooldown : 5,
-    usage: 'setsite <id bot> <lien | none>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Setsite extends Command {
+    constructor() {
+        super({
+            name: 'setsite',
+            category: 'botlist',
+            description: 'Définir le site web d\'un bot.',
+            aliases: ["botsite"],
+            usage: 'setsite <id> <lien | none>',
+            example: ["setsite 692374264476860507 https://g-ca.fr"],
+            cooldown: 5
+        });
+    }
+
+    async run(client, message, args) {
         if (!args[0]) return message.channel.send(`\`\`\`${prefix}setsite <id bot> <lien | none>\`\`\``)
             const member = message.guild.members.fetch(`${args[0]}`)
             if (!member) return message.channel.send(`**${client.no} ➜ Identifiant invalide.**`)
@@ -76,3 +79,5 @@ module.exports = {
             }
     }
 }
+
+module.exports = new Setsite;

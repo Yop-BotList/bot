@@ -1,11 +1,12 @@
-const { MessageEmbed } = require("discord.js");
-const { autokick } = require("../configs/config.json"),
+'use strict';
+
+const { MessageEmbed } = require("discord.js"),
+      { autokick } = require("../configs/config.json"),
       { mainguildid } = require("../configs/config.json"),
       { botlogs } = require("../configs/channels.json"),
-      client = require("../index"),
       bots = require("../models/bots");
 
-client.on("guildMemberRemove", async (client, member) => {
+module.exports = async(client, member) => {
     if (member.guild.id !== mainguildid) return
     const botget = await bots.find({ ownerID: member.user.id })
     if (botget) {
@@ -23,4 +24,4 @@ client.on("guildMemberRemove", async (client, member) => {
             await bots.deleteOne({ botID: x.botID })
         });
     }
-})
+}

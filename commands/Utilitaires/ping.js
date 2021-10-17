@@ -1,18 +1,20 @@
-const { Client, Message } = require('discord.js');
+'use strict';
 
-module.exports = {
-    name: 'ping',
-    aliases: ['p', 'latence'],
-    categories : 'info', 
-    permissions : 'everyone', 
-    description: 'Voir la latence du bot.',
-    cooldown : 5,
-    usage: 'ping',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     */
-    run: async(client, message) => {
+const Command = require("../../structure/Command.js")
+
+class Ping extends Command {
+    constructor() {
+        super({
+            name: 'ping',
+            category: 'utils',
+            description: 'Recevoir la latence du bot.',
+            aliases: ['latence']
+        });
+    }
+
+    async run(client, message, args) {
         await message.channel.send(`Pong :ping_pong: \`${Date.now() - message.createdTimestamp} ms\``);
     }
 }
+
+module.exports = new Ping;

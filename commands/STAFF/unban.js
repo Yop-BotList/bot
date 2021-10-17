@@ -1,22 +1,27 @@
-const { Client, Message, MessageEmbed, MessageFlags } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs } = require("../../configs/channels.json"),
       botconfig = require("../../models/botconfig"),
       { modrole, bypass } = require("../../configs/roles.json");
 
-module.exports = {
-    name: 'unban',
-    categories : 'staff', 
-    permissions : "BAN_MEMBERS", 
-    description: 'Débannir un membre.',
-    cooldown : 5,
-    usage: 'unban <id>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Unban extends Command {
+    constructor() {
+        super({
+            name: 'unban',
+            category: 'staff',
+            description: 'Débannir un utilisateur.',
+            usage: 'unban <id>',
+            example: ['unban 692374264476860507'],
+            perms: 'BAN_MEMBERS',
+            cooldown: 240,
+            botPerms: ["EMBED_LINKS", "SEND_MESSAGES", "READ_MESSAGES", "BAN_MEMBERS"]
+        });
+    }
+
+    async run(client, message, args) {
         const member = await client.users.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.bot) return message.reply(`**${client.no} ➜ Cet utilisateur n’est pas humain.**`)
@@ -41,3 +46,5 @@ module.exports = {
         message.reply(`**${client.yes} ➜ ${member.tag} a été débanni avec succès !**`)
     }
 }
+
+module.exports = new Unban;

@@ -1,21 +1,23 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
-      { prefix } = require("../../configs/config.json");
+'use strict';
 
-module.exports = {
-    name: 'eval',
-    aliases: ['e'],
-    categories : 'owner', 
-    permissions : 'owner', 
-    description: 'Évaluer un code.',
-    cooldown : 5,
-    usage: 'eval <code>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message 
-     * @param {String[]} args 
-     */
-    run: async(client, message, args) => {
-        if (!args[0]) return message.channel.send(`\`\`\`${prefix}eval <code>\`\`\``)
+const { MessageEmbed } = require("discord.js");
+const Command = require("../../structure/Command.js")
+
+class Eval extends Command {
+    constructor() {
+        super({
+            name: 'eval',
+            category: 'utils',
+            description: 'Évaluer un code.',
+            aliases: ["e"],
+            example: ["e client.color"],
+            perms: 'owner',
+            usage: 'eval <code>'
+        });
+    }
+
+    async run(client, message, args) {
+        if (!args[0]) return message.channel.send(`\`\`\`${client.config.prefix}eval <code>\`\`\``)
     	if (message.content.toLowerCase().match(`token`)) return message.channel.send({ content: "**" + client.no + " ➜ Attention ! J'ai détecté le mot `token` dans ton message. Évite cela si tu veux garder ton accès à cette commande.**" });
         if (message.content.toLowerCase().match('client.destroy()')) return message.channel.send({ content: "**" + client.no + " ➜ Attention ! J'ai détecté le mot `client.destroy()` dans ton message. Évite cela si tu veux garder ton accès à cette commande.**" });
         if (message.content.toLowerCase().match('roles.remove')) return message.channel.send({ content: "**" + client.no + " ➜ Attention ! J'ai détecté le mot `roles.remove` dans ton message. Évite cela si tu veux garder ton accès à cette commande.**" });
@@ -24,7 +26,7 @@ module.exports = {
 
         let code;
         try {
-            const coded = eval(args.join(" "))
+            const coded = await eval(args.join(" "))
             code = coded
         }
         catch (err) {
@@ -41,3 +43,5 @@ module.exports = {
         message.channel.send({ content: null, embeds: [e] });
     }
 }
+
+module.exports = new Eval;

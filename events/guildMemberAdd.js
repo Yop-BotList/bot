@@ -1,11 +1,12 @@
+'use strict';
+
 const { welcomechannel } = require("../configs/channels.json"),
       { botintests, botrole } = require("../configs/roles.json"),
       { mainguildid } = require("../configs/config.json"),
       bots = require("../models/bots"),
-      client = require("../index"),
       { MessageEmbed } = require("discord.js");
 
-client.on("guildMemberAdd", async(client, member) => {
+module.exports = async(client, member) => {
     if (member.guild.id !== mainguildid) return;
     if (!member.user.bot) {
         client.channels.cache.get(welcomechannel).send(`**<a:entre:838336027616739338> ➜ Un \`${member.user.username}\` sauvage tape l'incruste dans le serveur !**`)
@@ -27,4 +28,4 @@ client.on("guildMemberAdd", async(client, member) => {
         // message
         client.channels.cache.get(welcomechannel).send(`**<a:entre:838336027616739338> ➜ Oh non, de la concurrance <:Panda_horrible:838335972931272745> ! Nan, je rigole ! Bienvenue à toi <@${member.user.id}> :wink:**`)
     }
-})
+}

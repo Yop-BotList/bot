@@ -1,22 +1,26 @@
-const { Client, Message, MessageEmbed } = require("discord.js"),
+'use strict';
+
+const { MessageEmbed } = require("discord.js")
+const Command = require("../../structure/Command.js"),
       bot = require("../../models/bots"),
       { mainguildid } = require("../../configs/config.json"),
       bumps = require("../../models/bumps");
 
-module.exports = {
-    name: "leaderboard",
-    categories: "info",
-    permissions: "everyone",
-    description: "Afficher les différents classements du serveur.",
-    aliases: ["top", "lb"],
-    usage: "leaderboard <likes | bumps | staff>",
-    
-    /**
-    * @param {Message} message
-    * @param {Client} client
-    * @param {String[]} args
-    */
-    run: async (client, message, args) => { 
+class Leaderboard extends Command {
+    constructor() {
+        super({
+            name: 'leaderboard',
+            category: 'utils',
+            description: 'Voir les classements du serveur.',
+            aliases: ["lb", "top"],
+            example: ["lb staff", "top likes"],
+            perms: 'everyone',
+            usage: 'leaderboard <likes | staff | bumps>',
+            cooldown: 5
+        });
+    }
+
+    async run(client, message, args) {
         if (args[0] !== "likes" && args[0] !== "bumps" && args[0] !== "staff") return message.reply(`**${client.no} ➜ Veuillez entrer l'un des arguments suivants : \`likes\`, \`bumps\` ou \`staff\`.**`)
         
         // likes
@@ -39,17 +43,12 @@ module.exports = {
     } else {
         first = `${ranked}`
     }
-
-    message.channel.send({
-        embed: {
-            title: "Classement des votes du mois :",
-            color: client.color,
-            thumbnail: {
-                url: message.guild.iconURL()
-            },
-            description: array.map((r, i) => `#${i + 1} **${client.users.cache.get(r.botID).tag}** avec \`${r.likesCount}\``).join("\n")
-        }
-    })
+    const e = new MessageEmbed()
+    .setTitle("Classement des votes du mois :")
+    .setColor(client.color)
+    .setThumbnail(message.guild.iconURL({ dynamic: true }))
+    .setDescription(array.map((r, i) => `#${i + 1} **${client.users.cache.get(r.botID).tag}** avec \`${r.likesCount}\` votes`).join("\n"))
+    message.channel.send({ embeds: [e] })
         }
         
         // bumps
@@ -73,16 +72,14 @@ module.exports = {
         first = `${ranked}`
     }
 
-    message.channel.send({
-        embed: {
-            title: "Classement des bumpers :",
-            color: client.color,
-            thumbnail: {
-                url: message.guild.iconURL()
-            },
-            description: array.map((r, i) => `#${i + 1} **${client.users.cache.get(r.userId).tag}** avec \`${r.bumpCount}\` bump(s)`).join("\n")
-        }
-    })
+    const e = new MessageEmbed()
+    .setTitle("Classement des bumps du mois :")
+    .setColor(client.color)
+    .setThumbnail(message.guild.iconURL({ dynamic: true }))
+    .setDescription(array.map((r, i) => `#${i + 1} **${client.users.cache.get(r.userId).tag}** avec \`${r.bumpCount}\` bump(s)`).join("\n"))
+    message.channel.send({ embeds: [e] })
         }
     }
 }
+
+module.exports = new Leaderboard;

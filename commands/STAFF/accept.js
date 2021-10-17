@@ -1,23 +1,27 @@
-const { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
-    { prefix } = require("../../configs/config.json"),
-    { botslogs } = require("../../configs/channels.json"),
-    { Client, Message, MessageEmbed } = require("discord.js"),
-    bots = require("../../models/bots");
+'use strict';
 
-module.exports = {
-    name: 'accept',
-    aliases: [],
-    categories : 'staff', 
-    permissions : verificator, 
-    description: 'Permet d’accepter un bot sur la liste.',
-    cooldown : 3600,
-    usage: 'accept <user>',
+const Command = require("../../structure/Command.js"),
+      { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
+      { prefix } = require("../../configs/config.json"),
+      { botslogs } = require("../../configs/channels.json"),
+      { MessageEmbed } = require("discord.js"),
+      bots = require("../../models/bots");
 
-    /**
-     * @param {Client} client
-     * @param {Message} message
-     */
-    run: async (client, message) => {
+class Accept extends Command {
+    constructor() {
+        super({
+            name: 'accept',
+            category: 'staff',
+            description: 'Accepter un bot sur la liste.',
+            usage: 'accept <utilisateur>',
+            example: ['accept <@692374264476860507>'],
+            perms: verificator,
+            cooldown: 1800,
+            botPerms: ["EMBED_LINKS", "SEND_MESSAGES", "READ_MESSAGES", "MANAGE_ROLES"]
+        });
+    }
+
+    async run(client, message, args) {
         const member = message.mentions.members.first();
         if (!member?.user.bot) return message.reply({ content: `**${client.no}  ➜ Vous n'avez pas mentionné de bots, ou alors, il n'est pas présent sur le serveur.**` });
 
@@ -72,3 +76,5 @@ module.exports = {
         message.guild.members.cache.get(botGet.ownerID)?.roles.add(isclient);
     }
 }
+
+module.exports = new Accept;

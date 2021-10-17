@@ -1,23 +1,27 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs } = require("../../configs/channels.json"),
       botconfig = require("../../models/botconfig"),
       { modrole, bypass } = require("../../configs/roles.json");
 
-module.exports = {
-    name: 'warn',
-    aliases: ['w'],
-    categories : 'staff', 
-    permissions : modrole, 
-    description: 'Avertir un membre.',
-    cooldown : 5,
-    usage: 'warn <id> <raison>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Warn extends Command {
+    constructor() {
+        super({
+            name: 'warn',
+            category: 'staff',
+            description: 'Permet d\'avertir un utilisateur.',
+            aliases: ["w"],
+            usage: 'warn <id> <raison>',
+            example: ["w 692374264476860507 Spam !"],
+            perms: modrole,
+            cooldown: 120
+        });
+    }
+
+    async run(client, message, args) {
         const member = message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.roles.highest.position >= message.member.roles.highest.position) return message.reply(`**${client.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`)
@@ -61,3 +65,5 @@ module.exports = {
         message.reply(`**${client.yes} ➜ ${member.user.tag} a été averti avec succès !**`)
     }
 }
+
+module.exports = new Warn;

@@ -1,23 +1,26 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       { botslogs } = require('../../configs/channels.json'),
       { verificator } = require('../../configs/roles.json'),
       { prefix } = require("../../configs/config.json"),
       bots = require("../../models/bots");
 
-module.exports = {
-    name: 'setsupport',
-    aliases: ['botsupport'],
-    categories : 'botlist', 
-    permissions : "everyone", 
-    description: 'Modifier le lien du serveur support d\'un bot.',
-    cooldown : 5,
-    usage: 'setsupport <id bot> <lien | none>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Setsupport extends Command {
+    constructor() {
+        super({
+            name: 'setsupport',
+            category: 'botlist',
+            description: 'Définir le serveur support d\'un bot.',
+            aliases: ["botsupport"],
+            usage: 'setsupport <id> <lien | none>',
+            example: ["setsupport 692374264476860507 https://discord.gg/gca", "botsupport 692374264476860507 none"],
+            cooldown: 5
+        });
+    }
+
+    async run(client, message, args) {
         if (!args[0]) return message.channel.send(`\`\`\`${prefix}setsupport <id bot> <invitation | none>\`\`\``)
             const member = message.guild.members.fetch(`${args[0]}`)
             if (!member) return message.channel.send(`**${client.no} ➜ Identifiant invalide.**`)
@@ -78,3 +81,5 @@ module.exports = {
             }
     }
 }
+
+module.exports = new Setsupport;

@@ -1,23 +1,26 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
-    bots = require("../../models/bots"),
-    { prefix, mainguildid } = require("../../configs/config.json"),
-    { botslogs } = require("../../configs/channels.json"),
-    { verificator } = require("../../configs/roles.json");
+'use strict';
 
-module.exports = {
-    name: 'botadd',
-    aliases: ['addbot'],
-    categories : 'botlist', 
-    permissions : 'everyone', 
-    description: 'Permet de rajouter un bot à la liste.',
-    cooldown : 5,
-    usage: 'botadd <id> <prefix>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
+      bots = require("../../models/bots"),
+      { prefix, mainguildid } = require("../../configs/config.json"),
+      { botslogs } = require("../../configs/channels.json"),
+      { verificator } = require("../../configs/roles.json");
+
+class Botadd extends Command {
+    constructor() {
+        super({
+            name: 'botadd',
+            category: 'botlist',
+            description: 'Ajouter un bot à la liste.',
+            aliases: ["addbot"],
+            usage: 'botadd <id> <préfixe>',
+            example: ["botadd 692374264476860507 ?"],
+            cooldown: 10
+        });
+    }
+
+    async run(client, message, args) {
         /* Verification */
         if (message.mentions.members.first() || message.mentions.users.first()) return message.reply({ content: `**${client.no} ➜ Désolé je ne prend pas en charge les mentions.**` });
         if (!args[0]) return message.reply({ content: `**${client.no} ➜ Il manque l'id du bot dans la commande : \`${prefix}botadd <id> <prefix>\`**` });
@@ -54,3 +57,5 @@ module.exports = {
         message.reply({ content: `**${client.yes} ➜ Votre bot \`${user.tag}\` vient juste d'être ajouté à la liste d’attente !**` });
     }
 }
+
+module.exports = new Botadd;

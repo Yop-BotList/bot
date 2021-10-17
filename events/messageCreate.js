@@ -1,5 +1,7 @@
+'use strict';
+
 const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
-  { prefix, owners, owner, mainguildid } = require("../configs/config.json"),
+  { prefix, owners, owner, mainguildid, color } = require("../configs/config.json"),
   client = require("../index"),
   { botlogs, ticketcategory, ticketslogs } = require('../configs/channels.json'),
   { ticketsaccess } = require("../configs/roles.json"),
@@ -13,7 +15,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
   deleteMp = new MessageButton()
   .setStyle("DANGER")
   .setCustomId("deleteMpTicket")
-  .setEmoji("🗑️")
+  .setEmoji("🗑️"),
   rowMp = new MessageActionRow()
   .addComponents(confirmMp),
   rowDelete = new MessageActionRow()
@@ -21,174 +23,175 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
   
   mpEmbed = new MessageEmbed()
   .setTitle("Support en MP")
-  .setColor(client.color)
+  .setColor(color)
   .setDescription(`> **🇫🇷 ➜ Bonjour,\n> Voulez vous envoyer un message au support ?\n> Si oui, cliquez sur le bouton ci dessous.**\n\n> **🇺🇸 ➜ Hello,\n> Do you want to tell support ?\n> If yes, click on the button below.**`)
   .setFooter(`YopBot Support System`),
   deleteMpEmbed = new MessageEmbed()
   .setTitle("Support en MP")
   .setDescription("> **🇫🇷 ➜ Pour pouvoir supprimer le ticket, cliquez sur le bouton ci-dessous.\n> 🇺🇸 ➜ To delete the ticket, click on the button below.**")
-  .setFooter("YopBot Support System");
+  .setFooter("YopBot Support System")
+  .setColor(color);
 
-client.on("messageCreate", async (message) => {
-  bumpChecker(message);
+module.exports = async(client, message) => {
+    bumpChecker(message);
   
-  if (message.author.bot) return;
-
-  /* MP SYSTEM */
-
-  if (message.channel.type === "DM") {
-    const guild = client.guilds.cache.get(mainguildid),
-      ticket = guild?.channels.cache.find(x => x.name === `🎫・ticket-${message.author.discriminator}` && x.topic === `${message.author.id}`);
-
-    if (ticket) {
-      const webhooks = await ticket.fetchWebhooks();
-		  const hook = webhooks.first();
+    if (message.author.bot) return;
+  
+    /* MP SYSTEM */
+  
+    if (message.channel.type === "DM") {
+      const guild = client.guilds.cache.get(mainguildid),
+        ticket = guild?.channels.cache.find(x => x.name === `🎫・ticket-${message.author.discriminator}` && x.topic === `${message.author.id}`);
+  
+      if (ticket) {
+        const webhooks = await ticket.fetchWebhooks();
+            const hook = webhooks.first();
+        if (message.attachments) {
+          if (message.content) {
+            await hook.send({
+              content: message.content,
+              files: [...message.attachments.values()]
+            });
+          } else {
+            await hook.send({
+              content: null,
+              files: [...message.attachments.values()]
+            });
+          }
+        } else {
+          await hook.send({
+            content: message.content
+          });
+        }
+        return message.react("📨");
+      }
+  
+      const msg = await message.author?.send({
+        content: null,
+        embeds: [mpEmbed],
+        components: [rowMp]
+      });
+  
+      const filter = btn => btn.customId === "confirmMpMessage" && btn.user.id === message.author.id;
+      const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
+  
+      collector.on("collect", async (button) => {
+        if (button.user.id === message.author.id) {
+          if (button.customId === "confirmMpMessage") {        
+            if (!ticket) {
+              guild.channels.create(`🎫・ticket-${message.author.discriminator}`, {
+                type: 'GUILD_TEXT',
+                permissionOverwrites: [
+                  {
+                    id: guild.id,
+                    deny: ["VIEW_CHANNEL"]
+                  }, {
+                    id: ticketsaccess,
+                    allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "ADD_REACTIONS", "SEND_MESSAGES", "ATTACH_FILES"]
+                  }
+                ],
+                parent: ticketcategory,
+                topic: `${message.author.id}`
+              }).then(async ch => {
+                const hook = await ch.createWebhook(message.author.username, {
+                  avatar: message.author.displayAvatarURL()
+                });
+  
+                ch.send({
+                  content: "@here",
+                  embeds: [deleteMpEmbed],
+                  components: [rowDelete]
+                });
+  
+                if (message.attachments) {
+                  if (message.content) {
+                    await hook.send({
+                      content: message.content,
+                      files: [...message.attachments.values()]
+                    });
+                  } else {
+                    await hook.send({
+                      content: null,
+                      files: [...message.attachments.values()]
+                    });
+                  }
+                } else {
+                  await hook.send({
+                    content: message.content
+                  });
+                }
+  
+                const ticketsChannel = client.channels.cache.get(ticketslogs);
+                ticketsChannel?.send({
+                  content: null,
+                  embeds: [
+                    new MessageEmbed()
+                    .setTitle(`Nouveau ticket de ${message.author.username}#${message.author.discriminator}`)
+                    .setTimestamp(new Date())
+                    .setColor(client.color)
+                    .addFields(
+                      { name: ":id: ➜ ID :", value: `\`\`\`${message.author.id}\`\`\``, inline: false},
+                      { name: ":newspaper2: ➜ Raison :", value: `\`\`\`md\n# ${message.content}\`\`\``, inline: false },
+                    )
+                  ]
+                });
+              });
+  
+              await button.update({
+                content: "> **🇫🇷 ➜ Votre message à bien été envoyé au support.\n> 🇺🇸 ➜ Your message has been succefully sent to the support**",
+                embeds: [],
+                components: []
+              });
+              await collector.stop();
+            }
+          }
+        }
+      });
+  
+      return;
+    }
+  
+    if (message.channel.name.startsWith("🎫・ticket-")) {
+      const user = await client.users.fetch(message.channel.topic);
+      if (message.content.startsWith("!")) return
+      if (message.author.bot) return
+      if (!message.member.roles.cache.has(ticketsaccess)) {
+        message.react("❌")
+        return message.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation d'envoyer un message dans ce ticket.**`)
+      }
+  
+      const supportMp = new MessageEmbed()
+      .setTitle(message.author.tag)
+      .setThumbnail(message.author.displayAvatarURL())
+      .setDescription(message.content),
+        noContentSupportMp = new MessageEmbed()
+      .setTitle(message.author.tag)
+      .setThumbnail(message.author.displayAvatarURL())
+  
+  
       if (message.attachments) {
         if (message.content) {
-          await hook.send({
-            content: message.content,
+          await user?.send({
+            content: null,
+            embeds: [supportMp],
             files: [...message.attachments.values()]
           });
         } else {
-          await hook.send({
+          await user?.send({
             content: null,
+            embeds: [noContentSupportMp],
             files: [...message.attachments.values()]
           });
         }
       } else {
-        await hook.send({
-          content: message.content
+        await user?.send({
+          content: null,
+          embeds: [sendSupportMp]
         });
       }
+  
       return message.react("📨");
     }
-
-    const msg = await message.author?.send({
-      content: null,
-      embeds: [mpEmbed],
-      components: [rowMp]
-    });
-
-    const filter = btn => btn.customId === "confirmMpMessage" && btn.user.id === message.author.id;
-    const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
-
-    collector.on("collect", async (button) => {
-      if (button.user.id === message.author.id) {
-        if (button.customId === "confirmMpMessage") {        
-          if (!ticket) {
-            guild.channels.create(`🎫・ticket-${message.author.discriminator}`, {
-              type: 'GUILD_TEXT',
-              permissionOverwrites: [
-                {
-                  id: guild.id,
-                  deny: ["VIEW_CHANNEL"]
-                }, {
-                  id: ticketsaccess,
-                  allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "ADD_REACTIONS", "SEND_MESSAGES", "ATTACH_FILES"]
-                }
-              ],
-              parent: ticketcategory,
-              topic: `${message.author.id}`
-            }).then(async ch => {
-              const hook = await ch.createWebhook(message.author.username, {
-                avatar: message.author.displayAvatarURL()
-              });
-
-              ch.send({
-                content: "@here",
-                embeds: [deleteMpEmbed],
-                components: [rowDelete]
-              });
-
-              if (message.attachments) {
-                if (message.content) {
-                  await hook.send({
-                    content: message.content,
-                    files: [...message.attachments.values()]
-                  });
-                } else {
-                  await hook.send({
-                    content: null,
-                    files: [...message.attachments.values()]
-                  });
-                }
-              } else {
-                await hook.send({
-                  content: message.content
-                });
-              }
-
-              const ticketsChannel = client.channels.cache.get(ticketslogs);
-              ticketsChannel?.send({
-                content: null,
-                embeds: [
-                  new MessageEmbed()
-                  .setTitle(`Nouveau ticket de ${message.author.username}#${message.author.discriminator}`)
-                  .setTimestamp(new Date())
-                  .setColor(client.color)
-                  .addFields(
-                    { name: ":id: ➜ ID :", value: `\`\`\`${message.author.id}\`\`\``, inline: false},
-                    { name: ":newspaper2: ➜ Raison :", value: `\`\`\`md\n# ${message.content}\`\`\``, inline: false },
-                  )
-                ]
-              });
-            });
-
-            await button.update({
-              content: "> **🇫🇷 ➜ Votre message à bien été envoyé au support.\n> 🇺🇸 ➜ Your message has been succefully sent to the support**",
-              embeds: [],
-              components: []
-            });
-            await collector.stop();
-          }
-        }
-      }
-    });
-
-    return;
-  }
-
-  if (message.channel.name.startsWith("🎫・ticket-")) {
-    const user = await client.users.fetch(message.channel.topic);
-    if (message.content.startsWith("!")) return
-    if (message.author.bot) return
-    if (!message.member.roles.cache.has(ticketsaccess)) {
-      message.react("❌")
-      return message.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation d'envoyer un message dans ce ticket.**`)
-    }
-
-    const supportMp = new MessageEmbed()
-    .setTitle(message.author.tag)
-    .setThumbnail(message.author.displayAvatarURL())
-    .setDescription(message.content),
-      noContentSupportMp = new MessageEmbed()
-    .setTitle(message.author.tag)
-    .setThumbnail(message.author.displayAvatarURL())
-
-
-    if (message.attachments) {
-      if (message.content) {
-        await user?.send({
-          content: null,
-          embeds: [supportMp],
-          files: [...message.attachments.values()]
-        });
-      } else {
-        await user?.send({
-          content: null,
-          embeds: [noContentSupportMp],
-          files: [...message.attachments.values()]
-        });
-      }
-    } else {
-      await user?.send({
-        content: null,
-        embeds: [sendSupportMp]
-      });
-    }
-
-    return message.react("📨");
-  }
 
   /* Guild System */
 
@@ -206,10 +209,23 @@ client.on("messageCreate", async (message) => {
     if (matchedPrefix.includes(client.user.id) && message.author.id == "692374264476860507") return message.reply({ content: `Bonjour maître. Mon préfixe est \`${prefix}\`` });
   }
 
-  /* Command Detection */
-  const command = client.commands.get(cmd.toLowerCase()) || client.aliases.get(cmd.toLowerCase());
 
-  /* Commands Log */
+  if (message.content.includes(client.user.username)) message.react("👀");
+
+
+
+
+    const data = message.content;
+    message.guild.prefix = client.config.prefix;
+    const arg = data.slice(message.guild.prefix.length).trim().split(/ +/g);
+    
+    if (!data.startsWith(message.guild.prefix)) return;
+
+    const command = client.commands.find(cmd => cmd.aliases.includes(arg[0])) || client.commands.get(arg[0]);
+    if (!command) return;
+    if (message.channel.type === "dm") return;
+    if(command.botNotAllowed && message.author.bot) return;
+      /* Commands Log */
   client.channels.cache.get(botlogs).send({
     content: null,
     embeds: [
@@ -224,16 +240,33 @@ client.on("messageCreate", async (message) => {
     ] 
   })
 
-  /* Perms */
-  if(command.permissions === "owner") {
-    if(!owners.includes(message.author.id) && owner != message.author.id) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas la permission d'exécuter cette commande !**` });
-  }else if(command.permissions !== 'everyone') {
-    if(!message.member.permissions.has(command.permissions) || !message.member.roles.cache.has(command.permissions)) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande !**` });
-  }
-
+    if(command.perms === "owner") {
+        if(!client.config.owners.includes(message.author.id) && client.config.owner !== message.author.id) {
+            return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**`);
+        }
+    }else if(command.perms !== 'everyone') {
+        if(!message.member.permissions.has(command.perms) && !message.member.permissions.has(command.perms)) {
+            return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**`);
+        }
+    }
+     if(command.botPerms !== []) {
+      let perms = []
+         for(let i = 0;i < command.botPerms.length; i++) {
+             if(!message.guild.members.cache.get(client.user.id).permissions.has(command.botPerms[i])) {
+                
+                perms.push(`\`${command.botPerms[i]}\``);
+             }
+         }
+         if(perms.length >= 1){
+            return message.channel.send(`**${client.no} ➜ Il me manque les permissions suivantes pour pouvoir exécuter cette commande : ${perms.join("\n")}`);
+         }
+     }
   /* Cooldown */
   if (onCoolDown(message, command) && !owners.includes(message.author.id) && owner !== message.author.id) return message.reply({ content: `**${client.no} ➜ Veuillez patienter encore ${onCoolDown(message, command)} avant de pouvoir réutiliser la commande \`${command.name}\` !**` });
-  await command.run(client, message, args);
 
-  if (message.content.includes(client.user.username)) return message.react("👀");
-});
+    try {
+        command.run(client, message, args)
+    } catch (err) {
+       client.emit('error',err);
+    }
+};

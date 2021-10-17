@@ -1,23 +1,27 @@
-const { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
-    { autokick } = require("../../configs/config.json"),
-    { botslogs } = require("../../configs/channels.json"),
-    { Client, Message, MessageEmbed } = require("discord.js"),
-    bots = require("../../models/bots");
+'use strict';
 
-module.exports = {
-    name: 'delete',
-    categories : 'staff', 
-    permissions : verificator, 
-    description: 'Permet de supprimer un bot de la liste.',
-    cooldown : 3600,
-    usage: 'delete <id> <raison>',
+const Command = require("../../structure/Command.js"),
+      { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
+      { autokick } = require("../../configs/config.json"),
+      { botslogs } = require("../../configs/channels.json"),
+      { MessageEmbed } = require("discord.js"),
+      bots = require("../../models/bots");
 
-    /**
-     * @param {Client} client
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async (client, message, args) => {
+class Delete extends Command {
+    constructor() {
+        super({
+            name: 'delete',
+            category: 'staff',
+            description: 'Supprimer un bot de la liste.',
+            usage: "delete <id> <raison>",
+            example: ["delete 692374264476860507 Spam"],
+            perms: "ADMINISTRATOR",
+            cooldown: 120,
+            botPerms: ["EMBED_LINKS", "SEND_MESSAGES", "READ_MESSAGES", "KICK_MEMBERS"]
+        });
+    }
+
+    async run(client, message, args) {
         if (!args[0]) return message.reply({ content: `**${client.no} ➜ Merci de me donner une ID de bot.**`});
         let botGet = await bots.findOne({ botID: args[0], verified: true });
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Le bot ${member.user.tag} ne peut pas être supprimé car il n'est pas vérifié !**` });
@@ -48,3 +52,5 @@ module.exports = {
         if (autokick === true) member.kick();
     }
 }
+
+module.exports = new Delete;

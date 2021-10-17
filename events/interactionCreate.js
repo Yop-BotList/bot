@@ -1,37 +1,21 @@
-const client = require('../index'),
-    { MessageEmbed } = require("discord.js"),
-    { ticketslogs } = require("../configs/channels.json"),
-    { ticketsaccess } = require("../configs/roles.json");
+'use strict';
 
-
-client.on("interactionCreate", async (interaction) => {
-
-    if (interaction.isCommand()) {
-        await interaction.deferReply({ ephemeral: false }).catch(() => {});
-
-        const cmd = client.slashCommands.get(interaction.commandName);
-        if (!cmd) return interaction.followUp({ content: "Une erreur est survenue !" });
-
-        const args = [];
-
-        for (let option of interaction.options.data) {
-            if (option.type === "SUB_COMMAND") {
-                if (option.name) args.push(option.name);
-                option.options?.forEach((x) => {
-                    if (x.value) args.push(x.value);
-                });
-            } else if (option.value) args.push(option.value);
+const { MessageEmbed } = require("discord.js"),
+      { ticketslogs } = require("../configs/channels.json"),
+      { ticketsaccess } = require("../configs/roles.json");
+module.exports = async(client, data) => {
+    if(data.isMessageComponent()){
+        if(data.isCommand()){
+            client.emit('slashCommands',data)
         }
-
-        cmd.run(client, interaction, args);
     }
 
-    if (interaction.isButton()) {
-        if (interaction.customId === "deleteMpTicket") {
-            if (!interaction.channel.name.startsWith("🎫・ticket-")) return;
-            if (!interaction.member.roles.has(ticketsaccess)) return interaction.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation de fermer ce ticket.**`)
+    if (data.isButton()) {
+        if (data.customId === "deleteMpTicket") {
+            if (!data.channel.name.startsWith("🎫・ticket-")) return;
+            if (!data.member.roles.has(ticketsaccess)) return data.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation de fermer ce ticket.**`)
 
-            const user = await client.users.fetch(interaction.channel.topic),
+            const user = await client.users.fetch(data.channel.topic),
                   channelLogs = client.channels.cache.get(ticketslogs);
             
             channelLogs.send({
@@ -43,7 +27,7 @@ client.on("interactionCreate", async (interaction) => {
                     .setColor(client.color)
                     .addFields(
                         { name: `:id: ID :`, value: `\`\`\`${user.id}\`\`\``, inline: false },
-                        { name: `:man_police_officer: Modérateur :`, value: `\`\`\`${interaction.user.username}#${interaction.user.discriminator}\`\`\``, inline: false }
+                        { name: `:man_police_officer: Modérateur :`, value: `\`\`\`${data.user.username}#${data.user.discriminator}\`\`\``, inline: false }
                     )
                 ]
             });
@@ -51,17 +35,10 @@ client.on("interactionCreate", async (interaction) => {
             await user.send({
                 content: `> **🇫🇷 ➜ Votre ticket sur YopBot List à été fermé.\n> 🇺🇸 ➜ Your ticket on YopBot list has been closed.**`
             });
-            interaction.channel.send(`**${client.yes} ➜ Fermeture du ticket dans 10 secondes...**`)
+            data.channel.send(`**${client.yes} ➜ Fermeture du ticket dans 10 secondes...**`)
             return setTimeout(() => {
-                interaction.channel.delete()
+                data.channel.delete()
             }, 10000);
         }
     }
-
-    //Context menu handling
-    if(interaction.isContextMenu()) {
-        await interaction.deferReply({ ephemeral: false });
-        const command = client.slashCommands.get(interaction.commandName);
-        if(command) command.run(client, interaction);
-    }
-});
+}

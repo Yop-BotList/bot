@@ -1,23 +1,23 @@
-const { Client, Message, MessageEmbed } = require("discord.js");
-var config = require('../../configs/config.json');
+'use strict';
 
-module.exports = {
-  name: "avatar",
-  aliases: ["pp", "logo"],
-  categories: "info",
-  permissions: "everyone",
-  description: "Obtenir l'avatar d'un autre membre.",
-  usage: "avatar [utilisateur]",
+const { MessageEmbed } = require("discord.js");
+const Command = require("../../structure/Command.js")
 
-  /**
-   * @param {Client} client
-   * @param {Message} message
-   * @param {String[]} args
-   */
+class Avatar extends Command {
+    constructor() {
+        super({
+            name: 'avatar',
+            category: 'utils',
+            description: 'Voir l\'avatar d\'un autre utilisateur.',
+            usage: 'avatar [utilisateur]',
+            example: ["avatar <@692374264476860507>"],
+            aliases: ['pp']
+        });
+    }
 
-  run: async (client, message, args) => {
-
-    let user = message.author || message.mentions.users.first();
+    async run(client, message, args) {
+        
+    let user = message.mentions.users.first() || message.author;
     let avs = new MessageEmbed()
       .setAuthor(
         `Avatar de : ${user.tag}`,
@@ -53,5 +53,7 @@ module.exports = {
       );
 
       message.channel.send({embeds : [avs]})
-  },
-};
+    }
+}
+
+module.exports = new Avatar;

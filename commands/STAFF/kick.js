@@ -1,23 +1,28 @@
-const { Client, Message, MessageEmbed, MessageFlags } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs } = require("../../configs/channels.json"),
       botconfig = require("../../models/botconfig"),
       { modrole, bypass } = require("../../configs/roles.json");
 
-module.exports = {
-    name: 'kick',
-    aliases: ['k'],
-    categories : 'staff', 
-    permissions : "KICK_MEMBERS", 
-    description: 'Expluser un membre.',
-    cooldown : 5,
-    usage: 'kick <id> <raison>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Kick extends Command {
+    constructor() {
+        super({
+            name: 'kick',
+            category: 'staff',
+            description: 'Expulser un membre du serveur.',
+            aliases: ["k"],
+            usage: 'kick <id> <raison>',
+            example: ["kick 692374264476860507 Spam"],
+            perms: 'KICK_MEMBERS',
+            cooldown: 120,
+            botPerms: ["EMBED_LINKS", "SEND_MESSAGES", "READ_MESSAGES", "KICK_MEMBERS"]
+        });
+    }
+
+    async run(client, message, args) {
         const member = message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.user.bot) return message.reply(`**${client.no} ➜ Ce membre n’est pas humain.**`)
@@ -57,8 +62,10 @@ module.exports = {
         member.user.send({ embeds: [e2] }).catch(() => {
             e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de sa santion !")
         })
-        .kick({ reason: args.slice(1).join(" ") })
+        member.kick({ reason: args.slice(1).join(" ") })
         client.channels.cache.get(modlogs).send({ embeds: [e] })
         message.reply(`**${client.yes} ➜ ${member.user.tag} a été explusé avec succès !**`)
     }
 }
+
+module.exports = new Kick;

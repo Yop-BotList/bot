@@ -1,21 +1,26 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs } = require("../../configs/channels.json"),
       { modrole } = require("../../configs/roles.json");
 
-module.exports = {
-    name: 'delwarn',
-    categories : 'staff', 
-    permissions : modrole, 
-    description: 'Supprimer un avertissement.',
-    cooldown : 5,
-    usage: 'delwarn <warn id>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+
+class Delwarn extends Command {
+    constructor() {
+        super({
+            name: 'delwarn',
+            category: 'staff',
+            description: 'Supprimer une sanction.',
+            usage: 'delwarn <id sanction>',
+            example: ["delwarn 16"],
+            perms: modrole,
+            cooldown: 30
+        });
+    }
+
+    async run(client, message, args) {
         if (!parseInt(args[0])) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         const db = await warns.findOne({ wrnID: Number(args[0]) });
         if (!db) return message.reply(`**${client.no} ➜ Sanction introuvable !**`)
@@ -43,3 +48,5 @@ module.exports = {
         message.reply(`**${client.yes} ➜ Avertissement supprimé avec succès !**`)
     }
 }
+
+module.exports = new Delwarn;

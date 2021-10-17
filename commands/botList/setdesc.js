@@ -1,23 +1,26 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       bots = require("../../models/bots"),
       { prefix } = require("../../configs/config.json"),
       { botslogs } = require('../../configs/channels.json'),
       { verificator } = require("../../configs/roles.json");
 
-module.exports = {
-    name: 'setdesc',
-    aliases: ['botdesc'],
-    categories : 'botlist', 
-    permissions : 'everyone', 
-    description: 'Modifier la description d\'un robot.',
-    cooldown : 5,
-    usage: 'setdesc <id> <description | none>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Setdesc extends Command {
+    constructor() {
+        super({
+            name: 'setdesc',
+            category: 'botlist',
+            description: 'Définir la description d\'un bot.',
+            aliases: ["botdesc"],
+            usage: 'setdesc <id> <description | none>',
+            example: ["setdesc 692374264476860507 Bot de musique", "botdesc 692374264476860507 none"],
+            cooldown: 5
+        });
+    }
+
+    async run(client, message, args) {
         if (!args[0]) return message.channel.send(`\`\`\`${prefix}setdesc <id bot> <description | none>\`\`\``)
         const member = message.guild.members.fetch(`${args[0]}`);
         if (!member) return message.channel.send(`**${client.no} ➜ Veuillez entrer l'indentifiant valide d'un bot présent sur ce serveur.**`)
@@ -75,3 +78,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = new Setdesc;

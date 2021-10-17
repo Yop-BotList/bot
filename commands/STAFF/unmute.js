@@ -1,31 +1,34 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs, botslogs } = require("../../configs/channels.json"),
       botconfig = require("../../models/botconfig"),
       { modrole, bypass, mute } = require("../../configs/roles.json"),
       bots = require("../../models/bots");
-const { findOne } = require('../../models/sanction');
 
-module.exports = {
-    name: 'unmute',
-    aliases: [],
-    categories : 'staff', 
-    permissions : modrole, 
-    description: 'Rendre la voix à un membre.',
-    cooldown : 5,
-    usage: 'unmute <id> <raison>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Unmute extends Command {
+    constructor() {
+        super({
+            name: 'unmute',
+            category: 'staff',
+            description: 'Rendre la voix à un membre.',
+            usage: 'unmute <id>',
+            example: ['unmute 692374264476860507'],
+            perms: modrole,
+            cooldown: 60,
+            botPerms: ["EMBED_LINKS", "SEND_MESSAGES", "READ_MESSAGES", "MANAGE_ROLES"]
+        });
+    }
+
+    async run(client, message, args) {
         const member = message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (!member.roles.cache.has(mute)) return message.reply(`**${client.no} ➜ Ce membre n'est pas muet.**`)
         const db = await botconfig.findOne();
         if (member.user.bot) {
-            const db2 = await findOne({ botID: member.user.id })
+            const db2 = await bots.findOne({ botID: member.user.id })
             if (!db2) return message.reply(`**${client.no} ➜ Ce bot n'est pas sur ma liste.**`)
             try {
                 member.roles.remove(mute)
@@ -83,3 +86,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = new Unmute;

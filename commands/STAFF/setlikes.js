@@ -1,24 +1,28 @@
-const { verificator } = require("../../configs/roles.json"),
-    { Client, Message } = require("discord.js"),
-    bots = require("../../models/bots"),
-    moment = require("moment"),
-    { mainguildid } = require("../../configs/config.json");
+'use strict';
 
-    moment.locale("fr")
+const Command = require("../../structure/Command.js"),
+      { verificator } = require("../../configs/roles.json"),
+      { Client, Message } = require("discord.js"),
+      bots = require("../../models/bots"),
+      moment = require("moment"),
+      { mainguildid } = require("../../configs/config.json");
 
-module.exports = {
-    name: 'setlikes',
-    categories : 'staff', 
-    permissions : verificator, 
-    description: "Permet de rénitialiser ou changer le nombre de likes d'un bot.",
-    cooldown : 3600,
-    usage: 'setlikes <set/reset> <utilisateur | all> [number]',
+      moment.locale("fr")
 
-    /**
-     * @param {Client} client
-     * @param {Message} message
-     */
-    run: async (client, message, args) => {
+class Setlikes extends Command {
+    constructor() {
+        super({
+            name: 'setlikes',
+            category: 'staff',
+            description: 'Gérer les votes du serveur.',
+            usage: 'setlikes <set | reset> <user | all> [nombre]',
+            example: ["setlikes 692374264476860507 4", "setlikes reset all"],
+            perms: 'ADMINISTRATOR',
+            cooldown: 60
+        });
+    }
+
+    async run(client, message, args) {
         if (!args[0]) return message.reply({ content: `${client.no} ➜ Merci de mettre une des deux options au lieu de aucune, \`set/reset\`.` });
     
         if (args[0] === "set") {
@@ -88,3 +92,5 @@ module.exports = {
         } else return message.reply({ content: `${client.no} ➜ Merci de mettre une des deux options, \`set/reset\`.` });
     }
 }
+
+module.exports = new Setlikes;

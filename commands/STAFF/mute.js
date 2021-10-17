@@ -1,25 +1,29 @@
-const { Client, Message, MessageEmbed } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs, botslogs } = require("../../configs/channels.json"),
       botconfig = require("../../models/botconfig"),
       { modrole, bypass, mute } = require("../../configs/roles.json"),
       bots = require("../../models/bots");
-const { findOne } = require('../../models/bots');
 
-module.exports = {
-    name: 'mute',
-    aliases: ['m'],
-    categories : 'staff', 
-    permissions : modrole, 
-    description: 'Rendre muet un membre.',
-    cooldown : 5,
-    usage: 'mute <id> <raison>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Mute extends Command {
+    constructor() {
+        super({
+            name: 'mute',
+            category: 'staff',
+            description: 'Rendre muet un membre.',
+            aliases: ["m"],
+            usage: 'mute <id> <raison>',
+            example: ["m 692374264476860507 Spam"],
+            perms: modrole,
+            cooldown: 60,
+            botPerms: ["EMBED_LINKS", "SEND_MESSAGES", "READ_MESSAGES", "MANAGE_ROLES"]
+        });
+    }
+
+    async run(client, message, args) {
         const member = message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.roles.highest.position >= message.member.roles.highest.position) return message.reply(`**${client.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`)
@@ -98,3 +102,5 @@ module.exports = {
         }
     }
 }
+
+module.exports = new Mute;

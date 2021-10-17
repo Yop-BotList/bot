@@ -1,23 +1,28 @@
-const { Client, Message, MessageEmbed, MessageFlags } = require('discord.js'),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require('discord.js'),
       warns = require("../../models/sanction"),
       { modlogs } = require("../../configs/channels.json"),
       botconfig = require("../../models/botconfig"),
       { modrole, bypass } = require("../../configs/roles.json");
 
-module.exports = {
-    name: 'ban',
-    aliases: ['b'],
-    categories : 'staff', 
-    permissions : "BAN_MEMBERS", 
-    description: 'Bannir un membre.',
-    cooldown : 5,
-    usage: 'ban <id> <raison>',
-    /** 
-     * @param {Client} client 
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async(client, message, args) => {
+class Ban extends Command {
+    constructor() {
+        super({
+            name: 'ban',
+            category: 'staff',
+            description: 'Bannir un utilisateur',
+            aliases: ["b"],
+            usage: 'ban <id> <raison>',
+            example: ["b 692374264476860507 spam"],
+            perms: 'BAN_MEMBERS',
+            cooldown: 240,
+            botPerms: ["EMBED_LINKS", "SEND_MESSAGES", "READ_MESSAGES", "BAN_MEMBERS"]
+        });
+    }
+
+    async run(client, message, args) {
         const member = message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.user.bot) return message.reply(`**${client.no} ➜ Ce membre n’est pas humain.**`)
@@ -62,3 +67,5 @@ module.exports = {
         message.reply(`**${client.yes} ➜ ${member.user.tag} a été banni avec succès !**`)
     }
 }
+
+module.exports = new Ban;

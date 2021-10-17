@@ -1,25 +1,30 @@
-const { verificator, isclient, botintests, listedbot } = require("../../configs/roles.json"),
-    { autokick } = require("../../configs/config.json"),
-    { botslogs, modlogs } = require("../../configs/channels.json"),
-    { Client, Message, MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
-    bots = require("../../models/bots"),
-    botconfig = require("../../models/botconfig"),
-    warns = require("../../models/sanction")
+'use strict';
 
-module.exports = {
-    name: 'reject',
-    categories : 'staff', 
-    permissions : verificator, 
-    description: 'Permet de rejeter un bot de la liste.',
-    cooldown : 3600,
-    usage: 'reject <id> <raison>',
+const Command = require("../../structure/Command.js"),
+      { verificator } = require("../../configs/roles.json"),
+      { autokick } = require("../../configs/config.json"),
+      { botslogs, modlogs } = require("../../configs/channels.json"),
+      { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
+      bots = require("../../models/bots"),
+      botconfig = require("../../models/botconfig"),
+      warns = require("../../models/sanction")
 
-    /**
-     * @param {Client} client
-     * @param {Message} message
-     * @param {String[]} args
-     */
-    run: async (client, message, args) => {
+
+class Reject extends Command {
+    constructor() {
+        super({
+            name: 'reject',
+            category: 'staff',
+            description: 'Refuser un bot de la liste.',
+            usage: 'reject <id> <raison>',
+            example: ["reject 692374264476860507 Bot hors ToS"],
+            perms: verificator,
+            cooldown: 5,
+            botPerms: ["EMBED_LINKS", "SEND_MESSAGES", "READ_MESSAGES", "KICK_MEMBERS"]
+        });
+    }
+
+    async run(client, message, args) {
         const member = message.guild.members.fetch(args[0]);
         if (!member) return message.reply({ content: `**${client.no} ➜ Merci de me donner un ID de bot valide et présent sur le serveur.**`})
         let botGet = await bots.findOne({ botID: args[0], verified: false });
@@ -101,3 +106,5 @@ module.exports = {
         if (autokick === true) member.kick();
     }
 }
+
+module.exports = new Reject;

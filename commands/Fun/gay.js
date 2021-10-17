@@ -1,22 +1,21 @@
-const { Client, Message, MessageEmbed } = require("discord.js"),
-      { prefix } = require("../../configs/config.json"),
-      { verificator} = require("../../configs/roles.json");
+'use strict';
 
-module.exports = {
-    name: "gay",
-    categories: "fun",
-    permissions: "everyone",
-    description: "Signaler que tu es joyeux !",
-    aliases: [],
-    usage: "gay",
-    
-    /**
-    * @param {Message} message
-    * @param {Client} client
-    * @param {String[]} args
-    */
-    run: async (client, message, args) => { 
-        message.channel.send(`**:warning: ➜ Alerte à tout le monde ! <@${message.author.id}> est joyeux !**`)
+const Command = require("../../structure/Command.js")
+
+class Gay extends Command {
+    constructor() {
+        super({
+            name: 'gay',
+            category: 'fun',
+            description: 'Avertir que vous êtes joyeux !',
+            cooldown: 15
+        });
+    }
+
+    async run(client, message, args) {
+        message.channel.send(`**<a:Alerte:792846021876776980> ➜ Alerte à tout le monde ! <@${message.author.id}> est joyeux !**`)
         return message.delete()
     }
 }
+
+module.exports = new Gay;

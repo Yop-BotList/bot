@@ -1,22 +1,26 @@
-const { Client, Message, MessageEmbed } = require("discord.js"),
+'use strict';
+
+const Command = require("../../structure/Command.js"),
+      { MessageEmbed } = require("discord.js"),
       moment = require("moment"),
       bots = require("../../models/bots"),
       { prefix, mainguildid } = require("../../configs/config.json");
 
-module.exports = {
-    name: "botprofil",
-    categories: "botlist",
-    descripton: "Afficher le profil d'un robot inscrit sur la liste.",
-    aliases: ["profilbot"],
-    permissions: "everyone",
-    usage: "botprofil [utilisateur]",
-    /**
-     *  @param {Client} client
-     *  @param {Message} message
-     *  @param {Sting[]} args
-     */
+moment.locale('fr')
 
-    run: async (client, message, args) => {
+class Botprofil extends Command {
+    constructor() {
+        super({
+            name: 'botprofil',
+            category: 'botlist',
+            description: 'Voir le profil d\'un robot.',
+            usage: 'botprofil <mention>',
+            example: ["botprofil <@692374264476860507>"],
+            cooldown: 10
+        });
+    }
+
+    async run(client, message, args) {
         const member = message.mentions.members.first();
         if (!member) return message.channel.send(`**${client.no} ➜ Veuillez entrer la mention d'un robot présent sur ce serveur.**`)
         let db = await bots.findOne({ botID: member.user.id })
@@ -83,3 +87,5 @@ module.exports = {
             message.channel.send({ embeds: [e] })
     }
 }
+
+module.exports = new Botprofil;
