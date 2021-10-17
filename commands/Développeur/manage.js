@@ -257,16 +257,16 @@ class Manage extends Command {
                             }
                             if (button.customId === "seven") {
                                 msg.edit({ embeds: [e9], components: [row6] })
-                                const filter = m => m.author.id === message.author.id;
-                                const collector1 = await msg.channel.createMessageCollector({ filter })
-                                collector1.on("collect", (m) => {})
-                                collector1.on("end", (collected) => {
-                                    collected.forEach((value) => {
-                                        if (value) {
-        
-                                        }
-                                    });
-                                })
+                                const filter = x => x.author.id === button.user.id;
+
+                                const value = await button.channel.awaitMessages({
+                                    filter,
+                                    max: 1,
+                                    time: 1000 * 15
+                                });
+                                if (value) {
+
+                                }
                             }
                             if (button.customId === "eleven") msg.edit({ embeds: [e11], components: [row5]})
                             if (button.customId === "twelve") {
