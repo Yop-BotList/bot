@@ -13,7 +13,7 @@ module.exports = async(client, data) => {
     if (data.isButton()) {
         if (data.customId === "deleteMpTicket") {
             if (!data.channel.name.startsWith("🎫・ticket-")) return;
-            if (!data.member.roles.has(ticketsaccess)) return data.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation de fermer ce ticket.**`)
+            if (!data.member.roles.cache.has(ticketsaccess)) return data.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation de fermer ce ticket.**`)
 
             const user = await client.users.fetch(data.channel.topic),
                   channelLogs = client.channels.cache.get(ticketslogs);
