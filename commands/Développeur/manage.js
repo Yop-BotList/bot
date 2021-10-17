@@ -4,7 +4,6 @@ const Command = require("../../structure/Command.js")
 const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       { loading } = require("../../configs/emojis.json"),
       { botlogs } = require("../../configs/channels.json"),
-      { exec } = require("child_process"),
       { owner } = require("../../configs/config.json"),
       user = require("../../models/user");
 
@@ -54,12 +53,7 @@ class Manage extends Command {
                         .setStyle('PRIMARY')
                         .setEmoji('1️⃣')
                         .setCustomId('six')
-                
-                        let button8 = new MessageButton()
-                        .setStyle('PRIMARY')
-                        .setEmoji('2️⃣')
-                        .setCustomId('seven')
-                        
+                                        
                         let button9 = new MessageButton()
                         .setStyle('PRIMARY')
                         .setEmoji('1️⃣') 
@@ -72,7 +66,7 @@ class Manage extends Command {
                         
                         let button11 = new MessageButton()
                         .setStyle('PRIMARY')
-                        .setEmoji('3️⃣')
+                        .setEmoji('2️⃣')
                         .setCustomId('ten')
         
                         let button12 = new MessageButton()
@@ -112,7 +106,7 @@ class Manage extends Command {
                         .addComponents(button9, button10, button4);
                 
                         let row4 = new MessageActionRow()
-                        .addComponents(button7, button8, button11, button4)
+                        .addComponents(button7, button11, button4)
         
                         let row5 = new MessageActionRow()
                         .addComponents(button13, button14, button4)
@@ -165,7 +159,7 @@ class Manage extends Command {
                         
                         const e8 = new MessageEmbed()
                         .setTitle("Gérer le bot :")
-                        .setDescription(":one: Redémarrer le bot.\n:two: Exécuter une commande dans la console.\n:three: Démarrer/Arrêter un maintenance.\n:x: Annuler la commande.")
+                        .setDescription(":one: Redémarrer le bot.\n:two: Démarrer/Arrêter un maintenance.\n:x: Annuler la commande.")
                         .setColor(client.color)
                         .setThumbnail(message.guild.iconURL())
         
@@ -217,11 +211,13 @@ class Manage extends Command {
                                 if (value) client.reloadCommand(value.first().content).then(async res => {
                                     await msg.edit({ content: res, embeds: [], components: [] });
                                     value.first().delete()
+                                    collector.stop()
                                 });
                             }
                             if (button.customId === "five") {
                                 client.reloadAllCommands().then(async res => {
                                     await msg.edit({ content: res, embeds: [], components: [] });
+                                    collector.stop()
                                 })
                             }
                             if (button.customId === "two") msg.edit({ embeds: [e5], components: [row3] })
@@ -237,11 +233,13 @@ class Manage extends Command {
                                 if (value) client.reloadEvent(value.first().content).then(async res => {
                                     await msg.edit({ content: res, embeds: [], components: [] });
                                     value.first().delete()
+                                    collector.stop()
                                 });
                             }
                             if (button.customId === "nine") {
                                 client.reloadAllEvents().then(async res => {
                                     await msg.edit({ content: res, embeds: [], components: [] });
+                                    collector.stop()
                                 })
                             }
                             if (button.customId === "three") {
@@ -254,19 +252,6 @@ class Manage extends Command {
                                     collector.stop()
                                     return process.exit()
                                 })
-                            }
-                            if (button.customId === "seven") {
-                                msg.edit({ embeds: [e9], components: [row6] })
-                                const filter = x => x.author.id === button.user.id;
-
-                                const value = await button.channel.awaitMessages({
-                                    filter,
-                                    max: 1,
-                                    time: 1000 * 15
-                                });
-                                if (value) {
-
-                                }
                             }
                             if (button.customId === "eleven") msg.edit({ embeds: [e11], components: [row5]})
                             if (button.customId === "twelve") {
@@ -314,6 +299,51 @@ class Manage extends Command {
                                     }
                                 }
                             }
+                            if (button.customId === "thirteen") {
+                                msg.edit({ embeds: [e12], components: [row6] })
+                                const filter = x => x.author.id === button.user.id;
+
+                                const value = await button.channel.awaitMessages({
+                                    filter,
+                                    max: 1,
+                                    time: 1000 * 15
+                                });
+                                if (value) {
+                                    const member = await client.users.fetch(value.first().content)
+                                    if (!member) {
+                                        msg.edit({ content: `**${client.no} ➜ Cet utilisateur est introuvable.**`, embeds: [], components: [] })
+                                        value.first().delete()
+                                        return collector.stop()
+                                    }
+                                    if (member.id === owner) {
+                                        msg.edit({ content: `**${client.no} ➜ Vous ne pouvez pas ajouter mon propriétaire à la liste noire.**`, embeds: [], components: [] })
+                                        value.first().delete()
+                                        return collector.stop()
+                                    }
+                                    const db = await user.findOne({ userID: member.id })
+                                    if (!db) {
+                                        new user({
+                                            userID: member.id,
+                                            cmdbl: true
+                                        }).save()
+                                        msg.edit({ content: `**${client.yes} ➜ \`${member.tag}\` a bien été ajouté à la liste noire des commandes.**`, embeds: [], components: [] })
+                                        value.first().delete()
+                                        return collector.stop()
+                                    }
+                                    if (db.cmdbl === true) {
+                                        await user.findOneAndUpdate({ userID: member.id }, { $set: { cmdbl: false } }, { upsert: true })
+                                        msg.edit({ content: `**${client.yes} ➜ \`${member.tag}\` a bien été retiré de la liste noire des commandes.**`, embeds: [], components: [] })
+                                        value.first().delete()
+                                        return collector.stop()
+                                    }
+                                    if (db.cmdbl === false || !db.cmdbl) {
+                                        await user.findOneAndUpdate({ userID: member.id }, { $set: { cmdbl: true } }, { upsert: true })
+                                        msg.edit({ content: `**${client.no} ➜ \`${member.tag}\` a bien été ajouté à la liste noire des commandes.**`, embeds: [], components: [] })
+                                        value.first().delete()
+                                        return collector.stop()
+                                    }
+                                }
+                            }
                             if (button.customId === "fourteen") {
                                 msg.edit({ embeds: [e3], components: [row6] })
                                 const filter = x => x.author.id === button.user.id;
@@ -326,11 +356,13 @@ class Manage extends Command {
                                 if (value) client.reloadSlashCommand(value.first().content).then(async res => {
                                     await msg.edit({ content: res, embeds: [], components: [] });
                                     value.first().delete()
+                                    collector.stop()
                                 });
                             }
                             if (button.customId === "fifteen") {
                                 client.reloadAllSlashCommands().then(async res => {
                                     await msg.edit({ content: res, embeds: [], components: [] });
+                                    collector.stop()
                                 })
                             }
                         });

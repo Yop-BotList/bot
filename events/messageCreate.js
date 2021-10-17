@@ -1,36 +1,34 @@
 'use strict';
 
 const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
-  { prefix, owners, owner, mainguildid, color } = require("../configs/config.json"),
-  client = require("../index"),
-  { botlogs, ticketcategory, ticketslogs } = require('../configs/channels.json'),
-  { ticketsaccess } = require("../configs/roles.json"),
-  { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
-  bumpChecker = require("../fonctions/bumpChecker"),
-  
-  confirmMp = new MessageButton()
-  .setStyle("SUCCESS")
-  .setCustomId("confirmMpMessage")
-  .setEmoji("📥"),
-  deleteMp = new MessageButton()
-  .setStyle("DANGER")
-  .setCustomId("deleteMpTicket")
-  .setEmoji("🗑️"),
-  rowMp = new MessageActionRow()
-  .addComponents(confirmMp),
-  rowDelete = new MessageActionRow()
-  .addComponents(deleteMp),
-  
-  mpEmbed = new MessageEmbed()
-  .setTitle("Support en MP")
-  .setColor(color)
-  .setDescription(`> **🇫🇷 ➜ Bonjour,\n> Voulez vous envoyer un message au support ?\n> Si oui, cliquez sur le bouton ci dessous.**\n\n> **🇺🇸 ➜ Hello,\n> Do you want to tell support ?\n> If yes, click on the button below.**`)
-  .setFooter(`YopBot Support System`),
-  deleteMpEmbed = new MessageEmbed()
-  .setTitle("Support en MP")
-  .setDescription("> **🇫🇷 ➜ Pour pouvoir supprimer le ticket, cliquez sur le bouton ci-dessous.\n> 🇺🇸 ➜ To delete the ticket, click on the button below.**")
-  .setFooter("YopBot Support System")
-  .setColor(color);
+      { prefix, owners, owner, mainguildid, color } = require("../configs/config.json"),
+      { botlogs, ticketcategory, ticketslogs } = require('../configs/channels.json'),
+      { ticketsaccess } = require("../configs/roles.json"),
+      { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
+      bumpChecker = require("../fonctions/bumpChecker"),
+      user = require("../models/user"),
+      confirmMp = new MessageButton()
+      .setStyle("SUCCESS")
+      .setCustomId("confirmMpMessage")
+      .setEmoji("📥"),
+      deleteMp = new MessageButton()
+      .setStyle("DANGER")
+      .setCustomId("deleteMpTicket")
+      .setEmoji("🗑️"),
+      rowMp = new MessageActionRow()
+      .addComponents(confirmMp),
+      rowDelete = new MessageActionRow()
+      .addComponents(deleteMp),
+      mpEmbed = new MessageEmbed()
+      .setTitle("Support en MP")
+      .setColor(color)
+      .setDescription(`> **🇫🇷 ➜ Bonjour,\n> Voulez vous envoyer un message au support ?\n> Si oui, cliquez sur le bouton ci dessous.**\n\n> **🇺🇸 ➜ Hello,\n> Do you want to tell support ?\n> If yes, click on the button below.**`)
+      .setFooter(`YopBot Support System`),
+      deleteMpEmbed = new MessageEmbed()
+      .setTitle("Support en MP")
+      .setDescription("> **🇫🇷 ➜ Pour pouvoir supprimer le ticket, cliquez sur le bouton ci-dessous.\n> 🇺🇸 ➜ To delete the ticket, click on the button below.**")
+      .setFooter("YopBot Support System")
+      .setColor(color);
 
 module.exports = async(client, message) => {
     bumpChecker(message);
@@ -41,7 +39,7 @@ module.exports = async(client, message) => {
   
     if (message.channel.type === "DM") {
       const guild = client.guilds.cache.get(mainguildid),
-        ticket = guild?.channels.cache.find(x => x.name === `🎫・ticket-${message.author.discriminator}` && x.topic === `${message.author.id}`);
+            ticket = guild?.channels.cache.find(x => x.name === `🎫・ticket-${message.author.discriminator}` && x.topic === `${message.author.id}`);
   
       if (ticket) {
         const webhooks = await ticket.fetchWebhooks();
@@ -65,7 +63,7 @@ module.exports = async(client, message) => {
         }
         return message.react("📨");
       }
-  
+
       const msg = await message.author?.send({
         content: null,
         embeds: [mpEmbed],
@@ -77,7 +75,12 @@ module.exports = async(client, message) => {
   
       collector.on("collect", async (button) => {
         if (button.user.id === message.author.id) {
-          if (button.customId === "confirmMpMessage") {        
+          if (button.customId === "confirmMpMessage") { 
+            let db = user.findOne({ userID: message.author.id, ticketsbl: true });
+            if (db) {
+              await button.update({ content: `**${client.no} ➜ Vous êtes sur la liste noire des tickets. Vous ne pouvez donc pas contacter le STAFF.**`, embeds: [], components: [] })
+              return collector.stop()
+            }     
             if (!ticket) {
               guild.channels.create(`🎫・ticket-${message.author.discriminator}`, {
                 type: 'GUILD_TEXT',
@@ -208,13 +211,7 @@ module.exports = async(client, message) => {
     if (matchedPrefix.includes(client.user.id) && message.author.id !== "692374264476860507") return message.reply({ content: `<@${message.author.id}> Pour voir toutes les commandes, tapez \`${prefix}help\`` });
     if (matchedPrefix.includes(client.user.id) && message.author.id == "692374264476860507") return message.reply({ content: `Bonjour maître. Mon préfixe est \`${prefix}\`` });
   }
-
-
   if (message.content.includes(client.user.username)) message.react("👀");
-
-
-
-
     const data = message.content;
     message.guild.prefix = client.config.prefix;
     const arg = data.slice(message.guild.prefix.length).trim().split(/ +/g);
@@ -224,6 +221,8 @@ module.exports = async(client, message) => {
     const command = client.commands.find(cmd => cmd.aliases.includes(arg[0])) || client.commands.get(arg[0]);
     if (!command) return;
     if (message.channel.type === "dm") return;
+    const db = user.findOne({ userID: message.author.id, cmdbl: true });
+    if (db !== undefined) return message.reply(`**${client.no} ➜ Vous êtes sur la liste noire des commandes. Vous ne pouvez donc pas en utiliser.**`)
     if(command.botNotAllowed && message.author.bot) return;
       /* Commands Log */
   client.channels.cache.get(botlogs).send({
