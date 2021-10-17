@@ -76,8 +76,8 @@ module.exports = async(client, message) => {
       collector.on("collect", async (button) => {
         if (button.user.id === message.author.id) {
           if (button.customId === "confirmMpMessage") { 
-            let db = user.findOne({ userID: message.author.id, ticketsbl: true });
-            if (db) {
+            let db = await user.findOne({ userID: message.author.id });
+            if (db.ticketsbl === true) {
               await button.update({ content: `**${client.no} ➜ Vous êtes sur la liste noire des tickets. Vous ne pouvez donc pas contacter le STAFF.**`, embeds: [], components: [] })
               return collector.stop()
             }     
@@ -221,8 +221,8 @@ module.exports = async(client, message) => {
     const command = client.commands.find(cmd => cmd.aliases.includes(arg[0])) || client.commands.get(arg[0]);
     if (!command) return;
     if (message.channel.type === "dm") return;
-    const db = user.findOne({ userID: message.author.id, cmdbl: true });
-    if (db !== undefined) return message.reply(`**${client.no} ➜ Vous êtes sur la liste noire des commandes. Vous ne pouvez donc pas en utiliser.**`)
+    let db = await user.findOne({ userID: message.author.id, cmdbl: true });
+    if (db) return message.reply({ content: `**${client.no} ➜ Vous êtes sur la liste noire des commandes. Vous ne pouvez donc pas en utiliser.**` })
     if(command.botNotAllowed && message.author.bot) return;
       /* Commands Log */
   client.channels.cache.get(botlogs).send({
