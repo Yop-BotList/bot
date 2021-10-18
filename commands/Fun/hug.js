@@ -19,7 +19,7 @@ class Hug extends Command {
         const member = message.mentions.members.first();
         if (!member) return message.reply(`**${client.no} ➜ À qui souhaites-tu faire un câlin ?**`)
         const e = new MessageEmbed()
-        .setTitle(`<@${message.author.id}> fait un câlin à ${member.user.username}`)
+        .setDescription(`<@${message.author.id}> fait un câlin à ${member.user.username}`)
         .setTimestamp(new Date())
         .setImage("https://i.imgur.com/TuMgJw0.gif") 
         .setColor(client.color)

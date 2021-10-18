@@ -17,10 +17,10 @@ class Slap extends Command {
     }
 
     async run(client, message, args) {
-        const member = message.mentions.members.fisrt() || message.guild.members.fetch(args[0]);
+        const member = message.mentions.members.first() || message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Qui souhaites-tu frapper ?**`)
         const e = new MessageEmbed()
-        .setTitle(`<@${message.author.id}> frappe ${member.user.username}`)
+        .setDescription(`<@${message.author.id}> frappe ${member.user.username}`)
         .setTimestamp(new Date())
         .setImage("https://i.imgur.com/7NIq25q.gif")
         .setColor(client.color)

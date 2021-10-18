@@ -19,7 +19,7 @@ class Kiss extends Command {
         const member = message.mentions.members.first();
         if (!member) return message.reply(`**${client.no} ➜ Qui souhaites-tu embrasser ?**`)
         const e = new MessageEmbed()
-        .setTitle(`<@${message.author.id}> embrasse ${member.user.username}`)
+        .setDescription(`<@${message.author.id}> embrasse ${member.user.username}`)
         .setTimestamp(new Date())
         .setImage("https://i.imgur.com/GTeWgtB.gif")
         .setColor(client.color)
