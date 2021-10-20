@@ -26,7 +26,7 @@ class Warns extends Command {
         const member = message.mentions.members.first();
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un utilisateur présent sur le serveur.**`)
         if (member.user.bot) return message.reply(`**${client.no} ➜ Un bot ne peut pas avoir reçu d'infractions.**`)
-        const db = warns.find({ userID: member.user.id });
+        const db = await warns.find({ userID: member.user.id });
         if (db.length === 0) return message.reply(`**${client.no} ➜ Ce membre n'a pas encore reçu de sanctions.**`)
 
         let i0 = 0;
