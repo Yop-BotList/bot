@@ -4,12 +4,13 @@ const { welcomechannel } = require("../configs/channels.json"),
       { botintests, botrole } = require("../configs/roles.json"),
       { mainguildid } = require("../configs/config.json"),
       bots = require("../models/bots"),
-      { MessageEmbed } = require("discord.js");
+      { MessageEmbed } = require("discord.js"),
+      { entre } = require("../configs/emojis.json");
 
 module.exports = async(client, member) => {
     if (member.guild.id !== mainguildid) return;
     if (!member.user.bot) {
-        client.channels.cache.get(welcomechannel).send(`**<a:entre:838336027616739338> ➜ Un \`${member.user.username}\` sauvage tape l'incruste dans le serveur !**`)
+        client.channels.cache.get(welcomechannel).send(`**${entre} ➜ Un \`${member.user.username}\` sauvage tape l'incruste dans le serveur !**`)
         const e = new MessageEmbed()
         .setTitle("Bienvenue / Welcome")
         .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
@@ -26,6 +27,6 @@ module.exports = async(client, member) => {
         // autorename
         if (db) member.setNickname(`[${db.prefix}] ${member.user.username}`)
         // message
-        client.channels.cache.get(welcomechannel).send(`**<a:entre:838336027616739338> ➜ Oh non, de la concurrance <:Panda_horrible:838335972931272745> ! Nan, je rigole ! Bienvenue à toi <@${member.user.id}> :wink:**`)
+        client.channels.cache.get(welcomechannel).send(`**${entre} ➜ Oh non, de la concurrance <:Panda_horrible:838335972931272745> ! Nan, je rigole ! Bienvenue à toi <@${member.user.id}> :wink:**`)
     }
 }

@@ -1,6 +1,7 @@
 'use strict';
 
-const Command = require("../../structure/Command.js")
+const Command = require("../../structure/Command.js"),
+      { alerte } = require("../../configs/emojis.json")
 
 class Gay extends Command {
     constructor() {
@@ -13,7 +14,7 @@ class Gay extends Command {
     }
 
     async run(client, message, args) {
-        message.channel.send(`**<a:Alerte:792846021876776980> ➜ Alerte à tout le monde ! <@${message.author.id}> est joyeux !**`)
+        message.channel.send(`**${alerte} ➜ Alerte à tout le monde ! <@${message.author.id}> est joyeux !**`)
         return message.delete()
     }
 }

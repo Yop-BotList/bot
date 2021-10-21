@@ -53,7 +53,7 @@ class Warns extends Command {
         let buttons = new MessageActionRow()
         .addComponents(leftPage, deleteMsg, rightPage)
 
-        let description = `${db.map(r => `${r.wrnID} ➜ \`${r.type}\`➜ \`${message.guild.members.fetch(r.modID)}\` ➜ \`${moment(r.date).format("Do/MM/YY")}\` ➜ \`\`\`${r.reason}\`\`\``).slice(0, 10).join("\n")}`,
+        let description = `${db.map(r => `${r.wrnID} ➜ \`${r.type}\`➜ \`${await client.users.fetch(r.modID)}\` ➜ \`${moment(r.date).format("Do/MM/YY")}\` ➜ \`\`\`${r.reason}\`\`\``).slice(0, 10).join("\n")}`,
             footer = `Page ${page}/${Math.ceil(db.length/10)}`,
             embed = new MessageEmbed()
             .setTitle(`Suggestions en attente sur le serveur.`)

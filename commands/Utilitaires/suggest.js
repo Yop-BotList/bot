@@ -37,9 +37,9 @@ class Suggest extends Command {
                     .setTimestamp(new Date())
                     .setDescription(`\`\`\`md\n# ${args.join(' ')}\n\`\`\`\n**Réagissez :**\n${client.yes} = Oui\n${bof} = Pourquoi pas ?\n${client.no} = Non`)
                     client.channels.cache.get(channels.suggests).send({ embeds: [e] }).then(async(msg) => {
-                        msg.react('838334340618256384')
-                        msg.react('838334339820945419')
-                        msg.react('838334340160815104')
+                        msg.react('900773800973565972')
+                        msg.react('900773799035818024')
+                        msg.react('900773800193437697')
             
                         // database
                         new suggests({
