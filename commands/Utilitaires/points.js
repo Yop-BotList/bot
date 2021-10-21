@@ -19,7 +19,7 @@ class Points extends Command {
     }
 
     async run(client, message, args) {
-        let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
+        let member = message.mentions.members.first() || message.guild.members.cache.get(args[1]) || message.member;
 
         let userGet = await bumps.findOne({ userId: member.user.id });
     

@@ -22,10 +22,10 @@ class Unban extends Command {
     }
 
     async run(client, message, args) {
-        const member = await client.users.fetch(args[0]);
+        const member = await client.users.fetch(args[1]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.bot) return message.reply(`**${client.no} ➜ Cet utilisateur n’est pas humain.**`)
-        if (!message.guild.bans.fetch(args[0])) return message.reply(`**${client.no} ➜ Zut alors ! Cet utilisateur n'est pas banni du serveur !**`)
+        if (!message.guild.bans.fetch(args[1])) return message.reply(`**${client.no} ➜ Zut alors ! Cet utilisateur n'est pas banni du serveur !**`)
         
         try {
             message.guild.bans.remove({ user: member.id, reason: "Débannissement effectué par " + message.author.tag })

@@ -17,7 +17,7 @@ class Slap extends Command {
     }
 
     async run(client, message, args) {
-        const member = message.mentions.members.first() || message.guild.members.fetch(args[0]);
+        const member = message.mentions.members.first() || await message.guild.members.fetch(args[1]);
         if (!member) return message.reply(`**${client.no} ➜ Qui souhaites-tu frapper ?**`)
         const e = new MessageEmbed()
         .setDescription(`<@${message.author.id}> frappe ${member.user.username}`)

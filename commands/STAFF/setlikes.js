@@ -23,19 +23,19 @@ class Setlikes extends Command {
     }
 
     async run(client, message, args) {
-        if (!args[0]) return message.reply({ content: `${client.no} ➜ Merci de mettre une des deux options au lieu de aucune, \`set/reset\`.` });
+        if (!args[1]) return message.reply({ content: `${client.no} ➜ Merci de mettre une des deux options au lieu de aucune, \`set/reset\`.` });
     
-        if (args[0] === "set") {
+        if (args[1] === "set") {
             let bot = message.mentions.members.first();
             if (!bot) return message.reply({ content: `${client.no} ➜ Merci de mentionner un bot.` });
-            if (!bot.user || !bot.user.bot) return message.reply({ content: `${client.no} ➜ ${args[1]} n'est pas un bot.` });
+            if (!bot.user || !bot.user.bot) return message.reply({ content: `${client.no} ➜ ${args[2]} n'est pas un bot.` });
             let botGet = await bots.findOne({ botID: bot.user.id });
             if (!botGet) return message.reply({ content: `${client.no} ➜ \`${bot.user.tag}\` n'est pas sur la liste.` });
 
             if (!args.slice(2).join(" ")) return message.reply({ content: `${client.no} ➜ Merci de me donner un nombre de votes.` });
             args.shift();
 
-            const amount = parseInt(args[1]);
+            const amount = parseInt(args[2]);
 
             if (isNaN(amount)) return message.reply({ content: `${client.no} ➜ Merci de mettre un nombre valide.` });
 
@@ -49,10 +49,10 @@ class Setlikes extends Command {
             });
 
             message.reply({ content: `${client.yes} ➜ Le nombre de likes de \`${bot.user.tag}\` est maintenant défini sur ${amount}.` });
-        } else if (args[0] === "reset" && args[1] !== "all") {
+        } else if (args[1] === "reset" && args[2] !== "all") {
             let bot = message.mentions.members.first();
             if (!bot) return message.reply({ content: `${client.no} ➜ Merci de mentionner un bot.` });
-            if (!bot.user || !bot.user.bot) return message.reply({ content: `${client.no} ➜ ${args[1]} n'est pas un bot.` });
+            if (!bot.user || !bot.user.bot) return message.reply({ content: `${client.no} ➜ ${args[2]} n'est pas un bot.` });
             let botGet = await bots.findOne({ botID: bot.user.id });
             if (!botGet) return message.reply({ content: `${client.no} ➜ \`${bot.user.tag}\` n'est pas sur la liste.` });
 
@@ -68,7 +68,7 @@ class Setlikes extends Command {
             });
 
             return message.reply({ content: `${client.yes} ➜ Le nombre de votes de \`${bot.user.tag}\` vient juste d'être réinitialisé.` });
-        } else if (args[0] === "reset" && args[1] === "all") {
+        } else if (args[1] === "reset" && args[2] === "all") {
             const m = await message.reply(`**${client.yes} ➜ Approuvez-vous cette action ? Cela signifie que tous les votes vont être réinitialisés.**`)
             m.react("✅")
             m.react("❌")

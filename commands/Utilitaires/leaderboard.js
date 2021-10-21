@@ -21,10 +21,10 @@ class Leaderboard extends Command {
     }
 
     async run(client, message, args) {
-        if (args[0] !== "likes" && args[0] !== "bumps" && args[0] !== "staff") return message.reply(`**${client.no} ➜ Veuillez entrer l'un des arguments suivants : \`likes\`, \`bumps\` ou \`staff\`.**`)
+        if (args[1] !== "likes" && args[1] !== "bumps" && args[1] !== "staff") return message.reply(`**${client.no} ➜ Veuillez entrer l'un des arguments suivants : \`likes\`, \`bumps\` ou \`staff\`.**`)
         
         // likes
-        if (args[0] === "likes") {
+        if (args[1] === "likes") {
     const usersdata = await bot.find({ serverID: mainguildid });
 
     if (usersdata.length < 2) return message.channel.send(`**${client.no} ➜ Il n'y a pas assez de bots dans le classement pour que je puisse afficher en afficher un.**`)
@@ -52,7 +52,7 @@ class Leaderboard extends Command {
         }
         
         // bumps
-        if (args[0] === "bumps") {
+        if (args[1] === "bumps") {
             const usersdata = await bumps.find();
 
     if (usersdata.length < 2) return message.channel.send(`**${client.no} ➜ Il n'y a pas assez de bumpers dans le classement pour que je puisse afficher en afficher un.**`)

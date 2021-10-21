@@ -21,14 +21,14 @@ class Setsupport extends Command {
     }
 
     async run(client, message, args) {
-        if (!args[0]) return message.channel.send(`\`\`\`${prefix}setsupport <id bot> <invitation | none>\`\`\``)
-            const member = message.guild.members.fetch(`${args[0]}`)
+        if (!args[1]) return message.channel.send(`\`\`\`${prefix}setsupport <id bot> <invitation | none>\`\`\``)
+            const member = message.guild.members.fetch(`${args[1]}`)
             if (!member) return message.channel.send(`**${client.no} ➜ Identifiant invalide.**`)
             const db = await bots.findOne({ botID: member.user.id })
             if (!db) return message.channel.send("**" + client.no + ' ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste. (Ce n\'est d\'ailleurs peut-être même un bot)**')
             if (db.ownerID !== message.author.id && !message.member.roles.cache.get(verificator)) return message.channel.send("**" + client.no + " ➜ Désolé, mais vous n'avez pas la permission d'utiliser cette commande.**")
-            if (!args[1]) return message.channel.send("**" + client.no + ' ➜ Il faudrai peut-être entrer un lien non ?**')
-            if (args[1] === 'none' && db.serverInvite) {
+            if (!args[2]) return message.channel.send("**" + client.no + ' ➜ Il faudrai peut-être entrer un lien non ?**')
+            if (args[2] === 'none' && db.serverInvite) {
                 const e = new MessageEmbed()
                 .setColor(client.color)
                 .setTitle("Modification du profil...")
@@ -42,7 +42,7 @@ class Setsupport extends Command {
                 },
                 {
                     name: "➜ Après :",
-                    value: `\`\`\`${args[1]}\`\`\``,
+                    value: `\`\`\`${args[2]}\`\`\``,
                     inline: false
                 })
                 client.channels.cache.get(botslogs).send({ content: `<@${db.ownerID}>`, embeds: [e] })
@@ -51,9 +51,9 @@ class Setsupport extends Command {
                     return await bots.findOneAndUpdate({ botID: member.user.id }, { $set: { serverInvite: null } }, { upsert: true })
                 }, 2000)
             }
-            if (args[1] === 'none' && !db.serverInvite) return message.channel.send("**" + client.no + ' ➜ Tu m\'as demandé supprimer un lien qui n\'a jamais été enregistré ¯\\_(ツ)_/¯**')
-            if (args[1] !== "none") {
-                if (!args[1].startsWith('https://discord.gg/') || args[1] === "https://discord.gg/") return message.channel.send("**" + client.no + " ➜ Le lien entré est invalide. Je vous rappelle que le lien doit commencer par `https://discord.gg/`**")
+            if (args[2] === 'none' && !db.serverInvite) return message.channel.send("**" + client.no + ' ➜ Tu m\'as demandé supprimer un lien qui n\'a jamais été enregistré ¯\\_(ツ)_/¯**')
+            if (args[2] !== "none") {
+                if (!args[2].startsWith('https://discord.gg/') || args[2] === "https://discord.gg/") return message.channel.send("**" + client.no + " ➜ Le lien entré est invalide. Je vous rappelle que le lien doit commencer par `https://discord.gg/`**")
                 if (!db.serverInvite) var before = "none"
                 if (db.serverInvite) var before = db.serverInvite
 
@@ -70,13 +70,13 @@ class Setsupport extends Command {
                 },
                 {
                     name: "➜ Après :",
-                    value: `\`\`\`${args[1]}\`\`\``,
+                    value: `\`\`\`${args[2]}\`\`\``,
                     inline: false
                 })
                 client.channels.cache.get(botslogs).send({ content: `<@${db.ownerID}>`, embeds: [e] })
                 message.channel.send("**" + client.yes + " ➜ Modifications enregistrées avec succès !**")
                 setTimeout(async () => {
-                    return await bots.findOneAndUpdate({ botID: member.user.id }, { $set: { serverInvite: args[1] } }, { upsert: true })
+                    return await bots.findOneAndUpdate({ botID: member.user.id }, { $set: { serverInvite: args[2] } }, { upsert: true })
                 }, 2000)
             }
     }

@@ -53,8 +53,7 @@ class Warns extends Command {
         let buttons = new MessageActionRow()
         .addComponents(leftPage, deleteMsg, rightPage)
 
-        let array = db.sort((a, b) => (a.wrnID < b.wrnID) ? 1 : -1),
-            description = `${array.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${await client.users.fetch(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`,
+        let description = `${db.map(r => `${r.wrnID} ➜ \`${r.type}\`➜ \`${message.guild.members.fetch(r.modID)}\` ➜ \`${moment(r.date).format("Do/MM/YY")}\` ➜ \`\`\`${r.reason}\`\`\``).slice(0, 10).join("\n")}`,
             footer = `Page ${page}/${Math.ceil(db.length/10)}`,
             embed = new MessageEmbed()
             .setTitle(`Suggestions en attente sur le serveur.`)
@@ -93,7 +92,7 @@ class Warns extends Command {
                 buttons = new MessageActionRow()
                 .addComponents(leftPage, deleteMsg, rightPage);
 
-                description = `${array.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${await client.users.fetch(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`;
+                description = `${db.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${await client.users.fetch(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`;
                 footer = `Page ${page}/${Math.ceil(db.length/3)}`;
 
                 embed.setDescription(description).setFooter(footer);
@@ -115,7 +114,7 @@ class Warns extends Command {
                 buttons = new MessageActionRow()
                 .addComponents(leftPage, deleteMsg, rightPage);
 
-                description = `${array.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${await client.users.fetch(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`;
+                description = `${db.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${await client.users.fetch(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`;
                 footer = `Page ${page}/${Math.ceil(db.length/10)}`;
                 
                 embed.setDescription(description).setFooter(footer);

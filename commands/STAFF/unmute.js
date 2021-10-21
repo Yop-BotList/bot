@@ -23,7 +23,7 @@ class Unmute extends Command {
     }
 
     async run(client, message, args) {
-        const member = message.guild.members.fetch(args[0]);
+        const member = await message.guild.members.fetch(args[1]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (!member.roles.cache.has(mute)) return message.reply(`**${client.no} ➜ Ce membre n'est pas muet.**`)
         const db = await botconfig.findOne();
