@@ -11,7 +11,7 @@ module.exports = async(client, member) => {
     const botget = await bots.find({ ownerID: member.user.id })
     if (botget) {
         botget.forEach(async x => {
-            const robot = member.guild.members.fetch(x.botID),
+            const robot = await member.guild.members.fetch(x.botID),
                   e = new MessageEmbed()
                   .setTitle("Auto-expultion...")
                   .setColor(client.color)

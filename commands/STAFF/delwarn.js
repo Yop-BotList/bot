@@ -21,8 +21,8 @@ class Delwarn extends Command {
     }
 
     async run(client, message, args) {
-        if (!parseInt(args[1])) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
-        const db = await warns.findOne({ wrnID: Number(args[1]) });
+        if (!parseInt(args[0])) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
+        const db = await warns.findOne({ wrnID: Number(args[0]) });
         if (!db) return message.reply(`**${client.no} ➜ Sanction introuvable !**`)
         const member = await client.users.fetch(db.userID);       
         const e = new MessageEmbed()
@@ -44,7 +44,7 @@ class Delwarn extends Command {
             e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de la suppression de sa sanction !")
         })
         client.channels.cache.get(modlogs).send({ embeds: [e] })
-        await warns.findOneAndDelete({ warns: Number(args[1]) });
+        await warns.findOneAndDelete({ warns: Number(args[0]) });
         message.reply(`**${client.yes} ➜ Avertissement supprimé avec succès !**`)
     }
 }

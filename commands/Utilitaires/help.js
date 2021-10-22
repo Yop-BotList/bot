@@ -17,7 +17,7 @@ class Help extends Command {
     }
 
     async run(client, message, args) {
-        if (!args[1]) {
+        if (!args[0]) {
             let categories = [];
       
             readdirSync("./commands/").forEach((dir) => {
@@ -55,12 +55,12 @@ class Help extends Command {
             return message.channel.send({ content: null, embeds: [embed] });
           } else {
             const command =
-              client.commands.get(args[1].toLowerCase()) ||
+              client.commands.get(args[0].toLowerCase()) ||
               client.commands.find(
-                (c) => c.aliases && c.aliases.includes(args[1].toLowerCase())
+                (c) => c.aliases && c.aliases.includes(args[0].toLowerCase())
               );
       
-            if (!command) return message.channel.send({ content: `${client.no} ➜ Impossible de retrouver une commande nommée \`${client.config.prefix}${args[1]}\`` });
+            if (!command) return message.channel.send({ content: `${client.no} ➜ Impossible de retrouver une commande nommée \`${client.config.prefix}${args[0]}\`` });
       
             const embed = new MessageEmbed()
               .setTitle(`Informations sur la commande ${command.name}`)

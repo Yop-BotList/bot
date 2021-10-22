@@ -77,10 +77,12 @@ module.exports = async(client, message) => {
         if (button.user.id === message.author.id) {
           if (button.customId === "confirmMpMessage") { 
             let db = await user.findOne({ userID: message.author.id });
-            if (db.ticketsbl === true) {
-              await button.update({ content: `**${client.no} ➜ Vous êtes sur la liste noire des tickets. Vous ne pouvez donc pas contacter le STAFF.**`, embeds: [], components: [] })
-              return collector.stop()
-            }     
+			if (db) {
+				if (db.ticketsbl === true) {
+              		await button.update({ content: `**${client.no} ➜ Vous êtes sur la liste noire des tickets. Vous ne pouvez donc pas contacter le STAFF.**`, embeds: [], components: [] })
+              		return collector.stop()
+            } 
+            }    
             if (!ticket) {
               guild.channels.create(`🎫・ticket-${message.author.discriminator}`, {
                 type: 'GUILD_TEXT',

@@ -21,14 +21,14 @@ class Setdesc extends Command {
     }
 
     async run(client, message, args) {
-        if (!args[1]) return message.channel.send(`\`\`\`${prefix}setdesc <id bot> <description | none>\`\`\``)
-        const member = message.guild.members.fetch(`${args[1]}`);
+        if (!args[0]) return message.channel.send(`\`\`\`${prefix}setdesc <id bot> <description | none>\`\`\``)
+        const member = message.guild.members.fetch(`${args[0]}`);
         if (!member) return message.channel.send(`**${client.no} ➜ Veuillez entrer l'indentifiant valide d'un bot présent sur ce serveur.**`)
         const db = await bots.findOne({ botID: member.user.id });
         if (!db) return message.channel.send("**" + client.no + ' ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste. (Ce n\'est d\'ailleurs peut-être même un bot)**')
         if (db.ownerID !== message.author.id && !message.member.roles.cache.get(verificator)) return message.channel.send("**" + client.no + " ➜ Désolé, mais vous n'avez pas la permission d'utiliser cette commande.**")
-        if (!args[2]) return message.channel.send("**" + client.no + ' ➜ Il faudrai peut-être entrer une description non ?**')
-        if (args[2] === 'none' && db.desc) {
+        if (!args[1]) return message.channel.send("**" + client.no + ' ➜ Il faudrai peut-être entrer une description non ?**')
+        if (args[1] === 'none' && db.desc) {
             const e = new MessageEmbed()
             .setColor(client.color)
             .setTitle("Modification du profil...")
@@ -51,8 +51,8 @@ class Setdesc extends Command {
                 return await bots.findOneAndUpdate({ botID: member.user.id }, { $set: { desc: null } }, { upsert: true })
             }, 2000)
         }
-        if (args[2] === 'none' && !db.desc) return message.channel.send("**" + client.no + ' ➜ Tu m\'as demandé supprimer une description qui n\'a jamais été enregistrée ¯\\_(ツ)_/¯**')
-        if (args[2] !== "none") {
+        if (args[1] === 'none' && !db.desc) return message.channel.send("**" + client.no + ' ➜ Tu m\'as demandé supprimer une description qui n\'a jamais été enregistrée ¯\\_(ツ)_/¯**')
+        if (args[1] !== "none") {
             if (message.content.length > 300) return message.channel.send("**" + client.no + " ➜ Votre description ne doit pas dépasser les 300 caractères.**")
             const e = new MessageEmbed()
             .setColor(client.color)

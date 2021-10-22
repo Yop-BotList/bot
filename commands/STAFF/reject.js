@@ -25,9 +25,9 @@ class Reject extends Command {
     }
 
     async run(client, message, args) {
-        const member = await message.guild.members.fetch(args[1]);
+        const member = await message.guild.members.fetch(args[0]);
         if (!member) return message.reply({ content: `**${client.no} ➜ Merci de me donner un ID de bot valide et présent sur le serveur.**`})
-        let botGet = await bots.findOne({ botID: args[1], verified: false });
+        let botGet = await bots.findOne({ botID: args[0], verified: false });
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Aucune demande n’a été envoyée pour ${member.user.tag} !**` });
 
         if (!args.slice(1).join(" ")) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné de raison de refus.**` });
@@ -101,7 +101,7 @@ class Reject extends Command {
             }
         });
 
-        await bots.deleteOne({ botID: args[1] });
+        await bots.deleteOne({ botID: args[0] });
 
         if (autokick === true) member.kick();
     }

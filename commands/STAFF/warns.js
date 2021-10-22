@@ -28,7 +28,7 @@ class Warns extends Command {
         if (member.user.bot) return message.reply(`**${client.no} ➜ Un bot ne peut pas avoir reçu d'infractions.**`)
         const db = await warns.find({ userID: member.user.id });
         if (db.length === 0) return message.reply(`**${client.no} ➜ Ce membre n'a pas encore reçu de sanctions.**`)
-
+        
         let i0 = 0;
         let i1 = 3;
         let page = 1;
@@ -53,7 +53,7 @@ class Warns extends Command {
         let buttons = new MessageActionRow()
         .addComponents(leftPage, deleteMsg, rightPage)
 
-        let description = `${db.map(r => `${r.wrnID} ➜ \`${r.type}\`➜ \`${await client.users.fetch(r.modID)}\` ➜ \`${moment(r.date).format("Do/MM/YY")}\` ➜ \`\`\`${r.reason}\`\`\``).slice(0, 10).join("\n")}`,
+        let description = `${db.map(r => `${r.wrnID} ➜ \`${r.type}\`➜ \`${client.users.cache.get(r.modID)?.tag}\` ➜ \`${moment(r.date).format("Do/MM/YY")}\` ➜ \`\`\`${r.reason}\`\`\``).slice(0, 10).join("\n")}`,
             footer = `Page ${page}/${Math.ceil(db.length/10)}`,
             embed = new MessageEmbed()
             .setTitle(`Suggestions en attente sur le serveur.`)
@@ -92,7 +92,7 @@ class Warns extends Command {
                 buttons = new MessageActionRow()
                 .addComponents(leftPage, deleteMsg, rightPage);
 
-                description = `${db.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${await client.users.fetch(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`;
+                description = `${db.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${client.users.cache.get(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`;
                 footer = `Page ${page}/${Math.ceil(db.length/3)}`;
 
                 embed.setDescription(description).setFooter(footer);
@@ -114,7 +114,7 @@ class Warns extends Command {
                 buttons = new MessageActionRow()
                 .addComponents(leftPage, deleteMsg, rightPage);
 
-                description = `${db.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${await client.users.fetch(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`;
+                description = `${db.map(async(r, i) => `${r.wrnID} ➜ \`${db.type}\`➜ \`${client.users.cache.get(r.modID)?.tag}\` ➜ \`${moment(db.date).format("Do/MM/YY")}\` ➜ \`\`\`${db.reason}\`\`\``).slice(0, 10).join("\n")}`;
                 footer = `Page ${page}/${Math.ceil(db.length/10)}`;
                 
                 embed.setDescription(description).setFooter(footer);

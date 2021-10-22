@@ -26,8 +26,8 @@ class Suggest extends Command {
 
     async run(client, message, args) {
                 // create
-                if (!args[1]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | mask | list>\`\`\``)
-                if (args[1] !== "accept" && args[1] !== "reject" && args[1] !== "mask" && args[1] !== "list") {
+                if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | mask | list>\`\`\``)
+                if (args[0] !== "accept" && args[0] !== "reject" && args[0] !== "mask" && args[0] !== "list") {
                     const db = await botconfig.findOne()
                         
                     const e = new MessageEmbed()
@@ -58,13 +58,13 @@ class Suggest extends Command {
                 }
         
                 // accept
-                if (args[1] === "accept") {
+                if (args[0] === "accept") {
                     if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`)
-                    if (!args[2]) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion.**`)
-                    const db = await suggests.findOne({ suggestID: args[1], accepted: false, deleted: false });
+                    if (!args[1]) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion.**`)
+                    const db = await suggests.findOne({ suggestID: args[0], accepted: false, deleted: false });
                     if (!db) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion valide ou sur laquelle aucune action n'a été effectuée.**`)
                     const member = message.guild.members.cache.get(db.userID),
-                          reason = args.slice(3).join(" ") || `Aucun commentaire...`
+                          reason = args.slice(2).join(" ") || `Aucun commentaire...`
         
                     message.guild.channels.cache.get(channels.suggests).messages.fetch(db.msgID).then(async (msg) => {
                         const e1 = new MessageEmbed()
@@ -90,13 +90,13 @@ class Suggest extends Command {
                 }
         
                 // reject
-                if (args[1] === "reject") {
+                if (args[0] === "reject") {
                     if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`)
-                    if (!args[2]) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion.**`)
-                    const db = await suggests.findOne({ suggestID: args[1], accepted: false, deleted: false });
+                    if (!args[1]) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion.**`)
+                    const db = await suggests.findOne({ suggestID: args[0], accepted: false, deleted: false });
                     if (!db) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion valide ou sur laquelle aucune action n'a été effectuée.**`)
                     const member = message.guild.members.cache.get(db.userID),
-                          reason = args.slice(3).join(" ")
+                          reason = args.slice(2).join(" ")
         
                     if (!reason) return message.channel.send(`**${client.no} ➜ Veuillez entrer une raison.**`)
         
@@ -124,10 +124,10 @@ class Suggest extends Command {
                 }
         
                 // mask
-                if (args[1] === "mask") {
+                if (args[0] === "mask") {
                     if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`)
-                    if (!args[2]) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion.**`)
-                    const db = await suggests.findOne({ suggestID: args[2], accepted: false, deleted: false });
+                    if (!args[1]) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion.**`)
+                    const db = await suggests.findOne({ suggestID: args[1], accepted: false, deleted: false });
                     if (!db) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion valide ou sur laquelle aucune action n'a été effectuée.**`)
                     const member = message.guild.members.cache.get(db.userID)
         
@@ -154,7 +154,7 @@ class Suggest extends Command {
                 }
         
                 // list
-                if (args[1] === "list") {
+                if (args[0] === "list") {
                     if (!message.member.permissions.has("ADMINISTRATOR")) return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`)
                     let suggGet = await suggests.find({ accepted: false, deleted: false });
                     if (!suggGet) return message.reply(`**${client.no} ➜ Aucune suggestion n'est en attente de réponse sur le serveur.**`);

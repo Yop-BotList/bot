@@ -22,8 +22,8 @@ class Delete extends Command {
     }
 
     async run(client, message, args) {
-        if (!args[1]) return message.reply({ content: `**${client.no} ➜ Merci de me donner une ID de bot.**`});
-        let botGet = await bots.findOne({ botID: args[1], verified: true });
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Merci de me donner une ID de bot.**`});
+        let botGet = await bots.findOne({ botID: args[0], verified: true });
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Le bot ${member.user.tag} ne peut pas être supprimé car il n'est pas vérifié !**` });
         const member = await message.guild.members.fetch(botGet.botID);
         
@@ -47,7 +47,7 @@ class Delete extends Command {
 
         message.channel.send({ content: `${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être supprimé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`` });
 
-        await bots.deleteOne({ botID: args[1] });
+        await bots.deleteOne({ botID: args[0] });
 
         if (autokick === true) member.kick();
     }

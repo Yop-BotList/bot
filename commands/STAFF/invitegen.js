@@ -19,7 +19,7 @@ class Invitegen extends Command {
     }
 
     async run(client, message, args) {
-        let member = await client.users.fetch(args[1]);
+        let member = await client.users.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.bot === false) return message.reply(`**${client.no} ➜ Cet utilisateur n’est pas un robot.**`)
         const e = new MessageEmbed()
