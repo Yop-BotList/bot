@@ -12,7 +12,8 @@ const { Message, MessageButton, MessageActionRow } = require("discord.js"),
     .setEmoji("❌")
     .setCustomId("cancelRemind"),
     row = new MessageActionRow()
-    .addComponents(reminder, no);
+    .addComponents(reminder, no),
+    emojis = require("../configs/emojis.json");
 
 /**
  * @param {Message} message
@@ -26,7 +27,7 @@ bumpChecker = module.exports = async (message) => {
         userGet = await bumps.findOne({ userId: user_id });
 
     if (desc.includes("avant que le serveur puisse être bumpé !")) {
-        message.channel.send({ content: `**${client.no} ➜ Zut alors ! Quelqu'un a déjà bumpé avant toi. Mais n'hésites surtout pas à retenter ta chance !**`});
+        message.channel.send({ content: `**${emojis.no} ➜ Zut alors ! Quelqu'un a déjà bumpé avant toi. Mais n'hésites surtout pas à retenter ta chance !**`});
         
         if (await reminds.findOne({ userId: user_id })) return;
 
@@ -53,7 +54,7 @@ bumpChecker = module.exports = async (message) => {
                     endsAt: Date.now() + ms(desc)
                 }).save();
                 await button.reply({
-                    content: `${client.yes} ➜ Parfait, vous allez être rappelé dans ${desc} pour pouvoir bumper le serveur.`,
+                    content: `${emojis.yes} ➜ Parfait, vous allez être rappelé dans ${desc} pour pouvoir bumper le serveur.`,
                     ephemeral: true
                 });
                 await msg.edit({ content: "Rappel activé.", components: [] });
@@ -109,7 +110,7 @@ bumpChecker = module.exports = async (message) => {
                 endsAt: Date.now() + ms(desc)
             }).save();
             await button.reply({
-                content: `${client.yes} ➜ Parfait, vous allez être rappelé dans ${desc} pour pouvoir bumper le serveur.`,
+                content: `${emojis.yes} ➜ Parfait, vous allez être rappelé dans ${desc} pour pouvoir bumper le serveur.`,
                 ephemeral: true
             });
             await msg.edit({ content: "Rappel activé.", components: [] });
