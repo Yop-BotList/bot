@@ -22,7 +22,7 @@ class Stats extends Command {
         const e = new MessageEmbed()
         .setTitle("Informations sur le bot :")
         .setThumbnail(client.user.displayAvatarURL())
-        .setFooter(client.version)
+        .setFooter("Version " + client.version)
         .setTimestamp(Date())
         .setColor(client.color)
         .addField("**__:bookmark_tabs: Infos générales :__**", `> **:crown: Créateurs :** Nolhan#2508 et </ValRedstone>#6507\n**> :calendar: Date de création :** 05/04/2021\n**> :minidisc: Version :** ${client.version}`)
