@@ -11,5 +11,6 @@
         "OWNER_2_ID",
         "OWNER_3_ID"
     ],
-    "mainguildid": "YOUR_GUILD_ID"
+    "mainguildid": "YOUR_GUILD_ID",
+    "atiinvite": true
 }
