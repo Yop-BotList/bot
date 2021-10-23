@@ -246,7 +246,7 @@ module.exports = async(client, message) => {
             return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**`);
         }
     }else if(command.perms !== 'everyone') {
-        if(!message.member.permissions.has(command.perms) && !message.member.permissions.has(command.perms)) {
+        if(!message.member.permissions.has(command.perms) && !message.member.roles.cache.has(command.perms)) {
             return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**`);
         }
     }
