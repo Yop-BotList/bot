@@ -71,58 +71,61 @@ bumpChecker = module.exports = async (message) => {
         });
     }
 
-    if (!desc.includes("Bump effectué !")) return;
+    if (desc.includes("Bump effectué !")) {
 
-    if (!userGet) {
-        new bumps({
-            userId: user_id,
-            bumpCount: 1
-        }).save();
-    } else {
-        await bumps.findOneAndUpdate({
-            userId: user_id
-        }, {
-            bumpCount: userGet.bumpCount+1
-        }, {
-            new: true
+        if (!userGet) {
+            new bumps({
+                userId: user_id,
+                bumpCount: 1
+            }).save();
+        } else {
+            await bumps.findOneAndUpdate({
+                userId: user_id
+            }, {
+                $set: {
+                    bumpCount: userGet.bumpCount+1
+                }
+            }, {
+                upsert: true
+            });
+        }
+
+        userGet = await bumps.findOne({ userId: user_id });
+
+        message.channel.send({ content: `**${client.yes} ➜ Merci <@${user_id}> d'avoir bumpé le serveur, tu as maintenant **${userGet.bumpCount}** points de bump.**` });
+
+        if (await reminds.findOne({ userId: user_id })) return;
+
+        const msg = await message.channel.send({
+            content: `Voulez vous vous faire rappeler par le bot quand vous pourrez à nouveau bumper le serveur ?\nSi oui appuyez sur le bouton 🔔.`,
+            components: [row]
+        });
+        const filter = i => i.customId === "confirmRemind" || i.customId === "cancelRemind" && i.user.id === user_id;
+        const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
+        collector.on("collect", async (button) => {
+            if (button.customId === "confirmRemind") {
+                desc = `120m`;
+        
+                new reminds({
+                    userId: user_id,
+                    chanId: message.channel.id,
+                    endsAt: Date.now() + ms(desc)
+                }).save();
+                await button.reply({
+                    content: `${emojis.yes} ➜ Parfait, vous allez être rappelé dans ${desc} pour pouvoir bumper le serveur.`,
+                    ephemeral: true
+                });
+                await msg.edit({ content: "Rappel activé.", components: [] });
+                await collector.stop();
+            }
+            if (button.customId === "cancelRemind") {
+                await button.reply({
+                    content: `Vous avez annulé le rappel.`,
+                    ephemeral: true
+                });
+                await msg.edit({ content: `Rappel annulé.`, components: [] });
+                await collector.stop();
+            }
         });
     }
-
-    userGet = await bumps.findOne({ userId: user_id });
-
-    message.channel.send({ content: `**${client.yes} ➜ Merci <@${user_id}> d'avoir bumpé le serveur, tu as maintenant **${userGet.bumpCount}** points de bump.**` });
-
-    if (await reminds.findOne({ userId: user_id })) return;
-
-    const msg = await message.channel.send({
-        content: `Voulez vous vous faire rappeler par le bot quand vous pourrez à nouveau bumper le serveur ?\nSi oui appuyez sur le bouton 🔔.`,
-        components: [row]
-    });
-    const filter = i => i.customId === "confirmRemind" || i.customId === "cancelRemind" && i.user.id === user_id;
-    const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
-    collector.on("collect", async (button) => {
-        if (button.customId === "confirmRemind") {
-            desc = `120m`;
-        
-            new reminds({
-                userId: user_id,
-                chanId: message.channel.id,
-                endsAt: Date.now() + ms(desc)
-            }).save();
-            await button.reply({
-                content: `${emojis.yes} ➜ Parfait, vous allez être rappelé dans ${desc} pour pouvoir bumper le serveur.`,
-                ephemeral: true
-            });
-            await msg.edit({ content: "Rappel activé.", components: [] });
-            await collector.stop();
-        }
-        if (button.customId === "cancelRemind") {
-            await button.reply({
-                content: `Vous avez annulé le rappel.`,
-                ephemeral: true
-            });
-            await msg.edit({ content: `Rappel annulé.`, components: [] });
-            await collector.stop();
-        }
-    });
 }
