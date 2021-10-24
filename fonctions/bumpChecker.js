@@ -29,7 +29,7 @@ bumpChecker = module.exports = async (message) => {
     if (desc.includes("avant que le serveur puisse être bumpé !")) {
         message.channel.send({ content: `**${emojis.no} ➜ Zut alors ! Quelqu'un a déjà bumpé avant toi. Mais n'hésites surtout pas à retenter ta chance !**`});
         
-        //if (await reminds.findOne({ userId: user_id })) return;
+        if (await reminds.findOne({ userId: user_id })) return;
 
         const msg = await message.channel.send({
             content: `Voulez vous vous faire rappeler par le bot quand vous pourrez à nouveau bumper le serveur ?\nSi oui appuyez sur le bouton 🔔.`,
