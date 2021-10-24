@@ -42,11 +42,6 @@ bumpChecker = module.exports = async (message) => {
         collector.on("collect", async (button) => {
             if (button.customId === "confirmRemind") {
                 desc = desc.slice(39).substr(0, 2);
-                console.log(desc);
-                if (desc.includes(" ")) {
-                    desc = desc.substr(0, 2)
-                    if (desc.includes(" ")) desc = desc.substr(0, 1)
-                }
                 desc = `${desc}m`;
             
                 new reminds({
