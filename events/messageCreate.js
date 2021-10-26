@@ -5,6 +5,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       { botlogs, ticketcategory, ticketslogs } = require('../configs/channels.json'),
       { ticketsaccess } = require("../configs/roles.json"),
       { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
+      { boost } = require("../configs/emojis.json"),
       bumpChecker = require("../fonctions/bumpChecker"),
       user = require("../models/user"),
       confirmMp = new MessageButton()
@@ -165,33 +166,22 @@ module.exports = async(client, message) => {
         return message.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation d'envoyer un message dans ce ticket.**`)
       }
   
-      const supportMp = new MessageEmbed()
-      .setTitle(message.author.tag)
-      .setThumbnail(message.author.displayAvatarURL())
-      .setDescription(message.content),
-        noContentSupportMp = new MessageEmbed()
-      .setTitle(message.author.tag)
-      .setThumbnail(message.author.displayAvatarURL())
-  
   
       if (message.attachments) {
         if (message.content) {
           await user?.send({
-            content: null,
-            embeds: [supportMp],
+            content: `**${boost} ➜ ${message.author.username} :** ${message.content}`,
             files: [...message.attachments.values()]
           });
         } else {
           await user?.send({
-            content: null,
-            embeds: [noContentSupportMp],
+            content: `**${boost} ➜ ${message.author.username} :** ${message.content}`,
             files: [...message.attachments.values()]
           });
         }
       } else {
         await user?.send({
-          content: null,
-          embeds: [sendSupportMp]
+          content: `**${boost} ➜ ${message.author.username} :** ${message.content}`
         });
       }
   
