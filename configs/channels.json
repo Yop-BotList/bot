@@ -1,11 +1,11 @@
 {
-    "botslogs": "LE CHANNEL DES LOGS D'AJOUT DE BOTS",
-    "suggests": "LE CHANNEL DE SUGGESTIONS",
-    "botlogs": "LE CHANNEL DE LOGS DU BOT",
-    "ticketslogs": "LE CHANNEL DE LOGS DES TICKETS",
-    "ticketcategory": "LA CATEGORIE POUR LES TICKETS",
-    "avischannel": "LE CHANNEL DES AVIS",
-    "welcomechannel": "LE CHANNEL DE BIENVENUE",
-    "modlogs": "LE CHANNEL DE LOGS DES SANCTIONS",
-    "sugglogs": "LE CHANNEL OU LES MEMBRES SERONT NOTIFIES LORSQU'UNE REPONSE SERA AJOUTEE A LEUR SUGGESTION"
+    "botslogs": "782662726383042560",
+    "suggests": "782661936370024489",
+    "botlogs": "901122765761937429",
+    "ticketslogs": "837258757821038592",
+    "ticketcategory": "827792614106988554",
+    "avischannel": "784481268213612554",
+    "welcomechannel": "782661811291815947",
+    "modlogs": "857616632040652840",
+    "sugglogs": "782661811291815947"
 }

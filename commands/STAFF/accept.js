@@ -5,7 +5,8 @@ const Command = require("../../structure/Command.js"),
       { prefix } = require("../../configs/config.json"),
       { botslogs } = require("../../configs/channels.json"),
       { MessageEmbed } = require("discord.js"),
-      bots = require("../../models/bots");
+      bots = require("../../models/bots"),
+      user = require("../../models/user")
 
 class Accept extends Command {
     constructor() {
@@ -55,6 +56,13 @@ class Accept extends Command {
                 .setDescription(`<@${message.author.id}> vient juste d'accepter le bot ${member.user.username} !`)
             ]
         });
+        const edg = await user.findOne({ userID: message.author.id })
+        const vef = edg.verifications + 1 || 0;
+        if (edg) await user.findOneAndUpdate({ userID: message.author.id }, { $set: { verifications: vef } })
+        if (!edg) new user({
+            userID: message.author.id,
+            verifications: 1
+        }).save()
 
         message.channel.send({ content: `**${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être accepté !**` });
         

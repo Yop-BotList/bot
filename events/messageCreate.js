@@ -5,6 +5,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       { botlogs, ticketcategory, ticketslogs } = require('../configs/channels.json'),
       { ticketsaccess } = require("../configs/roles.json"),
       { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
+      { boost } = require("../configs/emojis.json"),
       bumpChecker = require("../fonctions/bumpChecker"),
       user = require("../models/user"),
       confirmMp = new MessageButton()
@@ -77,10 +78,12 @@ module.exports = async(client, message) => {
         if (button.user.id === message.author.id) {
           if (button.customId === "confirmMpMessage") { 
             let db = await user.findOne({ userID: message.author.id });
-            if (db.ticketsbl === true) {
-              await button.update({ content: `**${client.no} ➜ Vous êtes sur la liste noire des tickets. Vous ne pouvez donc pas contacter le STAFF.**`, embeds: [], components: [] })
-              return collector.stop()
-            }     
+			if (db) {
+				if (db.ticketsbl === true) {
+              		await button.update({ content: `**${client.no} ➜ Vous êtes sur la liste noire des tickets. Vous ne pouvez donc pas contacter le STAFF.**`, embeds: [], components: [] })
+              		return collector.stop()
+            } 
+            }    
             if (!ticket) {
               guild.channels.create(`🎫・ticket-${message.author.discriminator}`, {
                 type: 'GUILD_TEXT',
@@ -125,7 +128,8 @@ module.exports = async(client, message) => {
                 }
   
                 const ticketsChannel = client.channels.cache.get(ticketslogs);
-                ticketsChannel?.send({
+                
+                const mdg = message.content || "Aucun contenu"; ticketsChannel?.send({
                   content: null,
                   embeds: [
                     new MessageEmbed()
@@ -134,7 +138,7 @@ module.exports = async(client, message) => {
                     .setColor(client.color)
                     .addFields(
                       { name: ":id: ➜ ID :", value: `\`\`\`${message.author.id}\`\`\``, inline: false},
-                      { name: ":newspaper2: ➜ Raison :", value: `\`\`\`md\n# ${message.content}\`\`\``, inline: false },
+                      { name: ":newspaper2: ➜ Raison :", value: `\`\`\`md\n# ${mdg}\`\`\``, inline: false },
                     )
                   ]
                 });
@@ -163,33 +167,22 @@ module.exports = async(client, message) => {
         return message.author.send(`**${client.no} ➜ Vous n'avez pas l'autorisation d'envoyer un message dans ce ticket.**`)
       }
   
-      const supportMp = new MessageEmbed()
-      .setTitle(message.author.tag)
-      .setThumbnail(message.author.displayAvatarURL())
-      .setDescription(message.content),
-        noContentSupportMp = new MessageEmbed()
-      .setTitle(message.author.tag)
-      .setThumbnail(message.author.displayAvatarURL())
-  
   
       if (message.attachments) {
         if (message.content) {
           await user?.send({
-            content: null,
-            embeds: [supportMp],
+            content: `**${boost} ➜ ${message.author.username} :** ${message.content}`,
             files: [...message.attachments.values()]
           });
         } else {
           await user?.send({
-            content: null,
-            embeds: [noContentSupportMp],
+            content: `**${boost} ➜ ${message.author.username} :** ${message.content}`,
             files: [...message.attachments.values()]
           });
         }
       } else {
         await user?.send({
-          content: null,
-          embeds: [sendSupportMp]
+          content: `**${boost} ➜ ${message.author.username} :** ${message.content}`
         });
       }
   
@@ -244,7 +237,7 @@ module.exports = async(client, message) => {
             return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**`);
         }
     }else if(command.perms !== 'everyone') {
-        if(!message.member.permissions.has(command.perms) && !message.member.permissions.has(command.perms)) {
+        if(!message.member.permissions.has(command.perms) && !message.member.roles.cache.has(command.perms)) {
             return message.channel.send(`**${client.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**`);
         }
     }

@@ -7,7 +7,8 @@ const Command = require("../../structure/Command.js"),
       { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       bots = require("../../models/bots"),
       botconfig = require("../../models/botconfig"),
-      warns = require("../../models/sanction")
+      warns = require("../../models/sanction"),
+      user = require("../../models/user")
 
 
 class Reject extends Command {
@@ -25,10 +26,11 @@ class Reject extends Command {
     }
 
     async run(client, message, args) {
-        const member = await message.guild.members.fetch(args[1]);
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Merci de me donner un ID de bot valide et présent sur le serveur.**`})
+        const member = await message.guild.members.fetch(args[0]);
         if (!member) return message.reply({ content: `**${client.no} ➜ Merci de me donner un ID de bot valide et présent sur le serveur.**`})
-        let botGet = await bots.findOne({ botID: args[1], verified: false });
-        if (!botGet) return message.reply({ content: `**${client.no} ➜ Aucune demande n’a été envoyée pour ${member.user.tag} !**` });
+        let botGet = await bots.findOne({ botID: args[0], verified: false });
+        if (!botGet) return message.reply({ content: `**${client.no} ➜ Aucune demande n’a été envoyée pour ${member?.user.tag} !**` });
 
         if (!args.slice(1).join(" ")) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné de raison de refus.**` });
         
@@ -39,10 +41,10 @@ class Reject extends Command {
                 new MessageEmbed()
                 .setTitle("Refus...")
                 .setTimestamp(new Date())
-                .setThumbnail(member.user.displayAvatarURL())
+                .setThumbnail(member?.user.displayAvatarURL())
                 .setColor("#FF0000")
                 .setFooter(`Tu peux toujours corriger ce que ${message.author.username} demande et refaire une demande ^^`)
-                .setDescription(`<@${message.author.id}> vient juste de refuser le bot ${member.user.username} pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\``)
+                .setDescription(`<@${message.author.id}> vient juste de refuser le bot ${member?.user.username} pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\``)
             ]
         });
         const button = new MessageButton()
@@ -52,19 +54,27 @@ class Reject extends Command {
         .setStyle("PRIMARY")
         const row = new MessageActionRow()
         .addComponents(button)
+        const edg = await user.findOne({ userID: message.author.id })
+        const vef = edg.verifications + 1 || 0;
+        if (edg) await user.findOneAndUpdate({ userID: message.author.id }, { $set: { verifications: vef } })
+        if (!edg) new user({
+            userID: message.author.id,
+            verifications: 1
+        }).save()
 
-        message.channel.send({ content: `**${client.yes} ➜ Le bot ${member.user.username}#${member.user.discriminator} vient bien d'être refusé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`**`, components: [row] });
+        message.channel.send({ content: `**${client.yes} ➜ Le bot ${member?.user.username}#${member?.user.discriminator} vient bien d'être refusé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`**`, components: [row] });
 
         
         const filter = i => i.user.id === message.author.id;
         const collector = await message.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
 
         collector.on("collect", async button => {
-            if (button.customId === "button") {
+            if (button.customId === "button") {               
+                const proprio = await client.users.fetch(botGet.ownerID)
                 const db = await botconfig.findOne()
         
                 new warns({
-                    userID: member.user.id,
+                    userID: proprio?.id,
                     modID: message.author.id,
                     wrnID: Number(db.warns) + 1,
                     reason: "Non respect des conditions d'ajout de bots.",
@@ -72,8 +82,6 @@ class Reject extends Command {
                     date: Date.now()
                 }).save()
                 await botconfig.findOneAndUpdate({}, { $set: { warns: db.warns + 1 } }, { upsert: true })
-                
-                const proprio = await client.users.fetch(botGet.ownerID)
                 const e = new MessageEmbed()
                 .setTitle("Nouvelle sanction :")
                 .setThumbnail(proprio.displayAvatarURL({ dynamic: true }))
@@ -101,9 +109,9 @@ class Reject extends Command {
             }
         });
 
-        await bots.deleteOne({ botID: args[1] });
+        await bots.deleteOne({ botID: args[0] });
 
-        if (autokick === true) member.kick();
+        if (autokick === true) member?.kick();
     }
 }
 

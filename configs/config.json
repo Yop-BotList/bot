@@ -1,15 +1,14 @@
 {
-    "token": "TOKEN DU BOT",
-    "prefix": "PREFIX",
-    "mongooseConnectionString": "MongoURI",
+    "token": "NzgyNjY3MTMzNzE2NzkxMzE2.X8PhkQ.UKVa0IkJwFT_Pmvk5i2DiQ2QJYQ",
+    "prefix": "y!",
+    "mongooseConnectionString": "mongodb+srv://YopBot:Gj1rtk@cluster0.v3son.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     "color": "#f2ac34",
     "autokick": true,
-    "staffGuildId": "ID DU SERVEUR STAFF",
-    "owner": "ID DE L'OWNER",
+    "staffGuildId": "784122752315555860",
+    "owner": "692374264476860507",
     "owners": [
-        "OWNER_1_ID",
-        "OWNER_2_ID",
-        "OWNER_3_ID"
+        "650664078649458699"
     ],
-    "mainguildid": "YOUR_GUILD_ID"
+    "mainguildid": "782644006190055486",
+    "antiinvite": true
 }

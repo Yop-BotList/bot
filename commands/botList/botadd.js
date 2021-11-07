@@ -23,19 +23,19 @@ class Botadd extends Command {
     async run(client, message, args) {
         /* Verification */
         if (message.mentions.members.first() || message.mentions.users.first()) return message.reply({ content: `**${client.no} ➜ Désolé je ne prend pas en charge les mentions.**` });
-        if (!args[1]) return message.reply({ content: `**${client.no} ➜ Il manque l'id du bot dans la commande : \`${prefix}botadd <id> <prefix>\`**` });
-        const user = await client.users.fetch(args[1]);
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Il manque l'id du bot dans la commande : \`${prefix}botadd <id> <prefix>\`**` });
+        const user = await client.users.fetch(args[0]);
         if (!user) return message.reply({ content: `**${client.no} ➜ Utilisateur introuvable !**` });
         if (!user.bot) return message.reply({ content: `**${client.no} ➜ Cet utilisateur n’est pas un bot !**` });
 
-        if (!args[2]) return message.reply({ content: `**${client.no} ➜ Préfixe introuvable !**` });
+        if (!args[1]) return message.reply({ content: `**${client.no} ➜ Préfixe introuvable !**` });
 
         if (await bots.findOne({ botID: user.id })) return message.reply({ content: `**${client.no} ➜ ${user.tag} est déjà sur la liste !**` });
 
         new bots({
             serverID: mainguildid,
-            botID: args[1],
-            prefix: args[2],
+            botID: args[0],
+            prefix: args[1],
             ownerID: message.author.id,
             verified: false
         }).save()
