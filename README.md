@@ -9,6 +9,8 @@
 > • Pour installer les modules nécessaires  au fonctionnement du bot, ouvrez un terminal dans votre éditeur de code, et tapez `npm install`. 
 # Configuration :
 > Pour configurer votre robot, vous pouvez modifier les informations dans les fichiers du dossier `configs`.
+# Démarrage :
+> Ouvez un terminal et tapez `pm2 start index.js`.
 # Remerciements :
 > • Tout d’abord, j’aimerai remercier [garder500](https://github.com/garder500) car l’handler utilisé est issu de son robot : [Obvision](https://github.com/garder500/obvision).  
 > • Ensuite, je voudrais remercier [ValRedstone](https://github.com/ValRedstone) qui m’a énormément aidé dans la création de cette troisième version. C’est lui qui s’est occupé de tout le système de tickets, de points de bump, et d’une grosse partie de la base de données.
