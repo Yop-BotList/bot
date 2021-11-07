@@ -32,7 +32,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       .setColor(color);
 
 module.exports = async(client, message) => {
-    bumpChecker(message);
+    //bumpChecker(message);
   
     if (message.author.bot) return;
   
@@ -128,12 +128,9 @@ module.exports = async(client, message) => {
                 }
   
                 const ticketsChannel = client.channels.cache.get(ticketslogs);
-<<<<<<< HEAD
                 
-                const mdg = message.content || "Aucun contenu"; ticketsChannel?.send({
-=======
+                const mdg = message.content || "Aucun contenu"; 
                 ticketsChannel?.send({
->>>>>>> abc94aa9e40c9d21ca21c4d4ae54cdedbaa6c763
                   content: null,
                   embeds: [
                     new MessageEmbed()
@@ -142,11 +139,7 @@ module.exports = async(client, message) => {
                     .setColor(client.color)
                     .addFields(
                       { name: ":id: ➜ ID :", value: `\`\`\`${message.author.id}\`\`\``, inline: false},
-<<<<<<< HEAD
                       { name: ":newspaper2: ➜ Raison :", value: `\`\`\`md\n# ${mdg}\`\`\``, inline: false },
-=======
-                      { name: ":newspaper2: ➜ Raison :", value: `\`\`\`md\n# ${message.content}\`\`\``, inline: false },
->>>>>>> abc94aa9e40c9d21ca21c4d4ae54cdedbaa6c763
                     )
                   ]
                 });
