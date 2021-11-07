@@ -127,8 +127,4 @@ const filter = i => i.customId === "confirmRemind" || i.customId === "cancelRemi
             }
         });
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> abc94aa9e40c9d21ca21c4d4ae54cdedbaa6c763

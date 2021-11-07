@@ -26,9 +26,7 @@ class Botprofil extends Command {
         let db = await bots.findOne({ botID: member.user.id })
         if (!db) return message.channel.send("**" + client.no + " ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste (ce n'est d'ailleurs peut-être même pas un bot)**")
 
-            const votes = db.likesCount || 0,
-                    lastlike = db.likeDate || "*Aucun vote...*",
-                    site = db.site || "*Aucun site web...*",
+            const   site = db.site || "*Aucun site web...*",
                     support = db.serverInvite || "*Aucun support...*",
                     description = db.desc || "*Aucune description...*",
                     e = new MessageEmbed()
@@ -71,16 +69,6 @@ class Botprofil extends Command {
                         name: '__:nut_and_bolt: Lien d\'invitation :__',
                         value: `> [Clique ici](https://discord.com/oauth2/authorize?client_id=${member.user.id}&scope=bot%20applications.commands&permissions=-1)`,
                         inline: false
-                    },
-                    {
-                        name: '__:sparkling_heart: Vote(s) :__',
-                        value: `> ${votes} vote(s)`,
-                        inline: true
-                    },
-                    {
-                            name: '__:two_hearts: Dernier like :__',
-                            value: `${lastlike}`,
-                            inline: true
                     })
             
             //Message
