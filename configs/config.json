@@ -1,7 +1,7 @@
 {
-    "token": "NzgyNjY3MTMzNzE2NzkxMzE2.X8PhkQ.5vDGr02yBbEX-SU3CMZv1Yy-eUU",
+    "token": "token",
     "prefix": "y!",
-    "mongooseConnectionString": "mongodb+srv://YopBot:tNh5uJQg9cfHGwd1@cluster0.v3son.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "mongooseConnectionString": "mongo url",
     "color": "#f2ac34",
     "autokick": true,
     "staffGuildId": "784122752315555860",
