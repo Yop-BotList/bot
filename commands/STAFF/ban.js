@@ -23,7 +23,7 @@ class Ban extends Command {
     }
 
     async run(client, message, args) {
-        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné un identifiant d'utilisateur.**" });
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné un identifiant d'utilisateur.**` });
         const member = await message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.user.bot) return message.reply(`**${client.no} ➜ Ce membre n’est pas humain.**`)
