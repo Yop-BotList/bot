@@ -23,11 +23,12 @@ class Kick extends Command {
     }
 
     async run(client, message, args) {
+        if (!args[0]) return message.reply(`**${client.no} ➜ Merci de me donner un identifiant d'utilisateur.**`);
         const member = await message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
-        if (member.user.bot) return message.reply(`**${client.no} ➜ Ce membre n’est pas humain.**`)
-        if (member.roles.highest.position >= message.member.roles.highest.position) return message.reply(`**${client.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`)
-        if (member.roles.cache.has(bypass)) return message.reply(`**${client.no} ➜ Ce membre est imunisé contre les sanctions.**`)
+        if (member?.user.bot) return message.reply(`**${client.no} ➜ Ce membre n’est pas humain.**`)
+        if (member.roles?.highest.position >= message.member.roles?.highest.position) return message.reply(`**${client.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`)
+        if (member.roles?.cache.has(bypass)) return message.reply(`**${client.no} ➜ Ce membre est imunisé contre les sanctions.**`)
         if (!member.kickable) return message.reply(`**${client.no} ➜ Zut alors ! Je ne peux pas expluser ce membre ! Essaie peut-être de mettre mon rôle un peu plus haut dans la hiérarchie du serveur :p**`)
         if (!args[1]) return message.reply(`**${client.no} ➜ Veuillez entrer une raison.**`)
         const db = await botconfig.findOne()
@@ -59,11 +60,11 @@ class Kick extends Command {
         .setTimestamp(new Date())
         .addField(`:dividers: ➜ Type :`, `\`\`\`md\n# KICK\`\`\``)
         .addField(`:newspaper2: ➜ Raison(s) :`, `\`\`\`md\n# ${args.slice(1).join(" ")}\`\`\``)
-        member.user.send({ embeds: [e2] }).catch(() => {
+        member?.user?.send({ embeds: [e2] }).catch(() => {
             e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de sa santion !")
         })
-        member.kick({ reason: args.slice(1).join(" ") })
-        client.channels.cache.get(modlogs).send({ embeds: [e] })
+        member?.kick({ reason: args.slice(1).join(" ") })
+        client.channels?.cache.get(modlogs)?.send({ embeds: [e] })
         message.reply(`**${client.yes} ➜ ${member.user.tag} a été explusé avec succès !**`)
     }
 }
