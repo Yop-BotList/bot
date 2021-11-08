@@ -24,21 +24,22 @@ class Mute extends Command {
     }
 
     async run(client, message, args) {
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné un identifiant d'utilisateur.**` });
         const member = await message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
-        if (member.roles.highest.position >= message.member.roles.highest.position) return message.reply(`**${client.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`)
-        if (member.roles.cache.has(bypass)) return message.reply(`**${client.no} ➜ Ce membre est imunisé contre les sanctions.**`)
-        if (member.roles.cache.has(mute)) return message.reply(`**${client.no} ➜ Ce membre est déjà muet.**`)
+        if (member.roles?.highest.position >= message.member.roles?.highest.position) return message.reply(`**${client.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`)
+        if (member.roles?.cache.has(bypass)) return message.reply(`**${client.no} ➜ Ce membre est imunisé contre les sanctions.**`)
+        if (member.roles?.cache.has(mute)) return message.reply(`**${client.no} ➜ Ce membre est déjà muet.**`)
         if (!args[1]) return message.reply(`**${client.no} ➜ Veuillez entrer une raison.**`)
         const db = await botconfig.findOne();
-        if (member.user.bot) {
+        if (member?.user.bot) {
             const db2 = await bots.findOne({ botID: member.user.id })
             if (!db2) return message.reply(`**${client.no} ➜ Ce bot n'est pas sur ma liste.**`)
             try {
-                member.roles.add(mute)
+                member.roles?.add(mute)
             }
             catch {
-                return message.reply(`**${client.no} ➜ Zut alors ! Je n'ai pas la permission d'ajouter le rôle \`${message.guild.roles.cache.get(mute).name}\` à \`${member.user.tag}\`.**`)
+                return message.reply(`**${client.no} ➜ Zut alors ! Je n'ai pas la permission d'ajouter le rôle \`${message.guild.roles?.cache.get(mute)?.name}\` à \`${member?.user.tag}\`.**`)
             }
             const e = new MessageEmbed()
             .setTitle("Nouvelle sanction :")
@@ -61,12 +62,12 @@ class Mute extends Command {
             client.channels.cache.get(modlogs).send({ embeds: [e] })
             return message.reply(`**${client.yes} ➜ ${member.user.tag} a été réduit au silence avec succès !**`)
         }
-        if (!member.user.bot) {
+        if (!member?.user.bot) {
             try {
-                member.roles.add(mute)
+                member.roles?.add(mute)
             }
             catch {
-                return message.reply(`**${client.no} ➜ Zut alors ! Je n'ai pas la permission d'ajouter le rôle \`${message.guild.roles.cache.get(mute).name}\` à \`${member.user.tag}\`.**`)
+                return message.reply(`**${client.no} ➜ Zut alors ! Je n'ai pas la permission d'ajouter le rôle \`${message.guild.roles?.cache.get(mute)?.name}\` à \`${member?.user.tag}\`.**`)
             }
             new warns({
                 userID: member.user.id,
@@ -96,7 +97,7 @@ class Mute extends Command {
             member.user.send({ embeds: [e2] }).catch(() => {
                 e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de sa santion !")
             })
-            client.channels.cache.get(modlogs).send({ embeds: [e] })
+            client.channels?.cache.get(modlogs)?.send({ embeds: [e] })
             message.reply(`**${client.yes} ➜ ${member.user.tag} a été rendu muet avec succès !**`)
             return await botconfig.findOneAndUpdate({ $set: { warns: db.warns + 1 } }, { upsert: true })
         }
