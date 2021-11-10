@@ -22,10 +22,11 @@ class Unban extends Command {
     }
 
     async run(client, message, args) {
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné un identifiant d'utilisateur.**` });
         const member = await client.users.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
         if (member.bot) return message.reply(`**${client.no} ➜ Cet utilisateur n’est pas humain.**`)
-        if (!message.guild.bans.fetch(args[0])) return message.reply(`**${client.no} ➜ Zut alors ! Cet utilisateur n'est pas banni du serveur !**`)
+        if (!(await message.guild.bans.fetch(args[0]))) return message.reply(`**${client.no} ➜ Zut alors ! Cet utilisateur n'est pas banni du serveur !**`)
         
         try {
             message.guild.bans.remove({ user: member.id, reason: "Débannissement effectué par " + message.author.tag })
@@ -42,7 +43,7 @@ class Unban extends Command {
         .addField(`:busts_in_silhouette: ➜ Utilisateur :`, `\`\`\`md\n# ${member.tag} ➜ ${member.id}\`\`\``)
         .addField(`:dividers: ➜ Type :`, `\`\`\`md\n# BAN\`\`\``)
         .addField(`:man_police_officer: ➜ Modérateur :`, `\`\`\`md\n# ${message.author.tag} ➜ ${message.author.id}\`\`\``)
-        client.channels.cache.get(modlogs).send({ embeds: [e] })
+        client.channels?.cache.get(modlogs)?.send({ embeds: [e] })
         message.reply(`**${client.yes} ➜ ${member.tag} a été débanni avec succès !**`)
     }
 }
