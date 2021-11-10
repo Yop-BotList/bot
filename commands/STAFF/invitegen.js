@@ -19,12 +19,13 @@ class Invitegen extends Command {
     }
 
     async run(client, message, args) {
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné un identifiant d'utilisateur.**` });
         let member = await client.users.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
-        if (member.bot === false) return message.reply(`**${client.no} ➜ Cet utilisateur n’est pas un robot.**`)
+        if (!member.bot) return message.reply(`**${client.no} ➜ Cet utilisateur n’est pas un robot.**`)
         const e = new MessageEmbed()
         .setTitle("Générateur de liens d’invitation :")
-        .setThumbnail(member.displayAvatarURL({ dynamic: true }))
+        .setThumbnail(member?.displayAvatarURL({ dynamic: true }))
         .setTimestamp(new Date())
         .setColor(client.color)
         .setDescription(`Pour obtenir le lien d’invitation de ${member.tag}, [cliquez ici](https://discord.com/oauth2/authorize?client_id=${member.id}&permissions=0&scope=bot%20applications.commands)`)
