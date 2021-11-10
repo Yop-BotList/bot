@@ -23,15 +23,16 @@ class Unmute extends Command {
     }
 
     async run(client, message, args) {
+        if (!args[0]) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné un identifiant d'utilisateur.**` });
         const member = await message.guild.members.fetch(args[0]);
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un identifiant valide.**`)
-        if (!member.roles.cache.has(mute)) return message.reply(`**${client.no} ➜ Ce membre n'est pas muet.**`)
+        if (!member.roles?.cache.has(mute)) return message.reply(`**${client.no} ➜ Ce membre n'est pas muet.**`)
         const db = await botconfig.findOne();
         if (member.user.bot) {
             const db2 = await bots.findOne({ botID: member.user.id })
             if (!db2) return message.reply(`**${client.no} ➜ Ce bot n'est pas sur ma liste.**`)
             try {
-                member.roles.remove(mute)
+                member.roles?.remove(mute)
             }
             catch {
                 return message.reply(`**${client.no} ➜ Zut alors ! Je n'ai pas la permission de retirer le rôle \`${message.guild.roles.cache.get(mute).name}\` à \`${member.user.tag}\`.**`)
@@ -52,13 +53,13 @@ class Unmute extends Command {
             .setTimestamp(new Date())
             .setDescription(`Votre robot \`${member.user.tag}\` a récupéré la permission de parler.`)
             .setFooter("Pour demander une reprise de voix, veuillez m'envoyer un Message Privé.")
-            client.channels.cache.get(botslogs).send({ content: `<@${db2.ownerID}>`, embeds: [e2] })
-            client.channels.cache.get(modlogs).send({ embeds: [e] })
+            client.channels?.cache.get(botslogs)?.send({ content: `<@${db2.ownerID}>`, embeds: [e2] })
+            client.channels?.cache.get(modlogs)?.send({ embeds: [e] })
             return message.reply(`**${client.yes} ➜ ${member.user.tag} a bien récupéré la permission de parler !**`)
         }
         if (!member.user.bot) {
             try {
-                member.roles.remove(mute)
+                member.roles?.remove(mute)
             }
             catch {
                 return message.reply(`**${client.no} ➜ Zut alors ! Je n'ai pas la permission de retirer le rôle \`${message.guild.roles.cache.get(mute).name}\` à \`${member.user.tag}\`.**`)
@@ -78,10 +79,10 @@ class Unmute extends Command {
             .setColor(client.color)
             .setTimestamp(new Date())
             .setDescription(`La sanction portant la raison suivante vient de vous être retiré :\n\`\`\`md\n${db.reason}\`\`\``)
-            member.user.send({ embeds: [e2] }).catch(() => {
+            member.user?.send({ embeds: [e2] }).catch(() => {
                 e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de la suppression de sa sanction !")
             })
-            client.channels.cache.get(modlogs).send({ embeds: [e] })
+            client.channels?.cache.get(modlogs)?.send({ embeds: [e] })
             return message.reply(`**${client.yes} ➜ ${member.user.tag} a bien récupéré la permission de parler !**`)
         }
     }
