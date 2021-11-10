@@ -25,7 +25,7 @@ class Warns extends Command {
     async run(client, message, args) {
         const member = message.mentions.members.first();
         if (!member) return message.reply(`**${client.no} ➜ Veuillez entrer un utilisateur présent sur le serveur.**`)
-        if (member.user.bot) return message.reply(`**${client.no} ➜ Un bot ne peut pas avoir reçu d'infractions.**`)
+        if (member.user?.bot) return message.reply(`**${client.no} ➜ Un bot ne peut pas avoir reçu d'infractions.**`)
         const db = await warns.find({ userID: member.user.id });
         if (db.length === 0) return message.reply(`**${client.no} ➜ Ce membre n'a pas encore reçu de sanctions.**`)
         
@@ -61,21 +61,21 @@ class Warns extends Command {
             .setFooter(footer)
             .setColor(client.color)
 
-        const msg = await message.channel.send({
+        const msg = await message.channel?.send({
             content: null,
             embeds: [embed],
             components: [buttons]
         });
 
         const filter = i => i.customId === "suggLeftPage" || i.customId === "suggDeleteMsg" || i.customId === "suggRightPage" && i.user.id === message.author.id;
-        const collector = await msg.channel.createMessageComponentCollector({ filter, componentType: "BUTTON" });
+        const collector = await msg.channel?.createMessageComponentCollector({ filter, componentType: "BUTTON" });
 
         collector.on("collect", async (button) => {
             // delete
             if (button.customId === "suggDeleteMsg") {
                 if (button.user.id === message.author.id) {
                     collector.stop();
-                    await msg.delete();
+                    await msg?.delete();
                 }
             }
             // left
@@ -84,7 +84,7 @@ class Warns extends Command {
                 i1 = i1 - 3;
                 page = page - 1;
 
-                if (page < Math.ceil(db.length/3)) return await msg.delete();
+                if (page < Math.ceil(db.length/3)) return await msg?.delete();
 
                 if (page === Math.ceil(db.length/3)) leftPage.setDisabled();
                 else leftPage.setDisabled(false);
@@ -106,7 +106,7 @@ class Warns extends Command {
                 i1 = i1 + 3;
                 page = page + 1;
 
-                if (page > Math.ceil(db.length/3)) return await msg.delete();
+                if (page > Math.ceil(db.length/3)) return await msg?.delete();
 
                 if (page === Math.ceil(db.length/3)) leftPage.setDisabled();
                 else leftPage.setDisabled(false);
