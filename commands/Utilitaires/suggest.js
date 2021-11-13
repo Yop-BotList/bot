@@ -27,7 +27,7 @@ class Suggest extends Command {
     async run(client, message, args) {
                 // create
                 if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | mask | list>\`\`\``)
-                if (args[0] !== ("accept" || "reject" || "mask" || "list")) {
+                if (args[0] !== "accept" && args[0] !== "reject" && args[0] !== "mask" && args[0] !== "list") {
                     const db = await botconfig.findOne()
                         
                     const e = new MessageEmbed()
@@ -66,7 +66,7 @@ class Suggest extends Command {
                     const member = message.guild.members.cache.get(db.userID),
                           reason = args.slice(2).join(" ") || `Aucun commentaire...`
         
-                    message.guild.channels.cache.get(channels.suggests).messages.fetch(db.msgID).then(async (msg) => {
+                    await message.guild.channels.cache.get(channels.suggests).messages.fetch(db.msgID).then(async (msg) => {
                         const e1 = new MessageEmbed()
                         .setTitle(`Suggestion de ${member.user.username} acceptée par ${message.author.username} !`)
                         .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
@@ -100,7 +100,7 @@ class Suggest extends Command {
         
                     if (!reason) return message.channel.send(`**${client.no} ➜ Veuillez entrer une raison.**`)
         
-                    message.guild.channels.cache.get(channels.suggests).messages.fetch(db.msgID).then(async (msg) => {
+                    await message.guild.channels.cache.get(channels.suggests).messages.fetch(db.msgID).then(async (msg) => {
                         const e1 = new MessageEmbed()
                         .setTitle(`Suggestion de ${member.user.username} refusée par ${message.author.username} !`)
                         .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
@@ -131,7 +131,7 @@ class Suggest extends Command {
                     if (!db) return message.channel.send(`**${client.no} ➜ Veuillez entrer un identifiant de suggestion valide ou sur laquelle aucune action n'a été effectuée.**`)
                     const member = message.guild.members.cache.get(db.userID)
         
-                    message.guild.channels.cache.get(channels.suggests).messages.fetch(db.msgID).then(async (msg) => {
+                    await message.guild.channels.cache.get(channels.suggests).messages.fetch(db.msgID).then(async (msg) => {
                         const e1 = new MessageEmbed()
                         .setTitle(`Suggestion de ${member.user.username} masquée par ${message.author.username} !`)
                         .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
