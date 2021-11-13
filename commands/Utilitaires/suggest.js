@@ -48,7 +48,7 @@ class Suggest extends Command {
                             suggID: db.suggests + 1,
                             accepted: false,
                             deleted: false,
-                            content: args.slice(1).join(" ")
+                            content: args.join(" ")
                         }).save()
                         if (db) await botconfig.findOneAndUpdate({ suggests: db.suggests + 1 })
                         
