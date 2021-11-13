@@ -57,7 +57,8 @@ class Accept extends Command {
             ]
         });
         const edg = await user.findOne({ userID: message.author.id })
-        const vef = edg.verifications + 1 || 0;
+        let vef = 0;
+		try { if (edg) vef = edg.verifications + 1 } catch (err) { vef = 1 }
         if (edg) await user.findOneAndUpdate({ userID: message.author.id }, { $set: { verifications: vef } })
         if (!edg) new user({
             userID: message.author.id,
