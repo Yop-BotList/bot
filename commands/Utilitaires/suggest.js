@@ -27,7 +27,7 @@ class Suggest extends Command {
     async run(client, message, args) {
                 // create
                 if (!args[0]) return message.channel.send(`\`\`\`${prefix}suggest <suggestion | accept | reject | mask | list>\`\`\``)
-                if (args[0] !== "accept" && args[0] !== "reject" && args[0] !== "mask" && args[0] !== "list") {
+                if (args[0] !== ("accept" || "reject" || "mask" || "list")) {
                     const db = await botconfig.findOne()
                         
                     const e = new MessageEmbed()
