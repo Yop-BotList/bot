@@ -42,7 +42,7 @@ class Leaderboard extends Command {
             .setTitle("Classement des vérificateurs :")
             .setColor(client.color)
             .setThumbnail(message.guild.iconURL({ dynamic: true }))
-            .setDescription(array.map((r, i) => `#${i + 1} **${client.users.cache.get(r.userID)?.tag}** avec \`${r.likesCount}\` bots vérifiés !`).join("\n"))
+            .setDescription(array.map((r, i) => `#${i + 1} **${client.users.cache.get(r.userID)?.tag}** avec \`${r.verifications}\` bots vérifiés !`).join("\n"))
             message.channel.send({ embeds: [e] })
     }
 }
