@@ -45,7 +45,7 @@ class Delwarn extends Command {
             e.addField(":warning: Avertissement :", "L'utilisateur n'a pas été prévenu(e) de la suppression de sa sanction !")
         })
         client.channels?.cache.get(modlogs)?.send({ embeds: [e] })
-        await warns.findOneAndDelete({ warns: Number(args[0]) });
+        await warns.findOneAndDelete({ wrnID: Number(args[0]) });
         message.reply(`**${client.yes} ➜ Avertissement supprimé avec succès !**`)
     }
 }
