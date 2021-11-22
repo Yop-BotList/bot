@@ -246,7 +246,7 @@ class Manage extends Command {
                                 msg.edit({ embeds: [e8], components: [row4] })
                             }
                             if (button.customId === "six") {
-                                msg.edit({ content: `**${client.yes} ➜ Redémarrage en cours...**`, components: null, embeds: null })
+                                msg.edit({ content: `**${client.yes} ➜ Redémarrage en cours...**`, components: null })
                                     client.channels.cache.get(botlogs).send(`**${loading} ➜ Redémarrage en cours...**`).then(() => {
                                     client.destroy()
                                     collector.stop()

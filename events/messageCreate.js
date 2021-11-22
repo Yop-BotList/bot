@@ -202,8 +202,8 @@ module.exports = async(client, message) => {
   
   /* Getting Mention for Prefix */
   if (cmd.length === 0) {
-    if (matchedPrefix.includes(client.user.id) && message.author.id !== "692374264476860507") return message.reply({ content: `<@${message.author.id}> Pour voir toutes les commandes, tapez \`${prefix}help\`` });
-    if (matchedPrefix.includes(client.user.id) && message.author.id == "692374264476860507") return message.reply({ content: `Bonjour maître. Mon préfixe est \`${prefix}\`` });
+    if (matchedPrefix.includes(client.user.id) && message.author.id !== "692374264476860507" && message.author.id !== "650664078649458699") return message.reply({ content: `<@${message.author.id}> Pour voir toutes les commandes, tapez \`${prefix}help\`` });
+    if (matchedPrefix.includes(client.user.id) && message.author.id == "692374264476860507" || message.author.id === "650664078649458699") return message.reply({ content: `Bonjour maître. Mon préfixe est \`${prefix}\`` });
   }
   if (message.content.includes(client.user.username)) message.react("👀");
     const data = message.content;

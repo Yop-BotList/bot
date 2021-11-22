@@ -3,7 +3,6 @@
 const { blue, red, green } = require('colors'),
       { online } = require("../configs/emojis.json"),
       { owner, prefix } = require("../configs/config.json"),
-      checkConnection = require("../fonctions/checkConnection"),
       { botlogs } = require('../configs/channels.json'),
       remind = require("../models/reminds"),
       botconfig = require("../models/botconfig");
@@ -36,7 +35,7 @@ module.exports = async(client) => {
          setInterval(async () => {
              await client.user.setActivity(activities[Math.floor(Math.random() * activities.length)], { type: "STREAMING", url: "https://twitch.tv/discord" });
              
-             checkConnection(client);
+             
      
              /* reminds */
              const reminds = await remind.find();

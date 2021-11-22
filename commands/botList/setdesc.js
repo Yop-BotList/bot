@@ -1,10 +1,11 @@
 'use strict';
 
 const Command = require("../../structure/Command.js"),
-    bots = require("../../models/bots"),
-    { prefix } = require("../../configs/config.json"),
-    { botslogs } = require('../../configs/channels.json'),
-    { verificator } = require("../../configs/roles.json");
+      { MessageEmbed } = require('discord.js'),
+      bots = require("../../models/bots"),
+      { prefix } = require("../../configs/config.json"),
+      { botslogs } = require('../../configs/channels.json'),
+      { verificator } = require("../../configs/roles.json");
 
 class Setdesc extends Command {
     constructor() {
@@ -28,60 +29,52 @@ class Setdesc extends Command {
         if (db.ownerID !== message.author.id && !message.member.roles.cache.get(verificator)) return message.channel.send("**" + client.no + " ➜ Désolé, mais vous n'avez pas la permission d'utiliser cette commande.**")
         if (!args[1]) return message.channel.send("**" + client.no + ' ➜ Il faudrai peut-être entrer une description non ?**')
         if (args[1] === 'none' && db.desc) {
-            client.channels.cache.get(botslogs).send({
-                content: `<@${db.ownerID}>`,
-                embeds: [{
-                    color: client.color,
-                    title: "Modification de la description de " + member.user.username + ".",
-                    description: `<@${message.author.id}> vient juste d'éditer la description de <@${member.id}> :`,
-                    fields: [{
-                        name: "➜ Avant :",
-                        value: `\`\`\`${db.desc}\`\`\``,
-                        inline: false
-                    }, {
-                        name: "➜ Après :",
-                        value: `\`\`\`none\`\`\``,
-                        inline: false
-                    }],
-                    timestamp: new Date(),
-                    footer: {
-                        text: "ID du bot : " + member.id,
-                        iconURL: member.user.displayAvatarURL()
-                    }
-
-                }]
+            const e = new MessageEmbed()
+            .setColor(client.color)
+            .setTitle("Modification du profil...")
+            .setThumbnail(member.user.displayAvatarURL())
+            .setTimestamp(new Date())
+            .setDescription(`<@${message.author.id}> vient juste d'éditer la description de votre robot <@${member.id}> :`)
+            .setFields({
+                name: "➜ Avant :",
+                value: `\`\`\`${db.desc}\`\`\``,
+                inline: false
+            },
+            {
+                name: "➜ Après :",
+                value: `\`\`\`none\`\`\``,
+                inline: false
             })
+            client.channels.cache.get(botslogs).send({ content: `<@${db.ownerID}>`, embeds: [e] })
             message.channel.send("**" + client.yes + " ➜ Modifications enregistrées avec succès !**")
-            db.desc = null;
-            db.save();
+            setTimeout(async () => {
+                return await bots.findOneAndUpdate({ botID: member.user.id }, { $set: { desc: null } }, { upsert: true })
+            }, 2000)
         }
         if (args[1] === 'none' && !db.desc) return message.channel.send("**" + client.no + ' ➜ Tu m\'as demandé supprimer une description qui n\'a jamais été enregistrée ¯\\_(ツ)_/¯**')
         if (args[1] !== "none") {
             if (message.content.length > 300) return message.channel.send("**" + client.no + " ➜ Votre description ne doit pas dépasser les 300 caractères.**")
-            client.channels.cache.get(botslogs).send({
-                content: `<@${db.ownerID}>`,
-                embeds: [{
-                    color: client.color,
-                    title: "Modification du profil...",
-                    thumbnail: {
-                        url: member.user.displayAvatarURL()
-                    },
-                    timestamp: new Date(),
-                    description: `<@${message.author.id}> vient juste d'éditer la description de votre robot <@${member.id}> :`,
-                    fields: [{
-                        name: "➜ Avant :",
-                        value: `\`\`\`none\`\`\``,
-                        inline: false
-                    }, {
-                        name: "➜ Après :",
-                        value: `\`\`\`${args.slice(1).join(" ")}\`\`\``,
-                        inline: false
-                    }]
-                }]
+            const e = new MessageEmbed()
+            .setColor(client.color)
+            .setTitle("Modification du profil...")
+            .setThumbnail(member.user.displayAvatarURL())
+            .setTimestamp(new Date())
+            .setDescription(`<@${message.author.id}> vient juste d'éditer la description de votre robot <@${member.id}> :`)
+            .setFields({
+                name: "➜ Avant :",
+                value: `\`\`\`none\`\`\``,
+                inline: false
+            },
+            {
+                name: "➜ Après :",
+                value: `\`\`\`${args.slice(1).join(" ")}\`\`\``,
+                inline: false
             })
+            client.channels.cache.get(botslogs).send({ content: `<@${db.ownerID}>`, embeds: [e] })
             message.channel.send("**" + client.yes + " ➜ Modifications enregistrées avec succès !**")
-            db.desc = args.slice(1).join(" ");
-            db.save();
+            setTimeout(async () => {
+                return await bots.findOneAndUpdate({ botID: member.user.id }, { $set: { desc: args.slice(1).join(" ") } }, { upsert: true })
+            }, 2000)
         }
     }
 }
