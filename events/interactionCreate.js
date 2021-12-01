@@ -49,7 +49,7 @@ module.exports = async(client, data) => {
                   title: data.channel.name
             });
     
-            writeFile(`../transcripts/${user.id}.html`, html, function (err) {
+            writeFile(`./transcripts/${user.id}.html`, html, function (err) {
                 if (err) console.log(err);
             });
               
