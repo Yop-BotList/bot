@@ -4,7 +4,7 @@ const { MessageEmbed } = require("discord.js"),
       { ticketslogs } = require("../configs/channels.json"),
       { ticketsaccess } = require("../configs/roles.json"),
       createHTML = require("../fonctions/createHtml"),
-      { writeFile } = require("fs");
+      { writeFile, unlink } = require("fs");
 
 module.exports = async(client, data) => {
     if(data.isMessageComponent()){
@@ -52,8 +52,7 @@ module.exports = async(client, data) => {
             writeFile(`../transcripts/${user.id}.html`, html, function (err) {
                 if (err) console.log(err);
             });
-    
-    
+              
             await channelLogs.send({
                 content: null,
                 embeds: [
@@ -69,6 +68,10 @@ module.exports = async(client, data) => {
                 files: [
                     `../transcripts/${user.id}.html`
                 ]
+            });
+              
+            unlink(`./transcripts/${user.id}.html`, (err) => {
+                  if (err) console.log(err);
             });
             return setTimeout(() => {
                 data.channel.delete()
