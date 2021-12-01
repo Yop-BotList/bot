@@ -66,7 +66,7 @@ module.exports = async(client, data) => {
                     )
                 ],
                 files: [
-                    `../transcripts/${user.id}.html`
+                    `./transcripts/${user.id}.html`
                 ]
             });
               
