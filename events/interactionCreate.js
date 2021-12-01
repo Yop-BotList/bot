@@ -3,7 +3,7 @@
 const { MessageEmbed } = require("discord.js"),
       { ticketslogs } = require("../configs/channels.json"),
       { ticketsaccess } = require("../configs/roles.json"),
-      createHTML = require("create-html"),
+      createHTML = require("../fonctions/createHtml"),
       { writeFile } = require("fs");
 
 module.exports = async(client, data) => {
@@ -43,26 +43,10 @@ module.exports = async(client, data) => {
             //transcript
             const messagesCollection = await data.channel.messages.fetch({ limit: 100 });
 
-            let body = ``;
-            let avatar;
-    
-            messagesCollection.forEach(x => {
-                const { author, content } = x;
-                if (author.bot && author.discriminator !== "0000") return;
-                if (author.avatar) {
-                    avatar = `https://cdn.discordapp.com/avatars/${author.id}/${author.avatar}.png`;
-                }
-                if (!content) return;
-                body = body + `<p><img src="${avatar}" width="25px" height="25px" style="border-radius: 50%;">${author.username}#${author.discriminator}</p>\n<p>${content}</p>\n\n`;
-            });
-    
-            var html = createHTML({
-                title: user.id,
-                scriptAsync: true,
-                body: body + `\n\n<style>
-        body { background-color: #2F3136 }
-        p { color: white }
-    </style>`,
+            const html = createHTML({
+                  messages: messagesCollection,
+                  bots: true,
+                  title: data.channel.name
             });
     
             writeFile(`../transcripts/${user.id}.html`, html, function (err) {
