@@ -1,6 +1,6 @@
 {
   "name": "yop-bot",
-  "version": "3.6",
+  "version": "3.7",
   "description": "Botlist manager !",
   "main": "index.js",
   "scripts": {
