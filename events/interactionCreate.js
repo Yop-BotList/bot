@@ -21,20 +21,6 @@ module.exports = async(client, data) => {
             const user = await client.users.fetch(data.channel.topic),
                   channelLogs = client.channels.cache.get(ticketslogs);
             
-            channelLogs.send({
-                content: null,
-                embeds: [
-                    new MessageEmbed()
-                    .setTitle(`Fermeture du ticket de ${user.username}#${user.discriminator}`)
-                    .setTimestamp(new Date())
-                    .setColor(client.color)
-                    .addFields(
-                        { name: `:id: ID :`, value: `\`\`\`${user.id}\`\`\``, inline: false },
-                        { name: `:man_police_officer: Modérateur :`, value: `\`\`\`${data.user.username}#${data.user.discriminator}\`\`\``, inline: false }
-                    )
-                ]
-            });
-
             await user.send({
                 content: `> **🇫🇷 ➜ Votre ticket sur YopBot List à été fermé.\n> 🇺🇸 ➜ Your ticket on YopBot list has been closed.**`
             });
