@@ -7,6 +7,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       { escapeRegex, onCoolDown } = require("../fonctions/cooldown.js"),
       { boost } = require("../configs/emojis.json"),
       bumpChecker = require("../fonctions/bumpChecker"),
+      counterSystem = require("../fonctions/counterSystem"),
       user = require("../models/user"),
       confirmMp = new MessageButton()
       .setStyle("SUCCESS")
@@ -191,6 +192,8 @@ module.exports = async(client, message) => {
     }
 
   /* Guild System */
+	
+  counterSystem(message);
 
   if (message.channel.partial) await message.channel.fetch();
   if (message.partial) await message.fetch();
