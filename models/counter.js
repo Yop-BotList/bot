@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose"),
 
 counterShema = new Schema({
-    lastNumber: { type: String, required: false },
+    lastNumber: { type: Number, required: false },
     lastUser: { type: String, required: false }
 }),
 
