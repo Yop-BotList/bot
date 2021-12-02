@@ -3,7 +3,7 @@ module.exports=(options)=>{
 
     messages.forEach(x => {
         const { author, content, components } = x;
-
+        let avatar;
         if (author.bot && bots !== true) return;
         if (author.avatar) avatar = `https://cdn.discordapp.com/avatars/${author.id}/${author.avatar}.png`;
 
