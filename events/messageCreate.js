@@ -36,6 +36,8 @@ module.exports = async(client, message) => {
     //bumpChecker(message);
   
     if (message.author.bot) return;
+
+    counterSystem(message);
   
     /* MP SYSTEM */
   
@@ -192,8 +194,6 @@ module.exports = async(client, message) => {
     }
 
   /* Guild System */
-	
-  counterSystem(message);
 
   if (message.channel.partial) await message.channel.fetch();
   if (message.partial) await message.fetch();
