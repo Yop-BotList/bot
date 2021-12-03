@@ -25,7 +25,7 @@ module.exports = async(client) => {
      
          /* botsconfig verification */
          const db = await botconfig.findOne()
-         if (!db) new botconfig({ suggests: 0, warns: 0, counter: 0 }).save();
+         if (!db) new botconfig({ suggests: 0, warns: 0, counter: 0, lastCountUser: client.user.id }).save();
      
          /* Bot’s Activity */
          const activities = [`${prefix}help`, `Version ${client.version}`,'By Nolhan#2508'];

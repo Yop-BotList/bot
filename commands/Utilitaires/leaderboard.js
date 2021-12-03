@@ -24,7 +24,7 @@ class Leaderboard extends Command {
         
             if (udata.length < 2) return message.channel.send(`**${client.no} ➜ Il n'y a pas assez de vérificateurs dans le classement pour que je puisse afficher en afficher un.**`)
             let array = udata.sort((a, b) => (a.verifications < b.verifications) ? 1 : -1).slice(0, 10);
-            let forfind = udata.sort((a, b) => (a.verifications < b.varifications) ? 1 : -1);
+            let forfind = udata.sort((a, b) => (a.verifications < b.verifications) ? 1 : -1);
         
             function estUser(user) {
                 return user.userID === message.author.id;
@@ -42,7 +42,7 @@ class Leaderboard extends Command {
             .setTitle("Classement des vérificateurs :")
             .setColor(client.color)
             .setThumbnail(message.guild.iconURL({ dynamic: true }))
-            .setDescription(array.map((r, i) => `#${i + 1} **${client.users.cache.get(r.userID)?.tag}** avec \`${r.verifications}\` bots vérifiés !`).join("\n"))
+            .setDescription(array.map((r, i) => `#${i + 1} **${client.users.cache.get(r.userID)?.tag || r.userID}** avec \`${r.verifications}\` bots vérifiés !`).join("\n"))
             message.channel.send({ embeds: [e] })
     }
 }
