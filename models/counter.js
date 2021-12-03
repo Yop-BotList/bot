@@ -5,4 +5,4 @@ counterShema = new Schema({
     number: { type: Number, required: false }
 }),
 
-countershema = module.exports = model("counter", botconfigShema)
+countershema = module.exports = model("counter", counterShema)
