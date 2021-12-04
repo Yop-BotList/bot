@@ -1,7 +1,8 @@
 'use strict';
 
 const Command = require("../../structure/Command.js"),
-      count = require("../../models/counter");
+      count = require("../../models/counter"),
+      { MessageEmbed } = require("discord.js");
 
 class Counter extends Command {
     constructor() {
