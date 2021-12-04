@@ -29,7 +29,7 @@ const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js"),
       .setDescription("> **🇫🇷 ➜ Pour pouvoir supprimer le ticket, cliquez sur le bouton ci-dessous.\n> 🇺🇸 ➜ To delete the ticket, click on the button below.**")
       .setFooter("YopBot Support System")
       .setColor(color),
-      cc = require("../models/counter"),
+      counterdb = require("../models/counter"),
       botconfig = require("../models/botconfig");
 
 module.exports = async(client, message) => {  
@@ -42,9 +42,9 @@ module.exports = async(client, message) => {
       if (!bc) return;
       if (Number(message.content) !== bc.counter + 1) return message.author.send(`**${client.no} ➜ Le prochain nombre est ${bc.counter + 1}.**`)
       if (bc.lastCountUser === message.author.id) return message.author.send(`**${client.no} ➜ Vous êtes déjà le dernier utilisateur a avoir envoyé un nombre. Veuillez patienter...**`)
-      const ccc = await cc.findOne({ userID: message.author.id })
-      if (ccc) await cc.findOneAndUpdate({ userID: message.author.id }, { $set: { number: bc.counter + 1 } }, { upsert: true })
-      if (!ccc) new cc({ userID: message.author.id, number: bc.counter + 1}).save()
+      const ccc = await counterdb.findOne({ userID: message.author.id })
+      if (ccc) await counterdb.findOneAndUpdate({ userID: message.author.id }, { $set: { number: ccc.number + 1 } })
+      if (!ccc) new counterdb({ userID: message.author.id, number: 1 }).save()
       await botconfig.findOneAndUpdate({}, { $set: { counter: bc.counter + 1, lastCountUser: message.author.id } })
       const e = new MessageEmbed()
       .setDescription(`<@${message.author.id}> : ${bc.counter + 1}`)
