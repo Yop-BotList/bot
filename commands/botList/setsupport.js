@@ -37,12 +37,12 @@ class Setsupport extends Command {
                 .setDescription(`<@${message.author.id}> vient juste d'éditer le lien du serveur support de votre robot <@${member.id}> :`)
                 .setFields({
                     name: "➜ Avant :",
-                    value: `\`\`\`none\`\`\``,
+                    value: `\`\`\`${db.serverInvite}\`\`\``,
                     inline: false
                 },
                 {
                     name: "➜ Après :",
-                    value: `\`\`\`${args[1]}\`\`\``,
+                    value: `\`\`\`none\`\`\``,
                     inline: false
                 })
                 client.channels.cache.get(botslogs).send({ content: `<@${db.ownerID}>`, embeds: [e] })
@@ -65,7 +65,7 @@ class Setsupport extends Command {
                 .setDescription(`<@${message.author.id}> vient juste d'éditer le lien du serveur support de votre robot <@${member.id}> :`)
                 .setFields({
                     name: "➜ Avant :",
-                    value: `\`\`\`${before}\`\`\``,
+                    value: `\`\`\`${db.serverInvite || "none"}\`\`\``,
                     inline: false
                 },
                 {
