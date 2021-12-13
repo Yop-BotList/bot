@@ -62,7 +62,7 @@ class Setdesc extends Command {
             .setDescription(`<@${message.author.id}> vient juste d'éditer la description de votre robot <@${member.id}> :`)
             .setFields({
                 name: "➜ Avant :",
-                value: `\`\`\`none\`\`\``,
+                value: `\`\`\`${db.desc || "none"}\`\`\``,
                 inline: false
             },
             {
