@@ -37,12 +37,12 @@ class Setsite extends Command {
                 .setDescription(`<@${message.author.id}> vient juste d'éditer le site web de votre robot <@${member.id}> :`)
                 .setFields({
                     name: "➜ Avant :",
-                    value: `\`\`\`none\`\`\``,
+                    value: `\`\`\`${db.site}\`\`\``,
                     inline: false
                 },
                 {
                     name: "➜ Après :",
-                    value: `\`\`\`${args[1]}\`\`\``,
+                    value: `\`\`\`none\`\`\``,
                     inline: false
                 })
                 client.channels.cache.get(botslogs).send({ content: `<@${db.ownerID}>`, embeds: [e] })
@@ -63,7 +63,7 @@ class Setsite extends Command {
                 .setDescription(`<@${message.author.id}> vient juste d'éditer le site web de votre robot <@${member.id}> :`)
                 .setFields({
                     name: "➜ Avant :",
-                    value: `\`\`\`${db.site}\`\`\``,
+                    value: `\`\`\`${db.site || "none"}\`\`\``,
                     inline: false
                 },
                 {
