@@ -12,7 +12,7 @@ const { token } = require('./configs/config.json'),
       { botlogs } = require("./configs/channels.json"),
       { version } = require("./package.json"),
       mongoconnection = require('./fonctions/mongoose')
-
+// tu change ce que tu veux
 class Class extends Client {
     constructor(token) {
         super({ 
