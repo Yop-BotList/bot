@@ -14,6 +14,7 @@ module.exports = async(client, data) => {
     }
 
     if (data.isButton()) {
+        data.defearUpdate()
         if (data.customId === "deleteMpTicket") {
             if (!data.channel.name.startsWith("🎫・ticket-")) return;
             if (!data.member.roles.cache.has(ticketsaccess)) return data.user.send(`**${client.no} ➜ Vous n'avez pas l'autorisation de fermer ce ticket.**`)
