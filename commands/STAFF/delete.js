@@ -26,11 +26,8 @@ class Delete extends Command {
         let botGet = await bots.findOne({ botID: args[0], verified: true });
         if (!botGet) return message.reply({ content: `**${client.no} ➜ Le bot ${member.user.tag} ne peut pas être supprimé car il n'est pas vérifié !**` });
         const member = await message.guild.members.fetch(botGet.botID);
-        
-
 
         if (!args.slice(1).join(" ")) return message.reply({ content: `**${client.no} ➜ Vous n'avez pas donné de raison de suppresion.` });
-        
         
         client.channels.cache.get(botslogs).send({
             content: `<@${botGet.ownerID}>`,
@@ -54,7 +51,7 @@ class Delete extends Command {
         const checkBot = await bots.find({ ownerId: botGet.ownerID });
           
         if (checkBot.lenght === 0) {
-            //code pour remove le role client du membre
+            message.guild.members.cache.get(botGet.ownerID)?.roles.remove(isclient);
         }
     }
 }
