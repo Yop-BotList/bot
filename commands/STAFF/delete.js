@@ -50,6 +50,12 @@ class Delete extends Command {
         await bots.deleteOne({ botID: args[0] });
 
         if (autokick === true) member.kick();
+          
+        const checkBot = await bots.find({ ownerId: botGet.ownerID });
+          
+        if (checkBot.lenght === 0) {
+            //code pour remove le role client du membre
+        }
     }
 }
 
