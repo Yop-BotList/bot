@@ -24,6 +24,7 @@ class Leaderboard extends Command {
         
             if (udata.length < 2) return message.channel.send(`**${client.no} ➜ Il n'y a pas assez de vérificateurs dans le classement pour que je puisse afficher en afficher un.**`)
             let array = udata.sort((a, b) => (a.verifications < b.verifications) ? 1 : -1).slice(0, 10);
+            array.filter(x => x.verifications !== undefined);
             let forfind = udata.sort((a, b) => (a.verifications < b.verifications) ? 1 : -1);
         
             function estUser(user) {
