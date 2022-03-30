@@ -160,7 +160,7 @@ module.exports = async(client, message) => {
                 });
               });
   
-              await msg.update({
+              await msg.edit({
                 content: "> **🇫🇷 ➜ Votre message à bien été envoyé au support.\n> 🇺🇸 ➜ Your message has been succefully sent to the support**",
                 embeds: [],
                 components: []
