@@ -1,6 +1,8 @@
 ### Files ###
 package-lock.json
+YopBot V3.iml
 
 ### Folders ###
 configs/
 node_modules/
+/.idea/
