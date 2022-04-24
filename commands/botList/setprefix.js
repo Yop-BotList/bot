@@ -21,7 +21,7 @@ class Setprefix extends Command {
     }
 
     async run(client, message, args) {
-        if (!args[0]) return message.channel.send(`\`\`\`${prefix}setdesc <id bot> <description | none>\`\`\``)
+        if (!args[0]) return message.channel.send(`\`\`\`${prefix}setprefix <id bot> <prefix>\`\`\``)
        const member = await message.guild.members.fetch(args[0]).catch(() => null)
         if (!member) return message.channel.send(`**${client.no} ➜ Veuillez entrer l'indentifiant valide d'un bot présent sur ce serveur.**`)
         const db = await bots.findOne({ botID: member.user.id });
