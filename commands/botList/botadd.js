@@ -43,7 +43,7 @@ class Botadd extends Command {
         /* Responses */
 
         client.channels.cache.get(botslogs).send({
-            content: `<@${message.author.id}> / \`<@&${verificator}>\``,
+            content: `<@${message.author.id}> / <@&${verificator}>`,
             embeds: [
                 new MessageEmbed()
                 .setTitle("Demande d'ajout...")
