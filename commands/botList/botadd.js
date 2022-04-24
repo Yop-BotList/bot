@@ -24,7 +24,7 @@ class Botadd extends Command {
         /* Verification */
         if (message.mentions.members.first() || message.mentions.users.first()) return message.reply({ content: `**${client.no} ➜ Désolé je ne prend pas en charge les mentions.**` });
         if (!args[0]) return message.reply({ content: `**${client.no} ➜ Il manque l'id du bot dans la commande : \`${prefix}botadd <id> <prefix>\`**` });
-        const user = await client.users.fetch(args[0]);
+        const user = await client.users.fetch(args[0]).catch(() => null)
         if (!user) return message.reply({ content: `**${client.no} ➜ Utilisateur introuvable !**` });
         if (!user.bot) return message.reply({ content: `**${client.no} ➜ Cet utilisateur n’est pas un bot !**` });
 
