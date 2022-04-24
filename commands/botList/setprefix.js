@@ -41,12 +41,12 @@ class Setprefix extends Command {
             },
             {
                 name: "➜ Après :",
-                value: `\`\`\`args[1]\`\`\``,
+                value: `\`\`\`${args[1]}\`\`\``,
                 inline: false
             });
 
             client.channels.cache.get(botslogs)?.send({ content: `<@${db.ownerID}>`, embeds: [e] });
-            
+            message.reply(`**${client.yes} ➜ Modifications enregistrées !**`)
             setTimeout(async() => await bots.findOneAndUpdate({ botID: member.user.id }, { $set: { prefix: args[1] } }), 1000)
     }
 }
