@@ -157,3 +157,32 @@ Choisissez l'entreprise de votre choix, puis un pays et cliquez sur `Create Clus
  Trop cool, votre robot est équipé d'une base de données !
  
   ***
+  
+Pour modifier la couleur des embeds du bots, veuillez remplacer la valeur de `color` par un code couelur hexadécimal.
+> Astuce : Mettez la couleur principale du logo de votre bot ou celle de son rôle le plus haut sur votre serveur 😉
+
+***
+
+La fonctionnalité autokick vous permet d'expulser automatiquement les robots de votre serveur lorsque :
+
+* Le robot en question a été rejeté par un vérificateur.
+* Le robot en question a été supprimé par un administrateur.
+* Le propriétaire du robot a quitté votre serveur.
+
+Pour la désactiver, remplacer la valeur `true` par `false`.
+
+***
+
+Si vous tester les bots sur un autre serveur que le serveur principal, remplacer la valeur de `staffguildid` par l'identifiant du serveur en question. Si vous n'en avez pas, ne mettez rien mais laisser les guillemets.
+
+***
+
+La valeur de `owner` vous permettra d'accéder aux commandes de gérance du bot. Vous y mettrez donc votre identifiant. Pour autoriser une autre personne à y accéder, vous pouvez le rajouter dans l'array `owners`.
+
+***
+
+Dans la valeur `mainguildid`, vous placerez l'identifiant de votre serveur. Cela permettra à votre robot de le reconnaître.
+
+***
+
+Et enfin pour finir sur ce fichier `config.json`, le système de l'anti-invitation. Ce système vous permettra quiquonque hormis vous d'inviter quelqu'un sur le serveur de test des robots. Vous pouvez le désactiver en remplaçant la valeur `true` par `false`.
