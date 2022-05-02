@@ -10,7 +10,7 @@
 # Configuration :
 > Pour configurer votre robot, vous pouvez modifier les informations dans les fichiers du dossier `src/configs`.
 # Démarrage :
-> Ouvez un terminal et tapez `npm run build` puis `npm run start:js`.
+> Ouvez un terminal et tapez `npm run build` puis `npm run prod:start`.
 # Remerciements :
 > • Tout d’abord, j’aimerai remercier [garder500](https://github.com/garder500) car l’handler utilisé est issu de son robot : [Obvision](https://github.com/garder500/obvision).  
 > • Ensuite, je voudrais remercier [ValRedstone](https://github.com/ValRedstone) qui m’a énormément aidé dans la création de cette troisième version. C’est lui qui s’est occupé de tout le système de tickets, de points de bump, et d’une grosse partie de la base de données.

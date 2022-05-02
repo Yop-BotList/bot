@@ -6,7 +6,9 @@
   "author": "YopBotList's STAFF",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "colors": "^1.4.0",
     "discord.js": "^13.6.0",
+    "figlet": "^1.5.2",
     "fs": "^0.0.1-security",
     "mongoose": "^6.3.1",
     "path": "^0.12.7"
@@ -28,5 +30,13 @@
     "prod:list": "pm2 list",
     "prod:stop": "pm2 stop dist/index.js",
     "prod:logs": "pm2 logs"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nonolanlan1007/Yop-Bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Nonolanlan1007/Yop-Bot/issues"
+  },
+  "homepage": "https://github.com/Nonolanlan1007/Yop-Bot#readme"
 }
