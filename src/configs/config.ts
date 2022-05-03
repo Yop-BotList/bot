@@ -1,7 +1,7 @@
 export default {
-    token: "token",
+    token: "Nzg4MDg0OTk4ODAwMjc3NTY0.X9eXWQ.rqunfxMPobFlN8ZVhjKErL4ncTg",
     prefix: "y!",
-    mongooseConnectionString: "mongourl",
+    mongooseConnectionString: "mongodb+srv://Valredstone:wwLNg1DPYGqPymCO@cluster0.wiyny.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     color: "#f2ac34",
     autokick: true,
     staffGuildId: "784122752315555860",

@@ -1,5 +1,5 @@
 import { green, red } from "colors";
-import Discord, { Client, Collection } from "discord.js";
+import { ChannelType, Client, Collection, Partials } from "discord.js";
 import { readdirSync } from "fs";
 import { join } from "path";
 import { config, emotes, channels } from "./configs";
@@ -14,8 +14,29 @@ class Class extends Client {
     
     constructor(token: string) {
         super({
-            partials: ["USER","CHANNEL","GUILD_MEMBER","MESSAGE","REACTION"],
-            intents: ["GUILDS","GUILD_MEMBERS","GUILD_BANS","GUILD_EMOJIS_AND_STICKERS","GUILD_INTEGRATIONS","GUILD_INVITES","GUILD_VOICE_STATES","GUILD_PRESENCES","GUILD_MESSAGES","GUILD_MESSAGE_REACTIONS","GUILD_MESSAGE_TYPING","DIRECT_MESSAGES","DIRECT_MESSAGE_REACTIONS","DIRECT_MESSAGE_TYPING"]
+            partials: [
+                Partials.User,
+                Partials.Channel,
+                Partials.GuildMember,
+                Partials.Message,
+                Partials.Reaction
+            ],
+            intents: [
+                "Guilds",
+                "GuildMembers",
+                "GuildBans",
+                "GuildEmojisAndStickers",
+                "GuildIntegrations",
+                "GuildInvites",
+                "GuildVoiceStates",
+                "GuildPresences",
+                "GuildMessages",
+                "GuildMessageReactions",
+                "GuildMessageTyping",
+                "DirectMessages",
+                "DirectMessageReactions",
+                "DirectMessageTyping"
+            ]
         });
         
         this.config = config;
@@ -42,7 +63,7 @@ class Class extends Client {
                         this.commands.set(command.name, command);
                         console.log(`${green('[COMMANDS]')} Commande ${commandName} rechargée avec succès !`);
                         const channel = this.channels.cache?.get(channels.botlogs);
-                        if (channel?.type !== "GUILD_TEXT") throw new Error("Le salon de logs n'est pas un salon textuel !");
+                        if (channel?.type !== ChannelType.GuildText) return console.log("Le salon de logs n'est pas un salon textuel !");
                         channel.send(`**${emotes.yes} ➜ Commande \`${commandName}\` rechargée avec succès !**`);
                         _resolve(`**${emotes.yes} ➜ Commande \`${commandName}\` rechargée avec succès !**`);
                     } catch (error: any) {
@@ -73,7 +94,7 @@ class Class extends Client {
                         delete require.cache[require.resolve(join(__dirname, "events", event))];
                         console.log(`${green('[EVENTS]')} Évenèment ${eventName} rechargé avec succès !`);
                         const channel = this.channels.cache?.get(channels.botlogs);
-                        if (channel?.type !== "GUILD_TEXT") throw new Error("Le salon de logs n'est pas un salon textuel !");
+                        if (channel?.type !== ChannelType.GuildText) return console.log("Le salon de logs n'est pas un salon textuel !");
                         channel.send(`**${emotes.yes} ➜ Évènement \`${eventName}\` rechargé avec succès !**`);
                         _resolve(`**${emotes.yes} ➜ Évènement \`${eventName}\` rechargé avec succès !**`);
                     }
@@ -83,6 +104,51 @@ class Class extends Client {
                 }
             });
             _resolve(`**${emotes.no} ➜ Évènement \`${eventName}\` introuvable !**`);
-        })
+        });
+    }
+
+    reloadAllCommands(): Promise<String> {
+        return new Promise((_resolve) => {
+            let count = 0;
+            const folders = readdirSync(join(__dirname, "commands"));
+            for (let i = 0; i < folders.length; i++) {
+                const commands = readdirSync(join(__dirname, "commands", folders[i]));
+                count = count + commands.length;
+                for(const command of commands){
+                    try {
+                        this.reloadCommand(command.split('.')[0]);
+                    } catch (error: any) {
+                        console.log(`${red('[COMMANDS]')} Impossible de recharger la commande ${command} : ${error.stack || error}`);
+                    }
+                }
+            }
+            console.log(`${green('[COMMANDS]')} ${this.commands.size}/${count} Commandes rechargées !`);
+            _resolve(`**${emotes.yes} ➜ \`${this.commands.size}\`/\`${count}\` commandes rechargées !**`);
+            const channel = this.channels.cache?.get(channels.botlogs);
+            if (channel?.type !== ChannelType.GuildText) return console.log("Le salon de logs n'est pas un salon textuel !");
+            channel.send(`**${emotes.yes} ➜ \`${this.commands.size}\`/\`${count}\` commandes rechargées !**`);
+        });
+    }
+    
+    reloadAllEvents(): Promise<String> {
+        return new Promise((_resolve) => {
+            const files = readdirSync(join(__dirname, "events"));
+            let count = 0;
+            files.forEach((event) => {
+                try {
+                    count++;
+                    this.reloadEvent(event.split('.')[0]);
+                } catch (error: any) {
+                    console.log(`${red('[EVENTS]')} Impossible de recharger l’évènement ${event} : ${error.stack || error}`);
+                }
+            });
+            console.log(`${green('[EVENTS]')} ${count}/${files.length} Évènements rechargés !`);
+            _resolve(`**${emotes.yes} ➜ \`${count}\`/\`${files.length}\` évènements rechargés !**`);
+            const channel = this.channels.cache?.get(channels.botlogs);
+            if (channel?.type !== ChannelType.GuildText) return console.log("Le salon de logs n'est pas un salon textuel !");
+            channel.send(`**${emotes.yes} ➜ \`${count}\`/\`${files.length}\` évènements rechargés !**`);
+        });
     }
 }
+
+module.exports = new Class(config.token);
