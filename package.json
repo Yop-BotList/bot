@@ -24,6 +24,7 @@
     "typescript": "^4.6.4"
   },
   "scripts": {
+    "firstStart": "npx tsc && tsc && npm run prod:start",
     "build": "tsc",
     "start:js": "nodemon dist/index.js",
     "start:ts": "nodemon src/index.ts",
