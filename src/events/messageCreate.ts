@@ -1,28 +1,62 @@
-import { ChannelType, Client, Message } from "discord.js";
-import { config, emotes } from "../configs";
-import escapeRegex from "../functions/escapeRegex";
+import { ChannelType, Message } from "discord.js";
+import Class from "..";
+import { channels } from "../configs";
+import execCommand from "../functions/execCommand";
+import user from "../models/user";
 
-module.exports = async (client: Client, message: Message) => {
+module.exports = async (client: Class, message: Message) => {
     if (message.author.bot) return;
     
     if (message.channel.type === ChannelType.DM) return;
     // funny system
     if (message.content === `<@${client.user?.id}>`) {
-        if (config.owners.includes(message.author.id)) return message.reply(`**${emotes.discordicons.wave} ➜ Bonjour maître ! Comment allez-vous ?**`);
-        else return message.reply(`**${emotes.discordicons.wave} ➜ Bonjour, suis YopBot ! Mon préfixe est \`${config.prefix}\` mais sinon, vous pouvez utiliser mes commandes slash !**`);
+        if (client.config.owners.includes(message.author.id)) return message.reply(`**${client.emotes.discordicons.wave} ➜ Bonjour maître ! Comment allez-vous ?**`);
+        else return message.reply(`**${client.emotes.discordicons.wave} ➜ Bonjour, suis YopBot ! Mon préfixe est \`${client.config.prefix}\` mais sinon, vous pouvez utiliser mes commandes slash !**`);
     }
     
     if (message.content.includes(`${client.user?.username}`)) message.react("👀");
-    
-    // commands system
-    
-    const prefixRegex = new RegExp(`^(<@!?${client.user?.id}>|${escapeRegex(config.prefix)})\\s*`);
-    if (!prefixRegex.test(message.content)) return;
-    const matchedPrefix = message.content.match(prefixRegex),
-        args = message.content.slice(matchedPrefix?.length).trim().split(/ +/),
-        cmd = args.shift()?.toLowerCase();
 
-    if (message.content.includes(`${client.user?.username}`)) message.react("👀");
+    /* Command System */
+    
+    if (!message.content.startsWith(client.config.prefix)) return;
+    
+    const args = message.content.slice(client.config.prefix.length).trim().split(/ +/),
+        command = client?.commands?.find(cmd => cmd.aliases.includes(args[0].toLowerCase())) || client?.commands?.get(args[0].toLowerCase());
 
-    if (!message.content.startsWith(config.prefix)) return;
+    if (!command) return;
+
+    let db = await user.findOne({ userID: message.author.id, cmdbl: true });
+    if (db) return message.reply({ content: `**${client.emotes.no} ➜ Vous êtes sur la liste noire des commandes. Vous ne pouvez donc pas en utiliser.**` });
+
+    const channel = client.channels.cache?.get(channels.botlogs);
+
+    if (channel?.type !== ChannelType.GuildText) return;
+
+    channel.send({
+        content: null,
+        embeds: [
+            {
+                title: "Utilisation d'un commande",
+                thumbnail: {
+                    url: message.author.displayAvatarURL()
+                },
+                color: client.config.color.integer,
+                timestamp: Date(),
+                fields: [
+                    {
+                        name: "➜ Utilisateur :",
+                        value: `\`\`\`${message.author.username}#${message.author.discriminator} (${message.author.id})\`\`\``
+                    }, {
+                        name: "➜ Commande :",
+                        value: "```" + message.content + "```"
+                    }, {
+                        name: "➜ Lien",
+                        value: `[Cliquez-ici](https://discord.com/channels/${message.guild?.id}/${message.channel.id}/${message.id}) _Il se peut que cette personne aie supprimé ou édité son message._`
+                    }
+                ]
+            }
+        ]
+    });
+
+    execCommand(command, client, message, args);
 }

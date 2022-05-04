@@ -12,6 +12,7 @@ export default class Command {
     botPerms?: PermissionResolvable[];
     cooldown?: number;
     disabled?: boolean;
+    owner?: boolean;
 
     constructor(commandOptions: CommandOptions) {
         this.name = commandOptions.name;
@@ -24,5 +25,6 @@ export default class Command {
         this.botPerms = commandOptions.botPerms || ["EmbedLinks", "SendMessages", "ReadMessageHistory"];
         this.cooldown = commandOptions.cooldown || 0;
         this.disabled = commandOptions.disabled || false;
+        this.owner = commandOptions.owner || false;
     }
 }
