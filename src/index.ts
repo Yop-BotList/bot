@@ -67,6 +67,25 @@ class Class extends Client {
         this._processEvent();
         this._startingMessage();
     }
+
+    async postSlashs(slashsArray: any): Promise<void> {
+        if (this.isReady() !== true) throw new Error("Le client n'est pas connecté");
+
+        const guild = this.guilds.cache?.get(this.config.mainguildid);
+        if (!guild) throw new Error("Impossible de trouver le serveur de slashs commands test."); 
+
+        const clientSlashs = slashsArray.filter((slash: any) => slash?.guildOnly !== true).toJSON();
+        const guildSlashs = slashsArray.filter((slash: any) => slash?.guildOnly === true).toJSON();
+
+        try {
+            await this?.application?.commands.set(clientSlashs);
+            await guild.commands.set(guildSlashs);
+        } catch (error: any) {
+            throw new Error(error);
+        }
+
+        console.log(`[Success] Slashs Commands Posted\nClient Commands: ${this?.application?.commands.cache.size}\nGuild Commands: ${guild.commands.cache.size}`);
+    }
     
     /**
      * @param {String} commandName - Event file name without .ts or .js
@@ -99,7 +118,7 @@ class Class extends Client {
     }
 
     /**
-     * @param {String} slashCommand - Slash file name without .js
+     * @param {String} slashCommand - Slash file name without .ts or .js
      * @return {Promise<String>}
      */
     reloadSlashCommand(slashCommand: string): Promise<String> {
@@ -328,4 +347,4 @@ class Class extends Client {
     }
 }
 
-module.exports = new Class(config.token);
+export default new Class(config.token);
