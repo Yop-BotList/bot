@@ -196,6 +196,23 @@ class Class extends Client {
         }
         console.log(`${green('[SLASHCOMMANDS]')} ${this.slashs.size}/${count} commandes slash chargée(s)`)
     }
+
+    _eventsHandler():  any {
+        let count = 0;
+        const files = readdirSync(join(__dirname, "events"));
+        files.forEach((e) => {
+            try {
+                count++;
+                const fileName = e.split('.')[0];
+                const file = require(join(__dirname, "events", e));
+                this.on(fileName, file.bind(null, this));
+                delete require.cache[require.resolve(join(__dirname, "events", e))];
+            } catch (error) {
+                throw new Error(`${red('[EVENTS]')} Une erreur est survenue lors du chargement de l'évènement ${e} : ${error.stack || error}`)
+            }
+        });
+        console.log(`${green('[EVENTS]')} ${count}/${files.length} évènements chargé(s) !`)
+    }
 }
 
 module.exports = new Class(config.token);
