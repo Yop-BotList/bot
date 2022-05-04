@@ -38,7 +38,8 @@ class Class extends Client {
                 "GuildMessageTyping",
                 "DirectMessages",
                 "DirectMessageReactions",
-                "DirectMessageTyping"
+                "DirectMessageTyping",
+                "MessageContent"
             ]
         });
         

@@ -1,4 +1,5 @@
 import { Message } from "discord.js";
+import Class from "../..";
 import Command from "../../utils/Command";
 
 class Eval extends Command {
@@ -15,7 +16,11 @@ class Eval extends Command {
         });
     }
 
-    async run(message: Message, args: string[]) {}
+    async run(client: Class, message: Message, args: string[]) {
+        message.reply({
+            content: "Test passé avec succès !"
+        });
+    }
 }
 
 export = new Eval;

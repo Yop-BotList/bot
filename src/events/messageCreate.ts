@@ -4,7 +4,7 @@ import { channels } from "../configs";
 import execCommand from "../functions/execCommand";
 import user from "../models/user";
 
-module.exports = async (client: Class, message: Message) => {
+export = async (client: Class, message: Message) => {
     if (message.author.bot) return;
     
     if (message.channel.type === ChannelType.DM) return;
@@ -21,7 +21,7 @@ module.exports = async (client: Class, message: Message) => {
     if (!message.content.startsWith(client.config.prefix)) return;
     
     const args = message.content.slice(client.config.prefix.length).trim().split(/ +/),
-        command = client?.commands?.find(cmd => cmd.aliases.includes(args[0].toLowerCase())) || client?.commands?.get(args[0].toLowerCase());
+        command = client.commands?.find(cmd => cmd.aliases.includes(args[0].toLowerCase())) || client?.commands?.get(args[0].toLowerCase());
 
     if (!command) return;
 
@@ -41,7 +41,7 @@ module.exports = async (client: Class, message: Message) => {
                     url: message.author.displayAvatarURL()
                 },
                 color: client.config.color.integer,
-                timestamp: Date(),
+                timestamp: `${Date.now()}`,
                 fields: [
                     {
                         name: "➜ Utilisateur :",
