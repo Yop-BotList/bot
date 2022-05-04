@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "author": "YopBotList's STAFF",
   "license": "BSD-2-Clause",
-  "type": "module",
   "dependencies": {
     "colors": "^1.4.0",
     "discord.js": "^14.0.0-dev.1651493371-4ba0f56",
@@ -24,7 +23,6 @@
     "typescript": "^4.6.4"
   },
   "scripts": {
-    "firstStart": "npm i -g typescript pm2 && tsc && npm run prod:start",
     "build": "tsc",
     "start:js": "nodemon dist/index.js",
     "start:ts": "nodemon src/index.ts",
