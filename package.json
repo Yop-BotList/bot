@@ -1,6 +1,6 @@
 {
   "name": "yop-bot",
-  "version": "4.0.0-ts",
+  "version": "4.0.0",
   "description": "Botlist manager !",
   "main": "dist/index.js",
   "author": "YopBotList's STAFF",
@@ -15,6 +15,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
+    "@types/figlet": "^1.5.4",
     "@types/node": "^17.0.31",
     "nodemon": "^2.0.16",
     "pm2": "^5.2.0",

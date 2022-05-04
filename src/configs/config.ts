@@ -1,8 +1,11 @@
 export default {
-    token: "Nzg4MDg0OTk4ODAwMjc3NTY0.X9eXWQ.rqunfxMPobFlN8ZVhjKErL4ncTg",
+    token: "token",
     prefix: "y!",
-    mongooseConnectionString: "mongodb+srv://Valredstone:wwLNg1DPYGqPymCO@cluster0.wiyny.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    color: "#f2ac34",
+    mongooseConnectionString: "mongoConnectionString",
+    color: {
+        hexa: "#f2ac34",
+        integer: 0xf2ac34
+    },
     autokick: true,
     staffGuildId: "784122752315555860",
     owners: [
