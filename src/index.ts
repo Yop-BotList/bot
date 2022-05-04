@@ -149,6 +149,53 @@ class Class extends Client {
             channel.send(`**${emotes.yes} ➜ \`${count}\`/\`${files.length}\` évènements rechargés !**`);
         });
     }
+
+    async launch(): any {
+        console.log(green(`[BOT]`) + " Bot prêt !");
+        this.commands = new Collection();
+        this.slashs = new Collection();
+        this._commandsHandler();
+        this._slashHandler();
+        this._eventsHandler();
+        this._processEvent();
+        this._startingMessage();
+    }
+
+    _commandsHandler(): any {
+        let count = 0;
+        const folders = readdirSync(join(__dirname, "commands"));
+        for (let i = 0; i < folders.length; i++) {
+            const commands = readdirSync(join(__dirname, "commands", folders[i]));
+            count = count + commands.length;
+            for(const c of commands){
+                try {
+                    const command = require(join(__dirname, "commands", folders[i], c));
+                    this.commands.set(command.name, command);
+                } catch (error: any) {
+                    console.log(`${red('[COMMANDS]')} Une erreur est survenue lors du rechargement de la commande ${c} : ${error.stack || error}`)
+                }
+            }
+        }
+        console.log(`${green('[COMMANDS]')} ${this.commands.size}/${count} commandes chargée(s) !`)
+    }
+
+    _slashHandler(): any {
+        let count = 0;
+        const folders = readdirSync(join(__dirname, "slashs"));
+        for (let i = 0; i < folders.length; i++) {
+            const slashs = readdirSync(join(__dirname, "slashs", folders[i]));
+            count = count + slashs.length;
+            for(const c of slashs){
+                try {
+                    const slash = require(join(__dirname, "slashs", folders[i], c));
+                    this.slashs.set(slash.name, slash);
+                } catch (error: any) {
+                    console.log(`${red('[SLASHCOMMANDS]')} Une erreur est survenue lors du chargement de la commande ${c} : ${error.stack || error}`)
+                }
+            }
+        }
+        console.log(`${green('[SLASHCOMMANDS]')} ${this.slashs.size}/${count} commandes slash chargée(s)`)
+    }
 }
 
 module.exports = new Class(config.token);
