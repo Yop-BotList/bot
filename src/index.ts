@@ -1,16 +1,19 @@
-import { green, red } from "colors";
+import { blue, green, red } from "colors";
 import { ChannelType, Client, Collection, Partials } from "discord.js";
 import { readdirSync } from "fs";
+import { cpus, loadavg, totalmem } from "os";
 import { join } from "path";
+import { text } from "figlet";
 import { config, emotes, channels } from "./configs";
 import mongoconnection from "./functions/mongoose";
 
 class Class extends Client {
-    config: { token: string; prefix: string; mongooseConnectionString: string; color: string; autokick: boolean; staffGuildId: string; owners: string[]; mainguildid: string; antiinvite: boolean; };
+    config: { token: string; prefix: string; mongooseConnectionString: string; color: { hexa: string; integer: number; }; autokick: boolean; staffGuildId: string; owners: string[]; mainguildid: string; antiinvite: boolean; };
     emotes: { yes: string; no: string; bof: string; offline: string; online: string; streaming: string; idle: string; dnd: string; boost: string; loading: string; sort: string; entre: string; alerte: string; };
     version: any;
     cooldowns: Collection<string, any>;
     commands: Collection<string, any>;
+    slashs: Collection<string, any>;
     
     constructor(token: string) {
         super({
@@ -44,7 +47,25 @@ class Class extends Client {
         this.version = require("../package.json").version;
         this.cooldowns = new Collection();
         this.commands = new Collection();
+        this.slashs = new Collection();
         mongoconnection.init();
+
+        try {
+            this.launch().then(() => { console.log(blue('Tout est prêt, connexion à Discord !')); })
+        } catch (error: any) {
+            throw new Error(error)
+        }
+
+        this.login(token);
+    }
+
+    async launch(): Promise<any> {
+        console.log(green(`[BOT]`) + " Bot prêt !");
+        this._commandsHandler();
+        this._slashHandler();
+        this._eventsHandler();
+        this._processEvent();
+        this._startingMessage();
     }
     
     /**
@@ -75,6 +96,33 @@ class Class extends Client {
             
             _resolve(`**${emotes.no} ➜ Commande introuvable !**`);
         });
+    }
+
+    /**
+     * @param {String} reload_event - Event file name without .js
+     * @return {Promise<String>}
+     */
+    reloadSlashCommand(slashCommand: string): Promise<String> {
+        return new Promise((_resolve) => {
+            const folders = readdirSync(join(__dirname, "slashs"));
+            for (let i = 0; i < folders.length; i++) {
+                const commands = readdirSync(join(__dirname, "slashs", folders[i]));
+                if (commands.includes(`${slashCommand}.${__dirname.endsWith("src") ? "ts": "js"}`)) {
+                    try {
+                        delete require.cache[require.resolve(join(__dirname, "slashs", folders[i], `${slashCommand}.${__dirname.endsWith("src") ? "ts": "js"}`))]
+                        const command = require(join(__dirname, "slashs", folders[i], `${slashCommand}.${__dirname.endsWith("src") ? "ts": "js"}`));
+                        this.slashs.delete(command.name)
+                        this.slashs.set(command.name, command);
+                        console.log(`${green('[SLASHCOMMANDS]')} Commande slash ${slashCommand} rechargée avec succès !`)
+                        _resolve(`**${emotes.yes} ➜ Commande slash \`${slashCommand}\` rechargée avec succès !**`)
+                    } catch (error: any) {
+                        console.log(`${red('[SLASHCOMMANDS]')} Une erreur est survenue lors du rechargement de la commande ${slashCommand}: ${error.stack || error}`)
+                        _resolve(`**${emotes.no} ➜ Impossible de recharger la commande \`${slashCommand}\` !**`)
+                    }
+                }
+            }
+            _resolve(`**${emotes.no} ➜ Commande slash introuvable !**`)
+        })
     }
     
     /**
@@ -129,6 +177,26 @@ class Class extends Client {
             channel.send(`**${emotes.yes} ➜ \`${this.commands.size}\`/\`${count}\` commandes rechargées !**`);
         });
     }
+
+    reloadAllSlashCommands(): Promise<String> {
+        return new Promise((_resolve) => {
+            let count = 0;
+            const folders = readdirSync(join(__dirname, "slashs"));
+            for (let i = 0; i < folders.length; i++) {
+                const commands = readdirSync(join(__dirname, "slashs", folders[i]));
+                count = count + commands.length;
+                for(const c of commands){
+                    try {
+                        this.reloadSlashCommand(c.split('.')[0]);
+                    } catch (error: any) {
+                        throw new Error(`${red('[SLASHCOMMANDS]')} Une erreur est survenue lors du rechargement de la commande ${c}: ${error.stack || error}`)
+                    }
+                }
+            }
+            console.log(`${green('[SLASHCOMMANDS]')} ${this.slashs.size}/${count} commandes slash rechargée(s)`);
+            _resolve(`**${emotes.yes} ➜ \`${this.slashs.size}\`/\`${count}\` commande(s) slash rechargée(s) !**`)
+        })
+    }
     
     reloadAllEvents(): Promise<String> {
         return new Promise((_resolve) => {
@@ -148,17 +216,6 @@ class Class extends Client {
             if (channel?.type !== ChannelType.GuildText) return console.log("Le salon de logs n'est pas un salon textuel !");
             channel.send(`**${emotes.yes} ➜ \`${count}\`/\`${files.length}\` évènements rechargés !**`);
         });
-    }
-
-    async launch(): any {
-        console.log(green(`[BOT]`) + " Bot prêt !");
-        this.commands = new Collection();
-        this.slashs = new Collection();
-        this._commandsHandler();
-        this._slashHandler();
-        this._eventsHandler();
-        this._processEvent();
-        this._startingMessage();
     }
 
     _commandsHandler(): any {
@@ -197,21 +254,77 @@ class Class extends Client {
         console.log(`${green('[SLASHCOMMANDS]')} ${this.slashs.size}/${count} commandes slash chargée(s)`)
     }
 
-    _eventsHandler():  any {
+    _eventsHandler(): any {
         let count = 0;
         const files = readdirSync(join(__dirname, "events"));
-        files.forEach((e) => {
+        files.forEach((event) => {
             try {
                 count++;
-                const fileName = e.split('.')[0];
-                const file = require(join(__dirname, "events", e));
-                this.on(fileName, file.bind(null, this));
-                delete require.cache[require.resolve(join(__dirname, "events", e))];
-            } catch (error) {
-                throw new Error(`${red('[EVENTS]')} Une erreur est survenue lors du chargement de l'évènement ${e} : ${error.stack || error}`)
+                const file = require(join(__dirname, "events", event));
+                this.on(event.split('.')[0], file.bind(null, this));
+                delete require.cache[require.resolve(join(__dirname, "events", event))];
+            } catch (error: any) {
+                throw new Error(`${red('[EVENTS]')} Une erreur est survenue lors du chargement de l'évènement ${event} : ${error.stack || error}`)
             }
         });
         console.log(`${green('[EVENTS]')} ${count}/${files.length} évènements chargé(s) !`)
+    }
+
+    _processEvent() {
+        process.on('unhandledRejection', (error: any) => {
+            if(error.code === 50007) return;
+            console.error(green('Une erreur est survenue : ') + red(error.stack));
+            let details = `\`\`\`\nName : ${error.name}\nMessage : ${error.message}`;
+            if (error.path) details += `\nChemin : ${error.path}`;
+            if (error.code) details += `\nCode d'erreur : ${error.code}`;
+            if (error.method) details += `\nMéthode: ${error.method}`;
+            const channel = this.channels.cache?.get(channels.botlogs);
+            if (channel?.type === ChannelType.GuildText) channel.send({
+                content: `<@${this.config.owners[0]}>`,
+                embeds: [{
+                    description: `🔺 **Une erreur est survenue :**\n\`\`\`js\n${error}\`\`\``,
+                    color: this.config.color.integer,
+                    fields: [
+                        {
+                            name: "🔺 Détails :",
+                            value: `${details}\`\`\``
+                        }
+                    ]
+                }]
+            })
+        });
+    }
+
+    _startingMessage() {
+        const cpuCores = cpus().length;
+        //Custom Starting Message
+        text('Yop-Bot', {
+            font: "Standard"
+        }, function(err, data) {
+            if (err) {
+                console.log('Quelque chose ne va pas...');
+                console.dir(err);
+                return;
+            }
+            const data2 = data;
+            text('A botlist manager', {
+            }, function(err, data) {
+                if (err) {
+                    console.log('Quelque chose ne va pas...');
+                    console.dir(err);
+                    return;
+                }
+                console.log("================================================================================================================================"+"\n"+
+                                data2+"\n\n"+ data +"\n"+
+                            "================================================================================================================================"+ "\n"+
+                                `CPU: ${(loadavg()[0]/cpuCores).toFixed(2)}% / 100%` + "\n" +
+                                `RAM: ${Math.trunc((process.memoryUsage().heapUsed) / 1000 / 1000)} MB / ${Math.trunc(totalmem() / 1000 / 1000)} MB` + "\n" +
+                                //`Discord WebSocket Ping: ${this.ws.ping}` + "\n" +
+                            "================================================================================================================================"
+                );
+            });
+
+        });
     }
 }
 

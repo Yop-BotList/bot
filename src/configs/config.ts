@@ -2,7 +2,10 @@ export default {
     token: "token",
     prefix: "y!",
     mongooseConnectionString: "mongoConnectionString",
-    color: "#f2ac34",
+    color: {
+        hexa: "#f2ac34",
+        integer: 0xf2ac34
+    },
     autokick: true,
     staffGuildId: "784122752315555860",
     owners: [
