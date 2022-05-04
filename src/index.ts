@@ -99,7 +99,7 @@ class Class extends Client {
     }
 
     /**
-     * @param {String} reload_event - Event file name without .js
+     * @param {String} slashCommand - Slash file name without .js
      * @return {Promise<String>}
      */
     reloadSlashCommand(slashCommand: string): Promise<String> {
