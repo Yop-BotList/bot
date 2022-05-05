@@ -20,8 +20,8 @@ export = async (client: Class, message: Message) => {
     
     if (!message.content.startsWith(client.config.prefix)) return;
     
-    const args = message.content.slice(client.config.prefix.length).trim().split(/ +/),
-        command = client.commands?.find(cmd => cmd.aliases.includes(args[0].toLowerCase())) || client?.commands?.get(args[0].toLowerCase());
+    const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g),
+        command = client.commands.find(cmd => cmd.aliases.includes(args.shift()?.toLowerCase())) || client.commands.get(args.shift()?.toLowerCase());
 
     if (!command) return;
 
@@ -41,7 +41,7 @@ export = async (client: Class, message: Message) => {
                     url: message.author.displayAvatarURL()
                 },
                 color: client.config.color.integer,
-                timestamp: `${Date.now()}`,
+                timestamp: new Date().toISOString(),
                 fields: [
                     {
                         name: "➜ Utilisateur :",

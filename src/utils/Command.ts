@@ -13,6 +13,7 @@ export default class Command {
     cooldown?: number;
     disabled?: boolean;
     owner?: boolean;
+    minArgs?: number;
 
     constructor(commandOptions: CommandOptions) {
         this.name = commandOptions.name;
@@ -26,5 +27,6 @@ export default class Command {
         this.cooldown = commandOptions.cooldown || 0;
         this.disabled = commandOptions.disabled || false;
         this.owner = commandOptions.owner || false;
+        this.minArgs = commandOptions.minArgs || 0;
     }
 }

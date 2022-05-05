@@ -14,7 +14,7 @@ export default {
         mongoose.connect(config.mongooseConnectionString, mongoOptions)
         .then(() => {
             setTimeout(() => {
-                console.log(green("[Bot]") + "Connecté à MongoDB !");
+                console.log(green("[Bot]") + " Connecté à MongoDB !");
             }, 1500);
         }).catch(err => {
             console.log(red(`[BOT]`) + ` MongoDB déconnecté : ${err}`);

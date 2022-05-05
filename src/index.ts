@@ -10,8 +10,8 @@ import mongoconnection from "./functions/mongoose";
 class Class extends Client {
     version: string;
     cooldowns: Collection<string, any>;
-    commands: Collection<string, any>;
-    slashs: Collection<string, any>;
+    commands: Collection<string | undefined, any>;
+    slashs: Collection<string | undefined, any>;
     config: { token: string; prefix: string; mongooseConnectionString: string; color: { hexa: string; integer: number; }; autokick: boolean; staffGuildId: string; owners: string[]; mainguildid: string; antiinvite: boolean; };
     emotes: { yes: string; no: string; bof: string; offline: string; online: string; streaming: string; idle: string; dnd: string; boost: string; loading: string; sort: string; entre: string; alerte: string; notif: string; question: string; cadena: string; badges: { verifieddevelopper: string; balance: string; mod: string; bravery: string; bughuntergold: string; bughunter: string; brillance: string; hypesquadevent: string; partner: string; staff: string; earlysupporter: string; verifiedbot: string; system: string; badges: string; }; discordicons: { list: string; bot: string; textchannel: string; wave: string; entre: string; game: string; id: string; hierarchie: string; key: string; man: string; img: string; tag: string; clyde: string; horloge: string; }; };
     
@@ -85,7 +85,7 @@ class Class extends Client {
             throw new Error(error);
         }
 
-        console.log(`[Success] Slashs Commands Posted\nClient Commands: ${this?.application?.commands.cache.size}\nGuild Commands: ${guild.commands.cache.size}`);
+        console.log(`${green("[Success]")} Slashs Commands Posted\nClient Commands: ${this?.application?.commands.cache.size}\nGuild Commands: ${guild.commands.cache.size}`);
     }
     
     /**

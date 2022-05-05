@@ -11,5 +11,6 @@ export default interface CommandOptions {
     botPerms?: PermissionResolvable[],
     cooldown?: number,
     disabled?: boolean,
-    owner?: boolean
+    owner?: boolean,
+    minArgs?: number
 }

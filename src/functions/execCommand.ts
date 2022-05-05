@@ -22,6 +22,8 @@ export default function execCommand(command: any, client: Class, message: Messag
 
     if (onCooldown(client, message, command) && !client.config.owners.includes(message.author.id)) return message.reply({ content: `**${client.emotes.no} ➜ Veuillez patienter encore ${onCooldown(client, message, command)} avant de pouvoir réutiliser la commande \`${command.name}\` !**` });
 
+    if (command.minArgs > 0 && args.length < command.minArgs) return message.reply({ content: `**${client.emotes.no} ➜ \`${command.usage}\`**` });
+
     try {
         command.run(client, message, args);
     } catch (error: any) {
