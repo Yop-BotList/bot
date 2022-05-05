@@ -14,6 +14,7 @@ export default class Command {
     disabled?: boolean;
     owner?: boolean;
     minArgs?: number;
+    requiredRole?: string;
 
     constructor(commandOptions: CommandOptions) {
         this.name = commandOptions.name;
@@ -28,5 +29,6 @@ export default class Command {
         this.disabled = commandOptions.disabled || false;
         this.owner = commandOptions.owner || false;
         this.minArgs = commandOptions.minArgs || 0;
+        this.requiredRole = commandOptions.requiredRole || "";
     }
 }

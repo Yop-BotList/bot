@@ -17,7 +17,7 @@ class Botadd extends Command {
         });
     }
 
-    async run(client: Class, message: Message, args: string[]) {
+    async run(client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
         if (message.mentions.members?.first() || message.mentions.users.first()) return message.reply({ content: `**${client.emotes.no} ➜ Désolé je ne prend pas en charge les mentions.**` });
 
         const user = await client.users.fetch(args[0]).catch(() => null);

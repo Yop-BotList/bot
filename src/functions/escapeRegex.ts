@@ -1,4 +1,4 @@
-export default function escapeRegex(str: string) {
+export default function escapeRegex(str: string): string | undefined {
     try {
         return str.replace(/[.*+?^${}()|[\]\\]/g, `\\$&`);
     } catch (error: any) {

@@ -14,7 +14,7 @@ class Help extends Command {
         });
     }
 
-    async run(client: Class, message: Message, args: string[]) {
+    async run(client: Class, message: Message, args: string[]): Promise<Message<boolean>> {
         if (!args) {
             let commandsList = [
                 {
@@ -23,6 +23,9 @@ class Help extends Command {
                 }, {
                     name: "➜ Botlist",
                     value: client.commands.filter(c => c.category === 'Botlist').map(c => `\`${c.name}\``).join(', ')
+                }, {
+                    name: "➜ Staff",
+                    value: client.commands.filter(c => c.category === 'Staff').map(c => `\`${c.name}\``).join(', ')
                 }
             ];
 

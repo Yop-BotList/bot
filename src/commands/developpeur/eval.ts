@@ -17,7 +17,7 @@ class Eval extends Command {
         });
     }
 
-    async run(client: Class, message: Message, args: string[]) {
+    async run(client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
         let code = args.join(" ");
         let result = "";
 

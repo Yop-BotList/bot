@@ -12,5 +12,6 @@ export default interface CommandOptions {
     cooldown?: number,
     disabled?: boolean,
     owner?: boolean,
-    minArgs?: number
+    minArgs?: number,
+    requiredRole?: string 
 }

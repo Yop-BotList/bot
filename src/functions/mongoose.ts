@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { config } from "../configs";
 
 export default {
-    init: () => {
+    init: (): void => {
         const mongoOptions = {
             useNewUrlParser: true,
             useUnifiedTopology: true,

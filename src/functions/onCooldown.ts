@@ -2,7 +2,7 @@ import { Collection, Message } from "discord.js";
 import prettyMilliseconds from "pretty-ms";
 import Class from "..";
 
-export default function onCooldown(client: Class, message: Message, command: any) {
+export default function onCooldown(client: Class, message: Message, command: any): string | false {
     if(!message || !client) throw "No Message with a valid DiscordClient granted as First Parameter";
     if(!command || !command.name) throw "No Command with a valid Name granted as Second Parameter";
     if (!client.cooldowns.has(command.name)) {
