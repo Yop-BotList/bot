@@ -6,7 +6,7 @@ class Eval extends Command {
     constructor() {
         super({
             name: "eval",
-            category: "owner",
+            category: "Developpeur",
             description: "Test un code.",
             usage: "eval <code>",
             example: ["eval console.log('Hello World')"],
