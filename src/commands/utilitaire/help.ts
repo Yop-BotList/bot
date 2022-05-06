@@ -15,7 +15,7 @@ class Help extends Command {
     }
 
     async run(client: Class, message: Message, args: string[]): Promise<Message<boolean>> {
-        if (!args) {
+        if (!args[0]) {
             let commandsList = [
                 {
                     name: "➜ Utilitaire",
@@ -96,7 +96,7 @@ class Help extends Command {
                                 value: command.aliases.length > 0 ? command.aliases.map((alias: string) => `\`${alias}\``).join(', ') : 'Aucun alias.'
                             }, {
                                 name: '❱ Permissions',
-                                value: command.permissions.length > 0 ? command.permissions.map((permission: string) => `\`${permission}\``).join(', ') : 'Aucune permission requise.'
+                                value: command.perms.length > 0 ? command.perms.map((permission: string) => `\`${permission}\``).join(', ') : 'Aucune permission requise.'
                             }, {
                                 name: '❱ Exemple',
                                 value: command.exemple || 'Aucun exemple disponible.'
@@ -108,3 +108,5 @@ class Help extends Command {
         }
     }
 }
+
+export = new Help;

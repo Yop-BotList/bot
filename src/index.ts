@@ -40,7 +40,10 @@ class Class extends Client {
                 "DirectMessageReactions",
                 "DirectMessageTyping",
                 "MessageContent"
-            ]
+            ],
+            allowedMentions: {
+                repliedUser: false
+            }
         });
         
         this.config = config;

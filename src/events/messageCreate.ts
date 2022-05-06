@@ -20,8 +20,9 @@ export = async (client: Class, message: Message) => {
     
     if (!message.content.startsWith(client.config.prefix)) return;
     
-    const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g),
-        command = client.commands.find(cmd => cmd.aliases.includes(args.shift()?.toLowerCase())) || client.commands.get(args.shift()?.toLowerCase());
+    const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
+    const cmd = args.shift()?.toLowerCase();
+    const command = client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmd)) || client.commands.get(cmd);
 
     if (!command) return;
 
@@ -29,9 +30,7 @@ export = async (client: Class, message: Message) => {
     if (db) return message.reply({ content: `**${client.emotes.no} ➜ Vous êtes sur la liste noire des commandes. Vous ne pouvez donc pas en utiliser.**` });
 
     const channel = client.channels.cache?.get(channels.botlogs);
-
     if (channel?.type !== ChannelType.GuildText) return;
-
     channel.send({
         content: null,
         embeds: [
