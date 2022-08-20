@@ -19,10 +19,10 @@ export default function execCommand(command: any, client: Class, message: Messag
     if (command.botPerms !== []) {
         let botPerms = []
         for(let i = 0;i < command.botPerms.length; i++) {
-            if(!message.guild?.me?.permissions.has(command.botPerms[i] as PermissionResolvable)) botPerms.push(`\`${command.botPerms[i]}\``);
+            if(!message.guild?.members.me!.permissions.has(command.botPerms[i])) botPerms.push(`\`${command.botPerms[i]}\``);
         }
 
-        if(botPerms.length > 0) return message.reply(`**${client.emotes.no} ➜ Il me manque les permissions suivantes pour pouvoir exécuter cette commande : \`${botPerms.join("`,\n`")}\``);
+        if(botPerms.length > 0) return message.reply(`**${client.emotes.no} ➜ Il me manque les permissions suivantes pour pouvoir exécuter cette commande** : \`${botPerms.join("`,\n`")}\``);
     }
 
     if (command.disabled) return message.reply({ content: `**${client.emotes.no} ➜ Cette commande est actuellement désactivée.**` });

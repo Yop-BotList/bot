@@ -1,17 +1,17 @@
 export default {
     token: "token",
-    prefix: "y!",
-    mongooseConnectionString: "mongoConnectionUri",
+    prefix: "y/",
+    mongooseConnectionString: "mongooseConnectionString",
     color: {
         hexa: "#f2ac34",
         integer: 0xf2ac34
     },
     autokick: true,
-    staffGuildId: "784122752315555860",
+    staffGuildId: "839895687340753026",
     owners: [
         "692374264476860507",
         "650664078649458699"
     ],
-    mainguildid: "782644006190055486",
+    mainguildid: "839895687340753026",
     antiinvite: true
 };

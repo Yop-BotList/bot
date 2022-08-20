@@ -27,11 +27,17 @@ class Botadd extends Command {
         const channel = client.channels.cache.get(channels.botslogs);
         if (channel?.type !== ChannelType.GuildText) throw new Error("Le channel botslogs n'est pas un channel textuel ou n'a pas été trouvé.");
 
+        const userBots = await bots.find({ ownerId: message.author.id });
+
+        if ((userBots.length > 0) && !message.member?.roles.cache.has(roles.premium)) return message.reply({
+            content: `**${client.emotes.no} ➜ Vous ne pouvez pas ajouter un deuxième bot car vous ne possédez pas le role premium (voir <#${channels.faq}> N°7 pour plus d'informations).**`
+        });
+
         if (await bots.findOne({ botId: user.id })) return message.reply({ content: `**${client.emotes.no} ➜ Ce bot est déjà dans la liste.**` });
 
         new bots({
             botId: user.id,
-            botPrefix: args[1],
+            prefix: args[1],
             ownerId: message.author.id,
             verified: false
         }).save();

@@ -21,7 +21,7 @@ class Delete extends Command {
 
     async run(client: Class, message: Message, args: string[]) {
         const getBot = await bots.findOne({ botId: args[0], verified: true });
-        const member = message.guild?.members.cache.get(getBot?.botId);
+        const member = message.guild?.members.cache.get(args[0]);
         if (!getBot || !member) return message.reply({ content: `**${client.emotes.no} ➜ Le bot ${member?.user.tag} ne peut pas être supprimé car il n'est pas vérifié ou n'est pas sur la liste !**` });
 
         const channel = message.guild?.channels.cache.get(channels.botslogs);
@@ -56,7 +56,7 @@ class Delete extends Command {
 
         const ownerBots = await bots.find({ ownerId: getBot.ownerId });
         if (ownerBots.length === 0) {
-            const owner = message.guild?.members.cache.get(getBot.ownerId);
+            const owner = message.guild?.members.cache.get(`${getBot?.ownerId}`);
             if (owner) owner.roles.remove(roles.isclient);
         }
     }

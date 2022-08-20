@@ -21,8 +21,8 @@ export = async (client: Class, message: Message) => {
     if (!message.content.startsWith(client.config.prefix)) return;
     
     const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
-    const cmd = args.shift()?.toLowerCase();
-    const command = client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmd)) || client.commands.get(cmd);
+    const cmdName = args.shift()?.toLowerCase();
+    const command = client.commands.find(cmd => (cmd.name === cmdName) || cmd.aliases.includes(cmdName));
 
     if (!command) return;
 
