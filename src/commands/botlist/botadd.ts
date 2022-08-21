@@ -47,7 +47,7 @@ class Botadd extends Command {
             embeds: [
                 {
                     title: "Demande d'ajout...",
-                    description: `<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&scope=bot%20applications.commands&permissions=0). Un vérificateur va bientôt s’occuper de lui.`,
+                    description: `<@${message.author.id}> a demandé à ajouter le bot [${user.username}#${user.discriminator}](https://discord.com/oauth2/authorize?client_id=${user.id}&permissions=0&scope=bot%20applications.commands). Un vérificateur va bientôt s’occuper de lui.`,
                     color: 0x66DA61,
                     thumbnail: {
                         url: user.displayAvatarURL()

@@ -36,7 +36,7 @@ class Delete extends Command {
             embeds: [
                 {
                     title: "Refus...",
-                    timestamp: `${new Date()}`,
+                    timestamp: new Date().toISOString(),
                     thumbnail: {
                         url: member?.user.displayAvatarURL()
                     },

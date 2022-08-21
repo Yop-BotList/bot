@@ -6,7 +6,7 @@ import { channels } from '../configs'
 export = async (client: Class, member: GuildMember) => {
   if (member.guild.id === client.config.staffGuildId) {
     if (!member.user.bot) return;
-    const data = await bots.findOne({ botID: member.user.id })
+    const data = await bots.findOne({ botId: member.user.id })
     if (!data || !data.botId) return;
     if (data.verified !== false) return;
     const owner = await client.users.fetch(`${data.ownerId}`).catch(() => null)

@@ -8,6 +8,6 @@ export default {
     welcomechannel: "782661811291815947",
     modlogs: "857616632040652840",
     sugglogs: "782661811291815947",
-    counter: "counterchannel",
+    counter: "1010907609542426714",
     faq: "905014644048007179"
 }

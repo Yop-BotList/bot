@@ -2,7 +2,7 @@ import { Invite } from "discord.js";
 import Class from "..";
 import { config, emotes } from "../configs"
 
-module.exports = async(client: Class, invite: Invite) => {
+export = async(client: Class, invite: Invite) => {
     if (invite.guild!.id !== config.staffGuildId) return;
     if (config.antiinvite === false) return;
 
