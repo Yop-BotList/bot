@@ -24,19 +24,16 @@ class Profil extends Command {
     if (!member.bot) {
       const data = await bots.find({ ownerID: member.user.id })
       
-      let robots;
-      
-      if (data.length === 0) robots = 'Aucun robot listé.'
-      if (data.length > 0) robots = data.map(x => `<@${x.botID}>`).join(", ")
+      let robots = data.length > 0 ? data.map(x => `<@&${x.botId}>`).join(", ") : "Aucun robot listé.";
       
       message.reply({
         embeds: [
             {
               title: `Informations sur ${member.user.tag}`,
-              color: client.color,
+              color: client.config.color.integer,
               thumbnail: {
                 url: member.user.displayAvatarURL()
-              }
+              },
               fields: [
                   {
                     name: '__🏷 Nom :__',
@@ -70,10 +67,10 @@ class Profil extends Command {
         embeds: [
             {
               title: `Informations sur ${member.user.tag}`,
-              color: client.color,
+              color: client.config.color.integer,
               thumbnail: {
                 url: member.user.displayAvatarURL()
-              }
+              },
               fields: [
                   {
                     name: '__🏷 Nom :__',
@@ -106,7 +103,7 @@ class Profil extends Command {
         embeds: [
             {
               title: `Informations sur ${member.user.tag}`,
-              color: client.color,
+              color: client.config.color.integer,
               thumbnail: {
                 url: member.user.displayAvatarURL()
               },
@@ -117,7 +114,7 @@ class Profil extends Command {
                 {
                   name: '__:robot: Nom :__',
                   value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
-                        inline: true
+                  inline: true
                 },
                 {
                   name: '__:key: Propriétaire :__',
