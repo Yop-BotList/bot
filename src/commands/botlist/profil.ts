@@ -1,7 +1,10 @@
-import Class from '..'
-import Command from '../../utils/Command'
-import { Message } from 'discord.js'
-import bots from '../../models/bots'
+import Class from '../..';
+import Command from '../../utils/Command';
+import { Message } from 'discord.js';
+import bots from '../../models/bots';
+import moment from "moment";
+
+moment.locale("fr");
 
 class Profil extends Command {
   constructor() {
@@ -15,56 +18,54 @@ class Profil extends Command {
       minArgs: 1
     });
   }
-  
-  async run (client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
-    const member = message.mentions.members.first() || message.guild.members.fetch(args[0]).catch(() => null)
-    
-    if (!member.user) return message.reply({ content: `**${client.emotes.no} ➜ Membre introuvable !**`})
-    
-    if (!member.bot) {
-      const data = await bots.find({ ownerID: member.user.id })
-      
-      let robots = data.length > 0 ? data.map(x => `<@&${x.botId}>`).join(", ") : "Aucun robot listé.";
-      
+
+  async run(client: Class, message: Message): Promise<Message<boolean> | undefined> {
+    const member = message.mentions.members?.first();
+
+    if (!member || !member.user) return message.reply({ content: `**${client.emotes.no} ➜ Membre introuvable !**` });
+
+    if (!member.user.bot) {
+      const data = await bots.find({ ownerId: member.user.id });
+
+      let robots = data.length > 0 ? data.map(x => `<@!${x.botId}>`).join(", ") : "Aucun robot listé.";
+
       message.reply({
         embeds: [
-            {
-              title: `Informations sur ${member.user.tag}`,
-              color: client.config.color.integer,
-              thumbnail: {
-                url: member.user.displayAvatarURL()
-              },
-              fields: [
-                  {
-                    name: '__🏷 Nom :__',
-                    value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
-                    inline: false
-                  },
-                  {
-                    name: '__📆 Date de création :__',
-                    value: `> ${moment(member.user.createdAt).format('Do MMMM YYYY')}`,
-                    inline: false
-                  },
-                  {
-                    name: '__📆 A rejoint le :__',
-                    value: `> ${moment(member.user.joinedAt).format('Do MMMM YYYY')}`,
-                    inline: true
-                  },
-                  {
-                    name: '__🧾 Robots listés :__',
-                    value: '> ' + robots
-                  }
-                ]
-            }
-          ]
-      })
+          {
+            title: `Informations sur ${member.user.tag}`,
+            color: client.config.color.integer,
+            thumbnail: {
+              url: member.user.displayAvatarURL()
+            },
+            fields: [
+              {
+                name: '__🏷 Nom :__',
+                value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
+                inline: false
+              }, {
+                name: '__📆 Date de création :__',
+                value: `> ${moment(member.user.createdAt).format('Do MMMM YYYY')}`,
+                inline: false
+              }, {
+                name: '__📆 A rejoint le :__',
+                value: `> ${moment(member.joinedAt).format('Do MMMM YYYY')}`,
+                inline: true
+              }, {
+                name: '__🧾 Robots listés :__',
+                value: '> ' + robots
+              }
+            ]
+          }
+        ]
+      });
     }
-    
-    if (member.bot) {
-      let db = await bots.findOne({ botID: member.user.id })
+
+    if (member.user.bot) {
+      let db = await bots.findOne({ botId: member.user.id });
+
       if (!db) {
         message.reply({
-        embeds: [
+          embeds: [
             {
               title: `Informations sur ${member.user.tag}`,
               color: client.config.color.integer,
@@ -72,35 +73,34 @@ class Profil extends Command {
                 url: member.user.displayAvatarURL()
               },
               fields: [
-                  {
-                    name: '__🏷 Nom :__',
-                    value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
-                    inline: false
-                  },
-                  {
-                    name: '__📆 Date de création :__',
-                    value: `> ${moment(member.user.createdAt).format('Do MMMM YYYY')}`,
-                    inline: false
-                  },
-                  {
-                    name: '__📆 A rejoint le :__',
-                    value: `> ${moment(member.user.joinedAt).format('Do MMMM YYYY')}`,
-                    inline: true
-                  }
-                ]
+                {
+                  name: '__🏷 Nom :__',
+                  value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
+                  inline: false
+                },
+                {
+                  name: '__📆 Date de création :__',
+                  value: `> ${moment(member.user.createdAt).format('Do MMMM YYYY')}`,
+                  inline: false
+                },
+                {
+                  name: '__📆 A rejoint le :__',
+                  value: `> ${moment(member.joinedAt).format('Do MMMM YYYY')}`,
+                  inline: true
+                }
+              ]
             }
           ]
-        })
-
+        });
       }
-      
+
       if (db) {
-      const site = db.site || "*Aucun site web...*",
-            support = db.serverInvite || "*Aucun support...*",
-            description = db.desc || "*Aucune description...*"
-            
-      message.reply({
-        embeds: [
+        const site = db.site || "*Aucun site web...*",
+          support = db.supportInvite || "*Aucun support...*",
+          description = db.description || "*Aucune description...*";
+
+        message.reply({
+          embeds: [
             {
               title: `Informations sur ${member.user.tag}`,
               color: client.config.color.integer,
@@ -115,42 +115,36 @@ class Profil extends Command {
                   name: '__:robot: Nom :__',
                   value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
                   inline: true
-                },
-                {
+                }, {
                   name: '__:key: Propriétaire :__',
-                  value: `> <@${db.ownerID}>`,
+                  value: `> <@${db.ownerId}>`,
                   inline: true
-                },
-                {
+                }, {
                   name: '__:bookmark_tabs: Préfixe :__',
                   value: `> ${db.prefix}`,
                   inline: true
-                },
-                {
+                }, {
                   name: '__:pencil: Description :__',
                   value: `> ${description}`,
                   inline: false
-                },
-                {
+                }, {
                   name: '__:question: Serveur support : __',
                   value: `> ${support}`,
                   inline: true
-                },
-                {
+                }, {
                   name: '__:globe_with_meridians: Site web :__',
                   value: `> ${site}`,
                   inline: true
-                },
-                {
+                }, {
                   name: '__:nut_and_bolt: Lien d\'invitation :__',
                   value: `> [Clique ici](https://discord.com/oauth2/authorize?client_id=${member.user.id}&scope=bot%20applications.commands&permissions=-1)`,
                   inline: false
                 }
-            
+
               ]
             }
           ]
-      })
+        });
       }
     }
   }

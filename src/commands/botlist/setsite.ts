@@ -66,7 +66,7 @@ class Setsite extends Command {
             return message.reply(`**${client.emotes.yes} ➜ Modifications enregistrées !**`);
         }
 
-        if (!args[1].startsWith("http://") || !args[1].startsWith("https://")) return message.reply({ content: `**${client.emotes.no} ➜ Merci d'entrer une url valide avec un format comme ceux ci \`http://url.com\` ou \`https://url.com\`**` });
+        if ((args[1].startsWith("https://") || args[1].startsWith("http://")) !== true) return message.reply({ content: `**${client.emotes.no} ➜ Merci d'entrer une url valide avec un format comme ceux ci \`http://url.com\` ou \`https://url.com\`**` });
         
         channel?.isTextBased() ? channel.send({ content: `<@${db.ownerId}>`, embeds: [
             {

@@ -10,6 +10,7 @@
     "discord.js": "^14.2.1-dev.1661083412-23a0b6c.0",
     "figlet": "^1.5.2",
     "fs": "^0.0.1-security",
+    "moment": "^2.29.4",
     "mongoose": "^6.3.1",
     "path": "^0.12.7",
     "pretty-ms": "^7.0.1"
