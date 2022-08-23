@@ -5,7 +5,7 @@ import bots from "../../models/bots";
 import verificators from "../../models/verificators";
 import Command from "../../utils/Command";
 
-class Delete extends Command {
+class Reject extends Command {
     constructor() {
         super({
             name: 'reject',
@@ -65,8 +65,8 @@ class Delete extends Command {
 
         await bots.deleteOne({ botID: args[0] });
 
-        if (config.autokick === true) member?.kick();
+        if (config.autokick === true) member?.kick().catch(() => {});
     }
 }
 
-export = new Delete;
+export = new Reject;

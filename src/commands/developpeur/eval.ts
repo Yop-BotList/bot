@@ -24,7 +24,7 @@ class Eval extends Command {
         try {
             result = await eval(code);
         } catch (error: any) {
-            result = error.message;
+            result = await error.message;
         }
 
         if (code.length > 1024) {

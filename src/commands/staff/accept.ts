@@ -79,6 +79,10 @@ class Accept extends Command {
         member.roles.add(roles.listedbot);
         owner.roles.add(roles.isclient);
 
+        getBot?.team.forEach((teammate: string) => {
+            client.guilds.cache.get(client.config.mainguildid)?.members.cache.get(teammate)?.roles.add(roles.isclient).catch(() => {});
+        });
+
         const verificator = await verificators.findOne({ userId: message.author.id })
         if (verificator) {
             verificator.verifications = verificator.verifications !== undefined ? verificator.verifications + 1 : 1;

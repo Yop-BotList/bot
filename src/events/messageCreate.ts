@@ -4,6 +4,11 @@ import { channels } from "../configs";
 import execCommand from "../functions/execCommand";
 import counter from "../models/counter";
 import user from "../models/user";
+import moment from 'moment';
+import { existsSync, readFileSync, writeFile } from "fs";
+import { join } from "path";
+
+moment.locale("fr");
 
 export = async (client: Class, message: Message) => {
     if (message.author.bot) return;
@@ -79,30 +84,13 @@ export = async (client: Class, message: Message) => {
     
     const channel = client.channels.cache?.get(channels.botlogs);
     if (channel?.type !== ChannelType.GuildText) return;
-    channel.send({
-        content: null,
-        embeds: [
-            {
-                title: "Utilisation d'un commande",
-                thumbnail: {
-                    url: message.author.displayAvatarURL()
-                },
-                color: client.config.color.integer,
-                timestamp: new Date().toISOString(),
-                fields: [
-                    {
-                        name: "➜ Utilisateur :",
-                        value: `\`\`\`${message.author.username}#${message.author.discriminator} (${message.author.id})\`\`\``
-                    }, {
-                        name: "➜ Commande :",
-                        value: "```" + message.content + "```"
-                    }, {
-                        name: "➜ Lien",
-                        value: `[Cliquez-ici](https://discord.com/channels/${message.guild?.id}/${message.channel.id}/${message.id}) _Il se peut que cette personne aie supprimé ou édité son message._`
-                    }
-                ]
-            }
-        ]
+
+    const userCmds = existsSync(join(__dirname, "../logs", "commands/") + message.author.id + ".txt") ? readFileSync(join(__dirname, "../logs", "commands/") + message.author.id + ".txt") : null;
+
+    const newText = userCmds !== null ? userCmds + `\n[${moment(Date.now()).format("DD/MM/YYYY kk:mm:ss")}] [${message.guild!.id} - ${message.guild!.name}] [${message.channel.id} - ${message.channel.name}] [${message.id}] - ${message.content}` : `${message.author.id} - ${message.author.tag} - ${moment(message.author.createdAt).format("DD/MM/YYYY kk:mm:ss")}\n\n-------------------------------------------------------------------------------------------------------------------------\n\n` + `[${moment(Date.now()).format("DD/MM/YYYY kk:mm:ss")}] [${message.guild!.id} - ${message.guild!.name}] [${message.channel.id} - ${message.channel.name}] [${message.id}] - ${message.content}`;
+
+    writeFile(join(__dirname, "../logs", "commands/") + `${message.author.id}.txt`, newText, (err) => {
+        if (err) console.log(err.stack);
     });
     
     execCommand(command, client, message, args);

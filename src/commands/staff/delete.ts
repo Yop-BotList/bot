@@ -32,7 +32,7 @@ class Delete extends Command {
 
         await bots.deleteOne({ botId: args[0] });
 
-        if (client.config.autokick === true) member.kick();
+        if (client.config.autokick === true) member.kick().catch(() => {});
 
         channel.send({
             content: `<@${getBot.ownerId}>`,

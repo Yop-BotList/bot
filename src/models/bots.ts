@@ -12,5 +12,6 @@ export default model("bots", new Schema({
     site: notReqString,
     description: notReqString,
     likes: { type: Number, required: false },
-    latestLikeDate: { type: Date, required: false }
+    latestLikeDate: { type: Date, required: false },
+    team: { type: [String], required: false }
 }));

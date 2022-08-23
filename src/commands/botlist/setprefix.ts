@@ -19,10 +19,10 @@ class Setprefix extends Command {
     }
     
     async run(client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
-        const member = await message.guild!.members.fetch(args[0]).catch(() => {});
-        if (!member) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer l'indentifiant valide d'un bot présent sur ce serveur.**`);
+        const member = await client.users.fetch(args[0]).catch(() => {});
+        if (!member) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer un identifiant valide.**`);
         
-        const db = await bots.findOne({ botId: member.user.id });
+        const db = await bots.findOne({ botId: member.id });
         if (!db) return message.reply("**" + client.emotes.no + ' ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste. (Ce n\'est d\'ailleurs peut-être même un bot)**');
 
         if (db.ownerId !== message.author.id && !message.member!.roles.cache.get(roles.verificator)) return message.reply("**" + client.emotes.no + " ➜ Désolé, mais vous n'avez pas la permission d'utiliser cette commande.**");
@@ -36,7 +36,7 @@ class Setprefix extends Command {
                 color: client.config.color.integer,
                 title: "Modification du profil...",
                 thumbnail: {
-                    url: member.user.displayAvatarURL()
+                    url: member.displayAvatarURL()
                 },
                 timestamp: new Date().toISOString(),
                 description: `<@${message.author.id}> vient juste d'éditer le prefix de votre robot <@${member.id}> :`,
@@ -58,7 +58,7 @@ class Setprefix extends Command {
         message.reply(`**${client.emotes.yes} ➜ Modifications enregistrées !**`);
 
         setTimeout(() => {
-            member.setNickname(`[${args[1]}] ${member.user.username}`)
+            message.guild?.members.cache.get(member.id)?.setNickname(`[${args[1]}] ${member.username}`).catch(() => {});
 
             db.prefix = args[1];
             db.save();

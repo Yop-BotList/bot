@@ -297,24 +297,20 @@ class Class extends Client {
         process.on('unhandledRejection', (error: any) => {
             if(error.code === 50007) return;
             console.error(green('Une erreur est survenue : ') + red(error.stack));
-            let details = `\`\`\`\nName : ${error.name}\nMessage : ${error.message}`;
-            if (error.path) details += `\nChemin : ${error.path}`;
-            if (error.code) details += `\nCode d'erreur : ${error.code}`;
-            if (error.method) details += `\nMéthode: ${error.method}`;
             const channel = this.channels.cache?.get(channels.botlogs);
             if (channel?.type === ChannelType.GuildText) channel.send({
-                content: `<@${this.config.owners[0]}>`,
+                content: `${this.config.owners.map(owner => `<@${owner}> `)}`,
                 embeds: [{
                     description: `🔺 **Une erreur est survenue :**\n\`\`\`js\n${error}\`\`\``,
                     color: this.config.color.integer,
                     fields: [
                         {
                             name: "🔺 Détails :",
-                            value: `${details}\`\`\``
+                            value: `\`\`\`js\n${error.stack}\`\`\``
                         }
                     ]
                 }]
-            })
+            });
         });
     }
 
