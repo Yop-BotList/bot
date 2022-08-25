@@ -1,8 +1,8 @@
 import { ButtonInteraction, ChannelType, GuildMember, Message } from "discord.js";
 import Class from "../..";
 import Command from "../../utils/Command";
-import bots from "../../models/bots";
 import { channels, roles } from "../../configs";
+import { users, bots } from "../../models";
 
 class Botadd extends Command {
     constructor() {
@@ -18,6 +18,10 @@ class Botadd extends Command {
     }
     
     async run(client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
+        const userGet = await users.findOne({ userId: message.author.id });
+
+        if (userGet?.readFaq !== true) return message.reply({ content: `Merci de lire la <#${channels.faq}> juste avant d'ajouter un bot.` });
+
         if (message.mentions.members?.first() || message.mentions.users.first()) return message.reply({ content: `**${client.emotes.no} ➜ Désolé je ne prend pas en charge les mentions.**` });
         
         const user = await client.users.fetch(args[0]).catch(() => null);
