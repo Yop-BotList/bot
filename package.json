@@ -6,6 +6,7 @@
   "author": "YopBotList's STAFF",
   "license": "bsd-2-clause",
   "dependencies": {
+    "axios": "^0.27.2",
     "colors": "^1.4.0",
     "discord.js": "^14.2.1-dev.1661083412-23a0b6c.0",
     "figlet": "^1.5.2",

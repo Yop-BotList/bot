@@ -17,5 +17,6 @@ export default model("users", new Schema({
             date: { type: Number, required: false }
         }
     ],
-    totalNumbers: { type: Number, required: false, default: 0 }
+    totalNumbers: { type: Number, required: false, default: 0 },
+    readFaq: { type: Boolean, required: false, default: false }
 }));

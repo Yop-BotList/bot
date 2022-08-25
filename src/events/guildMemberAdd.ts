@@ -33,7 +33,8 @@ export = async (client: Class, member: GuildMember) => {
       cmdbl: false,
       ticketsbl: false,
       warns: [],
-      totalNumbers: 0
+      totalNumbers: 0,
+      readFaq: false
     }).save();
   }
 }

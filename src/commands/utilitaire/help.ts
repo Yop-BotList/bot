@@ -18,20 +18,20 @@ class Help extends Command {
         if (!args[0]) {
             let commandsList = [
                 {
-                    name: "➜ Utilitaire",
+                    name: "➜ Utilitaires :",
                     value: client.commands.filter(c => c.category === 'Utilitaire').map(c => `\`${c.name}\``).join(', ')
                 }, {
-                    name: "➜ Botlist",
+                    name: "➜ Botlist :",
                     value: client.commands.filter(c => c.category === 'Botlist').map(c => `\`${c.name}\``).join(', ')
                 }, {
-                    name: "➜ Staff",
+                    name: "➜ Staff :",
                     value: client.commands.filter(c => c.category === 'Staff').map(c => `\`${c.name}\``).join(', ')
                 }
             ];
             
             if (client.config.owners.includes(message.author.id)) {
                 commandsList.push({
-                    name: "➜ Developpeur",
+                    name: "➜ Développeur :",
                     value: client.commands.filter(c => c.category === 'Developpeur').map(c => `\`${c.name}\``).join(', ')
                 });
             }
@@ -81,25 +81,25 @@ class Help extends Command {
                     },
                     fields: [
                         {
-                            name: '❱ Description',
+                            name: '❱ Description :',
                             value: command.description || 'Aucune description disponible.'
                         }, {
-                            name: '❱ Usage',
+                            name: '❱ Usage :',
                             value: command.usage
                         }, {
-                            name: '❱ Catégorie',
+                            name: '❱ Catégorie :',
                             value: command.category
                         }, {
-                            name: '❱ Cooldown',
+                            name: '❱ Cooldown :',
                             value: `${command.cooldown} secondes`
                         }, {
-                            name: '❱ Aliases',
+                            name: '❱ Aliases :',
                             value: command.aliases.length > 0 ? command.aliases.map((alias: string) => `\`${alias}\``).join(', ') : 'Aucun alias.'
                         }, {
-                            name: '❱ Permissions',
+                            name: '❱ Permissions :',
                             value: command.perms.length > 0 ? command.perms.map((permission: string) => `\`${permission}\``).join(', ') : 'Aucune permission requise.'
                         }, {
-                            name: '❱ Exemple',
+                            name: '❱ Exemple :',
                             value: command.exemple || 'Aucun exemple disponible.'
                         }
                     ]
