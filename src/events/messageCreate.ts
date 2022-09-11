@@ -54,6 +54,8 @@ export = async (client: Class, message: Message) => {
         } else {
             if (!userGet.totalNumbers) userGet.totalNumbers = 1;
             else userGet.totalNumbers = userGet.totalNumbers + 1;
+
+            userGet.save();
         }
         
         return message.channel.send({
