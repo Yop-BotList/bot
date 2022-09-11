@@ -18,9 +18,9 @@ class Botadd extends Command {
     }
     
     async run(client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
-        const userGet = await users.findOne({ userId: message.author.id });
+        // const userGet = await users.findOne({ userId: message.author.id });
 
-        if (userGet?.readFaq !== true) return message.reply({ content: `Merci de lire la <#${channels.faq}> juste avant d'ajouter un bot.` });
+        // if (userGet?.readFaq !== true) return message.reply({ content: `Merci de lire la <#${channels.faq}> juste avant d'ajouter un bot.` });
 
         if (message.mentions.members?.first() || message.mentions.users.first()) return message.reply({ content: `**${client.emotes.no} ➜ Désolé je ne prend pas en charge les mentions.**` });
         
@@ -73,7 +73,8 @@ class Botadd extends Command {
                     prefix: args[1],
                     ownerId: message.author.id,
                     verified: false,
-                    team: team
+                    team: team,
+                    checked: true
                 }).save();
                 
                 channel.send({

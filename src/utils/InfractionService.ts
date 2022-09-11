@@ -4,7 +4,7 @@ import Class from "..";
 import { roles, channels } from '../configs';
 import { users } from '../models';
 
-async function newInfration(client: Class, user: User, mod: GuildMember, guild: Guild, type: string, reason: string, duration: number) {
+async function newInfraction(client: Class, user: User, mod: GuildMember, guild: Guild, type: string, reason: string, duration: number) {
     return new Promise(async (resolve) => {
         if (!guild.id) return new Error(`L'argument guild n'est pas valide. Veuillez entrer l'object Guild.`);
         
@@ -47,7 +47,8 @@ async function newInfration(client: Class, user: User, mod: GuildMember, guild: 
             reason: REASON,
             duration: duration,
             finishOn: endOn,
-            date: Date.now()
+            date: Date.now(),
+            deleted: false
         }
         
         const db = await users.findOne({ userId: user.id });
@@ -89,7 +90,7 @@ async function newInfration(client: Class, user: User, mod: GuildMember, guild: 
                 value: "```md\n# " + REASON + "```",
                 inline: false
             }
-        ]
+        ];
         
         if (duration > 0) fields.push({
             name: `${client.emotes.discordicons.horloge} ➜ Durée :`, 
@@ -111,7 +112,7 @@ async function newInfration(client: Class, user: User, mod: GuildMember, guild: 
             name: `:warning: ➜ Avertissement`,
             value: "```md\n# Je n'ai pas pu prévenir " + user.tag + " de sa sanction.```",
             inline: false
-        }))
+        }));
         
         embed = {
             title: 'Nouvelle infraction', 
@@ -127,17 +128,32 @@ async function newInfration(client: Class, user: User, mod: GuildMember, guild: 
         
         if (channel && channel.isTextBased()) channel.send({ embeds: [embed] }).catch(() => {})
         
-        resolve(`**${client.emotes.yes} ➜ Utilisateur sanctionné**`)
-    })
+        resolve(`**${client.emotes.yes} ➜ Utilisateur sanctionné.**`);
+    });
 }
 
 async function deleteInfraction(client: Class, user: User, code: Number) {
     return new Promise(async (resolve) => {
+        const data = await users.findOne({ userId: user.id });
+
+        if (!data) return resolve(`**${client.emotes.no} ➜ Utilisateur introuvable !**`);
+
+        if (!data.warns || data.warns.filter(warn => warn.id === code && warn.deleted === false).length === 0) resolve(`**${client.emotes.no} ➜ Infraction introuvable pour cet utilisateur.**`);
+
+        let infraction = data.warns.filter(warn => warn.id === code)[0];
+
+        data.warns = data.warns.filter(warn => warn.id !== code);
+
+        infraction.deleted = true;
+
+        data.warns.push(infraction);
+        data.save();
+        
+        return resolve(`**${client.emotes.yes} ➜ Infraction supprimée.**`);
     });
 }
 
-
-export = {
-    newInfration,
+export {
+    newInfraction,
     deleteInfraction
 };

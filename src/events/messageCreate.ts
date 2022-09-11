@@ -102,5 +102,19 @@ export = async (client: Class, message: Message) => {
         if (err) console.log(err.stack);
     });
     
-    execCommand(command, client, message, args);
+    try {
+        execCommand(command, client, message, args)
+    } catch (err) {
+        message.reply({
+            embeds: [
+                {
+                    title: 'Une erreur est survenue',
+                    description: '```js\n' + err + '```',
+                    footer: {
+                        text: moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')
+                    }
+                }
+            ]
+        });
+    }
 }
