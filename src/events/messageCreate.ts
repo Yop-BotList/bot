@@ -39,6 +39,15 @@ export = async (client: Class, message: Message) => {
             if (counterDb.lastCountUser === message.author.id) return message.author.send(`**${client.emotes.no} ➜ Vous êtes déjà le dernier utilisateur a avoir envoyé un nombre. Veuillez patienter...**`);
             if (Number(message.content) !== counterDb.counter + 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est ${counterDb.counter + 1}.**`);
             
+            let actual = 100;
+            let next = 100;
+            client.counterObjectifs.map((x: number, index: number) => {
+                x === Number(message.content) ? actual = x : 100;
+                x === Number(message.content) ? next = client.counterObjectifs[index+1] : 100;
+            });
+            
+            if (client.counterObjectifs.includes(Number(message.content))) message.channel.send({ content: `**🎉 ➜ Objectif atteint, nombre actuel: ${actual} prochain objectif: ${next} !**` });
+            
             counterDb.counter = Number(message.content);
             counterDb.lastCountUser = message.author.id;
             counterDb.save();
@@ -54,7 +63,7 @@ export = async (client: Class, message: Message) => {
         } else {
             if (!userGet.totalNumbers) userGet.totalNumbers = 1;
             else userGet.totalNumbers = userGet.totalNumbers + 1;
-
+            
             userGet.save();
         }
         

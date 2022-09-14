@@ -25,9 +25,13 @@ class Profil extends Command {
     if (!member || !member.user) return message.reply({ content: `**${client.emotes.no} ➜ Membre introuvable !**` });
 
     if (!member.user.bot) {
-      const data = await bots.find({ ownerId: member.user.id });
+      const data = await bots.find();
 
-      let robots = data.length > 0 ? data.map(x => `<@!${x.botId}>`).join(", ") : "Aucun robot listé.";
+      let robots: any[] = []
+
+      data.forEach(x => {
+        if (x.ownerId === member.user.id || x.team.includes(member.user.id)) robots.push(x.botId)
+      })
 
       message.reply({
         embeds: [
@@ -52,7 +56,7 @@ class Profil extends Command {
                 inline: true
               }, {
                 name: '__🧾 Robots listés :__',
-                value: '> ' + robots
+                value: '> ' + (robots!.length > 0 ? robots?.map(x => `<@${x}>`).slice(0, 4).join(", ") : "*Aucun robot listé...*")
               }
             ]
           }
@@ -97,7 +101,11 @@ class Profil extends Command {
       if (db) {
         const site = db.site || "*Aucun site web...*",
           support = db.supportInvite || "*Aucun support...*",
-          description = db.description || "*Aucune description...*";
+          description = db.description || "*Aucune description...*",
+          owners = [];
+
+        owners.push(db.ownerId)
+        if (db.team?.length > 0) db.team.forEach(async (x) => owners.push(x))
 
         message.reply({
           embeds: [
@@ -116,8 +124,8 @@ class Profil extends Command {
                   value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
                   inline: true
                 }, {
-                  name: '__:key: Propriétaire :__',
-                  value: `> <@${db.ownerId}>`,
+                  name: '__:key: Propriétaire(s) :__',
+                  value: `> ${owners.map(x => `<@${x}>`).slice(0, 4).join(", ")}`,
                   inline: true
                 }, {
                   name: '__:bookmark_tabs: Préfixe :__',

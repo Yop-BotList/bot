@@ -67,6 +67,8 @@ class Botadd extends Command {
         const collector = await msg.createMessageComponentCollector({ filter });
         
         collector.on("collect", async (interaction: ButtonInteraction) => {
+            await interaction.deferUpdate()
+
             if (interaction.customId === 'btnYes') {
                 new bots({
                     botId: user.id,
@@ -74,7 +76,7 @@ class Botadd extends Command {
                     ownerId: message.author.id,
                     verified: false,
                     team: team,
-                    checked: true
+                    checked: false
                 }).save();
                 
                 channel.send({

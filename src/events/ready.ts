@@ -23,5 +23,5 @@ export = async (client: Class) => {
 
   setInterval(async () => {
     await client.user!.setActivity(activities[Math.floor(Math.random() * activities.length)], { type: 1, url: "https://twitch.tv/discord" });
-  }, 120000);
+  }, 12000);
 }

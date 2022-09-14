@@ -1,5 +1,5 @@
 import { blue, green, red } from "colors";
-import { ChannelType, Client, Collection, Partials } from "discord.js";
+import { Client, Collection, Partials } from "discord.js";
 import { readdirSync, writeFile } from "fs";
 import { cpus, loadavg, totalmem } from "os";
 import { join } from "path";
@@ -8,6 +8,7 @@ import { config, emotes, channels } from "./configs";
 import mongoconnection from "./functions/mongoose";
 import moment from "moment";
 
+
 class Class extends Client {
     version: string;
     cooldowns: Collection<string, any>;
@@ -15,7 +16,8 @@ class Class extends Client {
     slashs: Collection<string | undefined, any>;
     config: { token: string; prefix: string; mongooseConnectionString: string; color: { hexa: string; integer: number; }; autokick: boolean; staffGuildId: string; owners: string[]; mainguildid: string; antiinvite: boolean; };
     emotes: { yes: string; no: string; bof: string; offline: string; online: string; streaming: string; idle: string; dnd: string; boost: string; loading: string; sort: string; entre: string; alerte: string; notif: string; question: string; cadena: string; badges: { verifieddevelopper: string; balance: string; mod: string; bravery: string; bughuntergold: string; bughunter: string; brillance: string; hypesquadevent: string; partner: string; staff: string; earlysupporter: string; verifiedbot: string; system: string; badges: string; }; discordicons: { list: string; bot: string; textchannel: string; wave: string; entre: string; game: string; id: string; hierarchie: string; key: string; man: string; img: string; tag: string; clyde: string; horloge: string; }; };
-    
+    counterObjectifs: number[];
+
     constructor(token: string) {
         super({
             partials: [
@@ -41,18 +43,17 @@ class Class extends Client {
                 "DirectMessageReactions",
                 "DirectMessageTyping",
                 "MessageContent"
-            ],
-            allowedMentions: {
-                repliedUser: false
-            }
+            ]
         });
-        
+
         this.config = config;
         this.emotes = emotes;
         this.version = require("../package.json").version;
         this.cooldowns = new Collection();
         this.commands = new Collection();
         this.slashs = new Collection();
+        this.counterObjectifs = [100, 500, 1000, 1500, 2500, 3000, 4000, 5000];
+
         mongoconnection.init();
 
         try {
@@ -73,11 +74,15 @@ class Class extends Client {
         this._startingMessage();
     }
 
+    async getDiscordBio(userId: string) {
+        
+    }
+
     async postSlashs(slashsArray: any): Promise<void> {
         if (this.isReady() !== true) throw new Error("Le client n'est pas connecté");
 
         const guild = this.guilds.cache?.get(this.config.mainguildid);
-        if (!guild) throw new Error("Impossible de trouver le serveur de slashs commands test."); 
+        if (!guild) throw new Error("Impossible de trouver le serveur de slashs commands test.");
 
         const clientSlashs = slashsArray.filter((slash: any) => slash?.guildOnly !== true).toJSON();
         const guildSlashs = slashsArray.filter((slash: any) => slash?.guildOnly === true).toJSON();
@@ -91,7 +96,7 @@ class Class extends Client {
 
         console.log(`${green("[Success]")} Slashs Commands Posted\nClient Commands: ${this?.application?.commands.cache.size}\nGuild Commands: ${guild.commands.cache.size}`);
     }
-    
+
     /**
      * @param {string} commandName - Event file name without .ts or .js
      * @return {Promise<string>}
@@ -101,10 +106,10 @@ class Class extends Client {
             const folders = readdirSync(join(__dirname, "commands"));
             for (let i = 0; i < folders.length; i++) {
                 const commands = readdirSync(join(__dirname, "commands", folders[i]));
-                if (commands.includes(`${commandName}.${__dirname.endsWith("src") ? "ts": "js"}`)) {
+                if (commands.includes(`${commandName}.${__dirname.endsWith("src") ? "ts" : "js"}`)) {
                     try {
-                        delete require.cache[require.resolve(`./commands/${folders[i]}/${commandName}.${__dirname.endsWith("src") ? "ts": "js"}`)];
-                        const command = require(`./commands/${folders[i]}/${commandName}.${__dirname.endsWith("src") ? "ts": "js"}`);
+                        delete require.cache[require.resolve(`./commands/${folders[i]}/${commandName}.${__dirname.endsWith("src") ? "ts" : "js"}`)];
+                        const command = require(`./commands/${folders[i]}/${commandName}.${__dirname.endsWith("src") ? "ts" : "js"}`);
                         this.commands.set(command.name, command);
                         console.log(`${green('[COMMANDS]')} Commande ${commandName} rechargée avec succès !`);
                         _resolve(`**${emotes.yes} ➜ Commande \`${commandName}\` rechargée avec succès !**`);
@@ -114,7 +119,7 @@ class Class extends Client {
                     }
                 }
             }
-            
+
             _resolve(`**${emotes.no} ➜ Commande introuvable !**`);
         });
     }
@@ -128,10 +133,10 @@ class Class extends Client {
             const folders = readdirSync(join(__dirname, "slashs"));
             for (let i = 0; i < folders.length; i++) {
                 const commands = readdirSync(join(__dirname, "slashs", folders[i]));
-                if (commands.includes(`${slashCommand}.${__dirname.endsWith("src") ? "ts": "js"}`)) {
+                if (commands.includes(`${slashCommand}.${__dirname.endsWith("src") ? "ts" : "js"}`)) {
                     try {
-                        delete require.cache[require.resolve(join(__dirname, "slashs", folders[i], `${slashCommand}.${__dirname.endsWith("src") ? "ts": "js"}`))]
-                        const command = require(join(__dirname, "slashs", folders[i], `${slashCommand}.${__dirname.endsWith("src") ? "ts": "js"}`));
+                        delete require.cache[require.resolve(join(__dirname, "slashs", folders[i], `${slashCommand}.${__dirname.endsWith("src") ? "ts" : "js"}`))]
+                        const command = require(join(__dirname, "slashs", folders[i], `${slashCommand}.${__dirname.endsWith("src") ? "ts" : "js"}`));
                         this.slashs.delete(command.name)
                         this.slashs.set(command.name, command);
                         console.log(`${green('[SLASHCOMMANDS]')} Commande slash ${slashCommand} rechargée avec succès !`)
@@ -145,7 +150,7 @@ class Class extends Client {
             _resolve(`**${emotes.no} ➜ Commande slash introuvable !**`)
         });
     }
-    
+
     /**
      * @param {string} eventName - Event file name without .ts or .js
      * @return {Promise<string>}
@@ -156,7 +161,7 @@ class Class extends Client {
             files.forEach((event) => {
                 try {
                     const fileName = event.split('.')[0];
-                    if(fileName === eventName) {
+                    if (fileName === eventName) {
                         const file = require(join(__dirname, "events", event));
                         this.off(fileName, file.default);
                         this.on(fileName, file.bind(null, this));
@@ -181,7 +186,7 @@ class Class extends Client {
             for (let i = 0; i < folders.length; i++) {
                 const commands = readdirSync(join(__dirname, "commands", folders[i]));
                 count = count + commands.length;
-                for(const command of commands){
+                for (const command of commands) {
                     try {
                         this.reloadCommand(command.split('.')[0]);
                     } catch (error: any) {
@@ -201,7 +206,7 @@ class Class extends Client {
             for (let i = 0; i < folders.length; i++) {
                 const commands = readdirSync(join(__dirname, "slashs", folders[i]));
                 count = count + commands.length;
-                for(const c of commands){
+                for (const c of commands) {
                     try {
                         this.reloadSlashCommand(c.split('.')[0]);
                     } catch (error: any) {
@@ -213,7 +218,7 @@ class Class extends Client {
             _resolve(`**${emotes.yes} ➜ \`${this.slashs.size}\`/\`${count}\` commande(s) slash rechargée(s) !**`)
         })
     }
-    
+
     reloadAllEvents(): Promise<string> {
         return new Promise((_resolve) => {
             const files = readdirSync(join(__dirname, "events"));
@@ -237,7 +242,7 @@ class Class extends Client {
         for (let i = 0; i < folders.length; i++) {
             const commands = readdirSync(join(__dirname, "commands", folders[i]));
             count = count + commands.length;
-            for(const c of commands){
+            for (const c of commands) {
                 try {
                     const command = require(join(__dirname, "commands", folders[i], c));
                     this.commands.set(command.name, command);
@@ -255,7 +260,7 @@ class Class extends Client {
         for (let i = 0; i < folders.length; i++) {
             const slashs = readdirSync(join(__dirname, "slashs", folders[i]));
             count = count + slashs.length;
-            for(const c of slashs){
+            for (const c of slashs) {
                 try {
                     const slash = require(join(__dirname, "slashs", folders[i], c));
                     this.slashs.set(slash.name, slash);
@@ -285,22 +290,21 @@ class Class extends Client {
 
     _processEvent() {
         process.on('unhandledRejection', async (error: any) => {
-            writeFile(join(__dirname, "./logs", "errors/") + `${moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')}.txt`, error.stack, (err) => 
-              {
-              if (err) console.log(err.stack);
+            writeFile(join(__dirname, "./logs", "errors/") + `${moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')}.txt`, error.stack, (err) => {
+                if (err) console.log(err.stack);
             });
-            const owner = await this.users.fetch(config.owners[0]).catch(() => {});
+            const owner = await this.users.fetch(config.owners[0]).catch(() => { });
             if (owner && owner.id) owner.send({
-              embeds: [
-                  {
-                    title: 'Une erreur est survenue',
-                    description: '```js\n' + error + '```',
-                    footer: {
-                      text: moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')
+                embeds: [
+                    {
+                        title: 'Une erreur est survenue',
+                        description: '```js\n' + error + '```',
+                        footer: {
+                            text: moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')
+                        }
                     }
-                  }
                 ]
-            }).catch(() => {})
+            }).catch(() => { })
         });
     }
 
@@ -309,7 +313,7 @@ class Class extends Client {
         //Custom Starting Message
         text('Yop-Bot', {
             font: "Standard"
-        }, function(err, data) {
+        }, function (err, data) {
             if (err) {
                 console.log('Quelque chose ne va pas...');
                 console.dir(err);
@@ -317,19 +321,19 @@ class Class extends Client {
             }
             const data2 = data;
             text('A botlist manager', {
-            }, function(err, data) {
+            }, function (err, data) {
                 if (err) {
                     console.log('Quelque chose ne va pas...');
                     console.dir(err);
                     return;
                 }
-                console.log("================================================================================================================================"+"\n"+
-                                data2+"\n\n"+ data +"\n"+
-                            "================================================================================================================================"+ "\n"+
-                                `CPU: ${(loadavg()[0]/cpuCores).toFixed(2)}% / 100%` + "\n" +
-                                `RAM: ${Math.trunc((process.memoryUsage().heapUsed) / 1000 / 1000)} MB / ${Math.trunc(totalmem() / 1000 / 1000)} MB` + "\n" +
-                                //`Discord WebSocket Ping: ${this.ws.ping}` + "\n" +
-                            "================================================================================================================================"
+                console.log("================================================================================================================================" + "\n" +
+                    data2 + "\n\n" + data + "\n" +
+                    "================================================================================================================================" + "\n" +
+                    `CPU: ${(loadavg()[0] / cpuCores).toFixed(2)}% / 100%` + "\n" +
+                    `RAM: ${Math.trunc((process.memoryUsage().heapUsed) / 1000 / 1000)} MB / ${Math.trunc(totalmem() / 1000 / 1000)} MB` + "\n" +
+                    //`Discord WebSocket Ping: ${this.ws.ping}` + "\n" +
+                    "================================================================================================================================"
                 );
             });
 

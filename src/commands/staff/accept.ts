@@ -25,14 +25,14 @@ class Accept extends Command {
         const channel = client.channels.cache.get(channels.botslogs);
         if (channel?.type !== ChannelType.GuildText) throw new Error("Le channel botslogs n'est pas un channel textuel ou n'a pas été trouvé.");
 
-        let getBot = await bots.findOne({ botID: member.user.id });
+        let getBot = await bots.findOne({ botId: member.user.id });
         if (!getBot) return message.reply({ content: `**${client.emotes.no} ➜ ${member.user.tag} n'est pas sur la liste.**` });
         if (getBot.verified === true) return message.reply({ content: `**${client.emotes.no} ➜ ${member.user.tag} est déjà vérifié.**` });
 
         getBot.verified = true;
         getBot.save();
 
-        getBot = await bots.findOne({ botID: member.user.id });
+        getBot = await bots.findOne({ botId: member.user.id });
         
         channel.send({
             content: `<@${getBot!.ownerId}>`,

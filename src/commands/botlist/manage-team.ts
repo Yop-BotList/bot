@@ -8,18 +8,19 @@ class TeamManager extends Command {
     constructor () {
         super({
             name: 'manage-team',
-            category: 'BotList',
+            category: 'Botlist',
             description: 'Gérer la team d\'un bot.', 
             usage: 'manage-team <bot>',
             aliases: ['team'],
-            cooldown: 20
+            cooldown: 20,
+            minArgs: 1
         })
     }
     
     async run (client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
         const member = message.mentions.members!.first() || await message.guild!.members.fetch(args[0]).catch(() => {});
         
-        if (!member) return message.reply({
+        if (!member?.user) return message.reply({
             content: `**${client.emotes.no} ➜ Membre introuvable.**`
         });
         
@@ -33,7 +34,7 @@ class TeamManager extends Command {
             content: `**${client.emotes.no} ➜ Ce robot n’est pas listé.**`
         });
         
-        if (!message.member!.roles.cache.has(roles.verificator) || (message.author.id !== oldData.ownerId)) return message.reply({
+        if (!message.member!.roles.cache.has(roles.verificator) && (message.author.id !== oldData.ownerId)) return message.reply({
             content: `**${client.emotes.no} ➜ Vous ne pouvez pas gérer la team de ce robot.**`
         });
         
@@ -65,21 +66,21 @@ class TeamManager extends Command {
                                     value: "transfer",
                                     description: "Transférer la propriété de ' + member.user.username",
                                     emoji: {
-                                        id: "🔄"
+                                        name: "🔄"
                                     }
                                 }, {
                                     label: "Ajouter",
                                     value: "add",
                                     description: "Ajouter un utilisateur à la team",
                                     emoji: {
-                                        id: "🆕"
+                                        name: "🆕"
                                     }
                                 }, {
                                     label: "Retirer",
                                     value: "delete",
                                     description: "Retirer un utilisateur de la team.",
                                     emoji: {
-                                        id: "⛔️"
+                                        name: "⛔️"
                                     }
                                 }
                             ],
@@ -252,21 +253,21 @@ class TeamManager extends Command {
                                                     value: "transfer",
                                                     description: "Transférer la propriété de ' + member.user.username",
                                                     emoji: {
-                                                        id: "🔄"
+                                                        name: "🔄"
                                                     }
                                                 }, {
                                                     label: "Ajouter",
                                                     value: "add",
                                                     description: "Ajouter un utilisateur à la team",
                                                     emoji: {
-                                                        id: "🆕"
+                                                        name: "🆕"
                                                     }
                                                 }, {
                                                     label: "Retirer",
                                                     value: "delete",
                                                     description: "Retirer un utilisateur de la team.",
                                                     emoji: {
-                                                        id: "⛔️"
+                                                        name: "⛔️"
                                                     }
                                                 }
                                             ],
@@ -350,21 +351,21 @@ class TeamManager extends Command {
                                                     value: "transfer",
                                                     description: "Transférer la propriété de ' + member.user.username",
                                                     emoji: {
-                                                        id: "🔄"
+                                                        name: "🔄"
                                                     }
                                                 }, {
                                                     label: "Ajouter",
                                                     value: "add",
                                                     description: "Ajouter un utilisateur à la team",
                                                     emoji: {
-                                                        id: "🆕"
+                                                        name: "🆕"
                                                     }
                                                 }, {
                                                     label: "Retirer",
                                                     value: "delete",
                                                     description: "Retirer un utilisateur de la team.",
                                                     emoji: {
-                                                        id: "⛔️"
+                                                        name: "⛔️"
                                                     }
                                                 }
                                             ],
@@ -411,21 +412,21 @@ class TeamManager extends Command {
                                                 value: "transfer",
                                                 description: "Transférer la propriété de ' + member.user.username",
                                                 emoji: {
-                                                    id: "🔄"
+                                                    name: "🔄"
                                                 }
                                             }, {
                                                 label: "Ajouter",
                                                 value: "add",
                                                 description: "Ajouter un utilisateur à la team",
                                                 emoji: {
-                                                    id: "🆕"
+                                                    name: "🆕"
                                                 }
                                             }, {
                                                 label: "Retirer",
                                                 value: "delete",
                                                 description: "Retirer un utilisateur de la team.",
                                                 emoji: {
-                                                    id: "⛔️"
+                                                    name: "⛔️"
                                                 }
                                             }
                                         ],
