@@ -12,24 +12,30 @@ class Waiting extends Command {
             cooldown: 5
         })
     }
-    
-    async run(client: Class, message: Message): Promise <Message <boolean> | undefined> {
+
+    async run(client: Class, message: Message): Promise<Message<boolean> | undefined> {
         const data = await bots.find({ verified: false });
         const dataChecked = await bots.find({ checked: false });
-        
+
         if (!data || data.length === 0 && dataChecked.length === 0) return message.reply({
             content: `**🎉 ➜ Félicitations, tous les robots en attente sont vérifiés !**`
         });
-        
+
         let description = data.length === 0 && dataChecked.length > 0 ? dataChecked.map(bot => `- [${client.users.cache.get(`${bot.botId}`)?.tag || bot.botId}](https://discord.com/oauth2/authorize?client_id=${bot.botId}&permissions=0&scope=bot%20applications.commands)`).join(",\n") : data.map(bot => `- [${client.users.cache.get(`${bot.botId}`)?.tag || bot.botId}](https://discord.com/oauth2/authorize?client_id=${bot.botId}&permissions=0&scope=bot%20applications.commands)`).join(",\n");
 
         let components = data.length > 0 ? [{
-            type: 2,
-            style: 1,
-            label: 'Voir les robots en attente de re-vérification',
-            custom_id: 'btn'
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    style: 1,
+                    label: 'Voir les robots en attente de re-vérification',
+                    custom_id: 'btn',
+                    disabled: dataChecked.length > 0 ? false : true
+                }
+            ]
         }] : [];
-        
+
         message.reply({
             embeds: [
                 {
@@ -45,21 +51,16 @@ class Waiting extends Command {
                     description: description
                 }
             ],
-            components: [
-                {
-                    type: 1,
-                    components: components
-                }
-            ]
+            components: components
         }).then(async (msg: Message) => {
             if (components.length === 0) return;
-            
+
             const filter = (x: any) => x.user.id === message.author.id && x.customId === 'btn';
             const collector = await msg.createMessageComponentCollector({ filter, time: 180000 })
-            
+
             collector.on('collect', async (interaction: ButtonInteraction) => {
                 await interaction.deferUpdate()
-                
+
                 msg.edit({
                     embeds: [
                         {

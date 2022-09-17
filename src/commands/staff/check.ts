@@ -30,38 +30,46 @@ class Check extends Command {
         if (args[0] === 'start') {
             let oldData = await bots.findOne({ checked: false })
 
-            if (oldData) message.reply({
+            if (oldData) return message.reply({
                 content: `**${client.emotes.no} ➜ La re-vérification des bots du serveur n’est pas encore terminée.**`
             })
 
             const msg = await message.reply({
-                content: `**${client.emotes.loading} ➜ Mise en service du système de re-vérification. Cette action peut prendre jusqu’à 5 minutes.**`
+                content: `**${client.emotes.loading} ➜ Mise en service du système de re-vérification. Cette action peut prendre jusqu’à 3 minutes.**`
             })
 
             let data = await bots.find({ verified: true });
 
-            let owners: any[] = []
+            let owners: any[] = [],
+                progression = 0
 
             for (const x of data) {
-                if (owners.includes(x.ownerId)) return;
-                owners.push(x.ownerId)
-                const owner = await client.users.fetch(`${x.ownerId}`);
+                await bots.findOneAndUpdate({ botId: x.botId }, { $set: { checked: false } }, { upsert: true });
 
-                await bots.findOneAndUpdate({ botId: x.botId }, { $set: { checked: false } }, { upsert: true })
-
-                setTimeout(() => owner.send({
-                    content: `**${client.emotes.no} ➜ Bonjour/Bonsoir !\nLe STAFF de ${message.guild!.name} vient de lancer une opération de re-vérification de tous les robots présents sur la liste. C’est pourquoi je vous informe que votre robot sera lui aussi re-vérifié, et qu’en cas de non respect de nos conditions, celui-ci sera supprimé.**`
-                }).catch(() => { }), (Math.random() * (300000 - 3000) + 3000));
+                if (!owners.includes(x.ownerId)) owners.push(x.ownerId);
             }
-            msg.edit({
-                content: `**${client.emotes.yes} ➜ Système de re-vérification mis en service. Votre équipe de vérificateurs peut dès maintenant effectuer les re-vérifications avec les commandes \`check accept\` et \`check reject\` qui fonctionnent exactement comme les commandes \`accept\` et \`reject\` !**`
-            })
+
+            for (const x of owners) {
+                const owner = await client.users.fetch(x);
+
+                setTimeout(() => {
+                    owner.send({
+                        content: `**${client.emotes.discordicons.wave} ➜ Bonjour/Bonsoir !\nLe STAFF de ${message.guild!.name} vient de lancer une opération de re-vérification de tous les robots présents sur la liste. C’est pourquoi je vous informe que votre robot sera lui aussi re-vérifié, et qu’en cas de non respect de nos conditions, celui-ci sera supprimé.**`
+                    }).catch(() => {});
+                    
+                    ++progression;
+
+                    if (progression === owners.length) msg.edit({
+                        content: `**${client.emotes.yes} ➜ Système de re-vérification mis en service. Votre équipe de vérificateurs peut dès maintenant effectuer les re-vérifications avec les commandes \`check accept\` et \`check reject\` qui fonctionnent exactement comme les commandes \`accept\` et \`reject\` !**`
+                    });
+                }, Math.floor(Math.random() * 180000));
+            }
         }
 
         if (args[0] === 'stop') {
             let oldData = await bots.findOne({ checked: false })
 
-            if (!oldData) message.reply({
+            if (!oldData) return message.reply({
                 content: `**${client.emotes.no} ➜ Aucune re-vérification des bots n’est en cours.**`
             })
 
@@ -69,7 +77,7 @@ class Check extends Command {
                 content: `**${client.emotes.loading} ➜ Arrêt du système de re-vérification. Cette action peut prendre quelques secondes.**`
             })
 
-            let data = await bots.find({ verified: false })
+            let data = await bots.find({ verified: true })
 
             for (const x of data) {
                 await bots.findOneAndUpdate({ botId: x.botId }, { $set: { checked: true } }, { upsert: true })
@@ -81,7 +89,7 @@ class Check extends Command {
 
         if (args[0] === 'accept') {
             const member = message.mentions.members?.first();
-            if (!member?.user.bot) return message.reply({ content: `**${client.emotes.no} ➜ Vous n'avez pas mentionné de bots, ou alors, il n'est pas présent sur le serveur.**` });
+            if (!member?.user.bot) return message.reply({ content: `**${client.emotes.no} ➜ Vous n'avez pas mentionné de bot, ou alors, il n'est pas présent sur le serveur.**` });
 
             const channel = client.channels.cache.get(channels.botslogs);
             if (channel?.type !== ChannelType.GuildText) throw new Error("Le channel botslogs n'est pas un channel textuel ou n'a pas été trouvé.");
@@ -174,7 +182,7 @@ class Check extends Command {
                                 label: 'Avertir l’utilisateur',
                                 custom_id: 'btnWarn',
                                 emoji: {
-                                    id: "⚠️"
+                                    name: "⚠️"
                                 }
                             }
                         ]

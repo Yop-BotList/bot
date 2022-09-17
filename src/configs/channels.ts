@@ -4,7 +4,7 @@ export default {
     botlogs: "849687171702325348",
     ticketslogs: "837258757821038592",
     ticketcategory: "827792614106988554",
-    avischannel: "784481268213612554",
+    avischannel: "921770581689503814",
     welcomechannel: "782661811291815947",
     modlogs: "857616632040652840",
     sugglogs: "782661811291815947",

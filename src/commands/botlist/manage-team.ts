@@ -5,43 +5,44 @@ import { channels, roles } from '../../configs';
 import { bots } from '../../models';
 
 class TeamManager extends Command {
-    constructor () {
+    constructor() {
         super({
             name: 'manage-team',
             category: 'Botlist',
-            description: 'Gérer la team d\'un bot.', 
+            description: 'Gérer la team d\'un bot.',
             usage: 'manage-team <bot>',
             aliases: ['team'],
             cooldown: 20,
             minArgs: 1
         })
     }
-    
-    async run (client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
-        const member = message.mentions.members!.first() || await message.guild!.members.fetch(args[0]).catch(() => {});
-        
+
+    async run(client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
+        const member = message.mentions.members!.first() || await message.guild!.members.fetch(args[0]).catch(() => { });
+
         if (!member?.user) return message.reply({
             content: `**${client.emotes.no} ➜ Membre introuvable.**`
         });
-        
+
         if (!member.user.bot) return message.reply({
             content: `**${client.emotes.no} ➜ Ce membre n’est pas un robot.**`
         });
-        
+
         const oldData = await bots.findOne({ botId: member.user.id, verified: true });
-        
+
         if (!oldData) return message.reply({
             content: `**${client.emotes.no} ➜ Ce robot n’est pas listé.**`
         });
-        
+
         if (!message.member!.roles.cache.has(roles.verificator) && (message.author.id !== oldData.ownerId)) return message.reply({
             content: `**${client.emotes.no} ➜ Vous ne pouvez pas gérer la team de ce robot.**`
         });
-        
-        const msg = await message.reply({
+
+        let msg = await message.reply({
+            content: null,
             embeds: [
                 {
-                    title: 'Gestion de la team', 
+                    title: 'Gestion de la team',
                     color: client.config.color.integer,
                     thumbnail: {
                         url: member.user.displayAvatarURL()
@@ -64,7 +65,7 @@ class TeamManager extends Command {
                                 {
                                     label: "Transférer",
                                     value: "transfer",
-                                    description: "Transférer la propriété de ' + member.user.username",
+                                    description: "Transférer la propriété de " + member.user.username,
                                     emoji: {
                                         name: "🔄"
                                     }
@@ -80,7 +81,7 @@ class TeamManager extends Command {
                                     value: "delete",
                                     description: "Retirer un utilisateur de la team.",
                                     emoji: {
-                                        name: "⛔️"
+                                        name: "⛔"
                                     }
                                 }
                             ],
@@ -90,22 +91,22 @@ class TeamManager extends Command {
                 }
             ]
         });
-        
+
         let memberToTransfer: string;
-        
+
         const filter = (x: any) => x.user.id === message.author.id
         const collector = await msg.createMessageComponentCollector({ filter, time: 300000 });
-        
+
         collector.on("collect", async (interaction: MessageComponentInteraction) => {
             await interaction.deferUpdate();
             const data = await bots.findOne({ botId: member.user.id });
-            
+
             if (interaction.isSelectMenu()) {
                 if (interaction.values[0] === "transfer") {
                     if (data!.team.length < 1) message.reply({
                         content: `**${client.emotes.no} ➜ Vous n'avez aucun membre dans votre team à qui transmettre la propriété.**`
                     }).then(m => setTimeout(() => { return m.delete() }, 3000));
-                    
+
                     else {
                         msg.edit({
                             embeds: [
@@ -124,10 +125,10 @@ class TeamManager extends Command {
                             ],
                             components: []
                         });
-                        
+
                         const msgFilter = (x: any) => x.author.id === message.author.id;
                         const msgCollector = msg.channel.createMessageCollector({ filter: msgFilter });
-                        
+
                         msgCollector.on("collect", async (m: Message) => {
                             if (m.content === "cancel") {
                                 m.delete();
@@ -135,15 +136,15 @@ class TeamManager extends Command {
                                 collector.stop();
                                 return msgCollector.stop();
                             }
-                            
+
                             const user = m.mentions.members?.first() || await message.guild?.members.fetch(m.content);
-                            
+
                             if (!user || !data!.team.includes(user.user.id)) message.reply({
                                 content: `**${client.emotes.no} ➜ Vous ne pouvez transférer la propriété uniquement à un membre présent le serveur ET dans votre team.**`
                             }).then((mm) => setTimeout(() => { return mm.delete() }, 3000));
-                            
+
                             memberToTransfer = user!.user.id
-                            
+
                             msg.edit({
                                 embeds: [
                                     {
@@ -178,14 +179,14 @@ class TeamManager extends Command {
                                     }
                                 ]
                             });
-                            
+
                             m.delete();
-                            
+
                             return msgCollector.stop();
                         });
                     }
                 }
-                
+
                 if (interaction.values[0] === "add") {
                     msg.edit({
                         embeds: [
@@ -204,10 +205,10 @@ class TeamManager extends Command {
                         ],
                         components: []
                     });
-                    
+
                     const msgFilter2 = (x: any) => x.author.id === message.author.id;
                     const msgCollector2 = msg.channel.createMessageCollector({ filter: msgFilter2 });
-                    
+
                     msgCollector2.on("collect", async (m: Message) => {
                         if (m.content === "cancel") {
                             m.delete();
@@ -215,20 +216,20 @@ class TeamManager extends Command {
                             collector.stop();
                             return msgCollector2.stop();
                         }
-                        
-                        const user = m.mentions.members!.first() || await message.guild!.members.fetch(m.content).catch(() => {});
-                        
+
+                        const user = m.mentions.members!.first() || await message.guild!.members.fetch(m.content).catch(() => { });
+
                         if (!user || data!.team.includes(user.user.id)) message.channel.send({
                             content: `**${client.emotes.no} ➜ Membre introuvable ou déjà présent dans votre team.**`
                         }).then((mm) => setTimeout(() => { return mm.delete() }, 3000));
-                        
+
                         data?.team.push(user!.user.id);
                         data?.save();
-                        
+
                         msg.edit({
                             embeds: [
                                 {
-                                    title: 'Gestion de la team', 
+                                    title: 'Gestion de la team',
                                     color: client.config.color.integer,
                                     thumbnail: {
                                         url: member.user.displayAvatarURL()
@@ -251,7 +252,7 @@ class TeamManager extends Command {
                                                 {
                                                     label: "Transférer",
                                                     value: "transfer",
-                                                    description: "Transférer la propriété de ' + member.user.username",
+                                                    description: "Transférer la propriété de " + member.user.username,
                                                     emoji: {
                                                         name: "🔄"
                                                     }
@@ -267,7 +268,7 @@ class TeamManager extends Command {
                                                     value: "delete",
                                                     description: "Retirer un utilisateur de la team.",
                                                     emoji: {
-                                                        name: "⛔️"
+                                                        name: "⛔"
                                                     }
                                                 }
                                             ],
@@ -277,12 +278,12 @@ class TeamManager extends Command {
                                 }
                             ]
                         });
-                        
+
                         m.delete();
                         return msgCollector2.stop();
                     });
                 }
-                
+
                 if (interaction.values[0] === "delete") {
                     msg.edit({
                         embeds: [
@@ -301,10 +302,10 @@ class TeamManager extends Command {
                         ],
                         components: []
                     });
-                    
+
                     const msgFilter3 = (x: any) => x.author.id === message.author.id;
                     const msgCollector3 = msg.channel.createMessageCollector({ filter: msgFilter3 });
-                    
+
                     msgCollector3.on("collect", async (m: Message) => {
                         if (m.content === "cancel") {
                             m.delete();
@@ -312,21 +313,21 @@ class TeamManager extends Command {
                             collector.stop();
                             return msgCollector3.stop();
                         }
-                        
-                        const user = m.mentions.members!.first() || await message.guild!.members.fetch(m.content).catch(() => {});
-                        
+
+                        const user = m.mentions.members!.first() || await message.guild!.members.fetch(m.content).catch(() => { });
+
                         if (!user || data!.team.includes(user.user.id)) message.channel.send({
                             content: `**${client.emotes.no} ➜ Membre introuvable ou déjà présent dans votre team.**`
                         }).then((mm) => setTimeout(() => { return mm.delete() }, 3000));
-                        
+
                         const newArray = data!.team.filter((x: string) => x !== user!.user.id);
                         data!.team = newArray;
                         data?.save();
-                        
+
                         msg.edit({
                             embeds: [
                                 {
-                                    title: 'Gestion de la team', 
+                                    title: 'Gestion de la team',
                                     color: client.config.color.integer,
                                     thumbnail: {
                                         url: member.user.displayAvatarURL()
@@ -349,7 +350,7 @@ class TeamManager extends Command {
                                                 {
                                                     label: "Transférer",
                                                     value: "transfer",
-                                                    description: "Transférer la propriété de ' + member.user.username",
+                                                    description: "Transférer la propriété de " + member.user.username,
                                                     emoji: {
                                                         name: "🔄"
                                                     }
@@ -365,7 +366,7 @@ class TeamManager extends Command {
                                                     value: "delete",
                                                     description: "Retirer un utilisateur de la team.",
                                                     emoji: {
-                                                        name: "⛔️"
+                                                        name: "⛔"
                                                     }
                                                 }
                                             ],
@@ -375,19 +376,19 @@ class TeamManager extends Command {
                                 }
                             ]
                         });
-                        
+
                         m.delete();
                         return msgCollector3.stop();
                     });
                 }
             }
-            
+
             if (interaction.isButton()) {
                 if (interaction.customId === "btnNo") {
                     msg.edit({
                         embeds: [
                             {
-                                title: 'Gestion de la team', 
+                                title: 'Gestion de la team',
                                 color: client.config.color.integer,
                                 thumbnail: {
                                     url: member.user.displayAvatarURL()
@@ -410,7 +411,7 @@ class TeamManager extends Command {
                                             {
                                                 label: "Transférer",
                                                 value: "transfer",
-                                                description: "Transférer la propriété de ' + member.user.username",
+                                                description: "Transférer la propriété de " + member.user.username,
                                                 emoji: {
                                                     name: "🔄"
                                                 }
@@ -426,7 +427,7 @@ class TeamManager extends Command {
                                                 value: "delete",
                                                 description: "Retirer un utilisateur de la team.",
                                                 emoji: {
-                                                    name: "⛔️"
+                                                    name: "⛔"
                                                 }
                                             }
                                         ],
@@ -437,7 +438,7 @@ class TeamManager extends Command {
                         ]
                     });
                 }
-                
+
                 if (interaction.customId === "btnYes") {
                     data!.ownerId = memberToTransfer;
                     const newArray = data!.team.filter(teammate => teammate !== memberToTransfer);
@@ -446,7 +447,7 @@ class TeamManager extends Command {
                     data!.save();
 
                     const channel = client.channels.cache.get(channels.botslogs);
-                    
+
                     channel?.isTextBased() ? channel.send({
                         content: `<@&${roles.verificator}>`,
                         embeds: [
@@ -464,10 +465,11 @@ class TeamManager extends Command {
                             }
                         ]
                     }) : new Error(`Channel botslogs: ${channels.botslogs} n'est pas en channel de texte`);
-                    
+
                     msg.edit({
                         content: `**${client.emotes.yes} ➜ La propriété a bien été transférée !**`,
-                        components: []
+                        components: [],
+                        embeds: []
                     });
 
                     return collector.stop();

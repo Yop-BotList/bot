@@ -7,7 +7,7 @@ export default function execCommand(command: any, client: Class, message: Messag
         if (!client.config.owners.includes(message.author.id)) return message.reply({ content: `**${client.emotes.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**` });
     }
 
-    if (command.perms !== []) {
+    if (command.perms.length !== 0) {
         let perms = [];
         for (let i = 0; i < command.perms.length; i++) {
             if (!message.member?.permissions.has(command.perms[i] as PermissionResolvable)) perms.push(command.perms[i]);
@@ -16,7 +16,7 @@ export default function execCommand(command: any, client: Class, message: Messag
         if (perms.length > 0) return message.reply({ content: `**${client.emotes.no} ➜ Il vous manque les permissions : \`${perms.join("`,\n`")}\`**` });
     }
     
-    if (command.botPerms !== []) {
+    if (command.botPerms.length !== 0) {
         let botPerms = []
         for(let i = 0;i < command.botPerms.length; i++) {
             if(!message.guild?.members.me!.permissions.has(command.botPerms[i])) botPerms.push(`\`${command.botPerms[i]}\``);

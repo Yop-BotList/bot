@@ -14,7 +14,8 @@
     "moment": "^2.29.4",
     "mongoose": "^6.3.1",
     "path": "^0.12.7",
-    "pretty-ms": "^7.0.1"
+    "pretty-ms": "^7.0.1",
+    "typescript": "^4.8.3"
   },
   "devDependencies": {
     "@types/figlet": "^1.5.4",
@@ -22,8 +23,7 @@
     "nodemon": "^2.0.16",
     "pm2": "^5.2.0",
     "ts-node": "^10.7.0",
-    "tsc": "^2.0.4",
-    "typescript": "^4.6.4"
+    "tsc": "^2.0.4"
   },
   "scripts": {
     "build": "tsc",
