@@ -17,6 +17,8 @@ export = async (client: Class, message: Message) => {
 
     if (message.channel.isDMBased()) return ticketsManager.clientSide();
 
+    if (message.channel.name.startsWith("🎫・ticket-")) return ticketsManager.serverSide();
+
     const data = await user.findOne({ userId: message.author.id })
     if (!data) new user({
         userId: message.author.id,

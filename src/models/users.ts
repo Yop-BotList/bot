@@ -19,5 +19,6 @@ export default model("users", new Schema({
         }
     ],
     totalNumbers: { type: Number, required: false, default: 0 },
-    readFaq: { type: Boolean, required: false, default: false }
+    readFaq: { type: Boolean, required: false, default: false },
+    locale: { type: String, required: false }
 }));

@@ -7,7 +7,7 @@ import bots from "../models/bots";
 export = async (client: Class, oldMember: GuildMember, newMember: GuildMember) => {
     if (!oldMember && !newMember) return;
 
-    if (!newMember.guild.roles.cache.get(roles.premium) && !newMember.guild.roles.cache.get(roles.premiumbot)) return console.error(red("Please enter a valid id for premium and premiumbot role in the configuration file."));
+    if (!newMember.guild.roles.cache.get(roles.premium) || !newMember.guild.roles.cache.get(roles.premiumbot)) return console.error(red("Please enter a valid id for premium and premiumbot role in the configuration file."));
     
     if (oldMember.roles.cache.has(roles.premium) && !newMember.roles.cache.has(roles.premium)) {
         toggleRole(newMember, false);

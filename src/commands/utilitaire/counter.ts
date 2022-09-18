@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 import Class from "../..";
 import { counter } from "../../models";
-import user from "../../models/user";
+import { users } from "../../models";
 import Command from "../../utils/Command";
 
 class Counter extends Command {
@@ -20,7 +20,7 @@ class Counter extends Command {
     
     async run(client: Class, message: Message, args: string[]) {
         if (args[0] === "leaderboard") {
-            const userData = await user.find();
+            const userData = await users.find();
             
             if (!userData || userData.length < 2) return message.reply(`**${client.emotes.no} ➜ Il n'y a pas assez de compteurs dans le classement pour que je puisse afficher en afficher un.**`);
             let array = userData.sort((a, b) => (a.totalNumbers < b.totalNumbers) ? 1 : -1).slice(0, 10);
