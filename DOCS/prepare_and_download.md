@@ -16,7 +16,7 @@ Pour l'installation, la configuration et la mise en service de YopBot, tu devras
 * [Visual Studio Code](https://code.visualstudio.com/) ou un tout autre éditeur de code.
 * Posséder Windows 8.1 *(pour les utilisateurs de Windows)*  ou une version supérieure *(NodeJS V16 ne fonctionne que sur ces versions là)*.
 
-> Les liens que je t’ai mis sont des liens d'installation pour Windows !!
+> Les liens que je t’ai mis sont des liens d'installation pour Windows, une version de la documentation pour linux sera faite plus tard !!
 ## Téléchargement des fichiers
 
 ***
