@@ -1,10 +1,13 @@
 import { Interaction } from "discord.js";
 import Class from "..";
+import TicketsDM from "../functions/ticketsDM";
 import { users } from "../models";
 import FaqModal from "../utils/FaqModal";
 import SendModal from "../utils/SendModal";
 
 export = async (client: Class, interaction: Interaction) => {
+    const ticketManager = new TicketsDM(client);
+
     if (interaction.isButton()) {
         if (interaction.customId === "faqVerifBtn") {
             const userFind = await users.findOne({ userId: interaction.user.id });
@@ -31,10 +34,8 @@ export = async (client: Class, interaction: Interaction) => {
             faqModal.handleSubmit(interaction);
         }
 
-        if (interaction.customId === "buttonTransfer") {}
+        if (interaction.customId === "buttonTransfer") ticketManager.transfer(interaction);
 
-        if (interaction.customId === "buttonClose") {
-            
-        }
+        if (interaction.customId === "buttonClose") ticketManager.transcript(interaction, interaction.channelId);
     };
 }

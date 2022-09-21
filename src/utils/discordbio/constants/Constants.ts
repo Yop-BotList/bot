@@ -12,6 +12,6 @@ export type Headers = {
     [key: string]: string | undefined
 }
 export const headers: Headers = {
-    'user-agent': `discord.bio/${require('../../package.json').version} (+https://github.com/asdfugil/discord.bio)`,
+    'user-agent': `yopbot/${require('../../../../package.json').version} (+https://github.com/Nonolanlan1007/Yop-Bot)`,
     'content-type': 'application/json; charset=utf-8'
 }

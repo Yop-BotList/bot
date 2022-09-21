@@ -1,8 +1,12 @@
-import { Message, PermissionResolvable } from "discord.js";
+import { Message, PermissionResolvable, TextChannel } from "discord.js";
 import Class from "..";
 import onCooldown from "./onCooldown";
 
+//🎫・ticket-
+
 export default function execCommand(command: any, client: Class, message: Message, args: string[]): Promise<Message<boolean>> | undefined {
+    const channel = message.channel as TextChannel;
+    if (channel.name.startsWith("🎫・ticket-")) return;
     if (command.owner === true) {
         if (!client.config.owners.includes(message.author.id)) return message.reply({ content: `**${client.emotes.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**` });
     }
