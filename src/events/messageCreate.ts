@@ -7,6 +7,7 @@ import moment from 'moment';
 import { existsSync, readFileSync, writeFile } from "fs";
 import { join } from "path";
 import TicketsDM from "../functions/ticketsDM";
+import citations from "../functions/citations";
 
 moment.locale("fr");
 
@@ -93,6 +94,8 @@ export = async (client: Class, message: Message) => {
     }
 
     if (message.content.includes(`${client.user?.username}`)) message.react("👀");
+
+    if (message.content.includes("discord.com/channels/")) citations(client, message);
 
     /* Command System */
 
