@@ -20,9 +20,7 @@ export default class TicketsDM {
         
         const getTicket = await tickets.findOne({ userId: this.message!.author.id });
         
-        if (!getTicket) {
-            this._noTicket();
-        }
+        if (!getTicket) this._noTicket();
         else {
             const ticketChannel = this.client.channels.cache.get(`${getTicket.channelId}`) as TextChannel;
             
@@ -226,45 +224,43 @@ export default class TicketsDM {
             }
             
             if (interaction.isButton()) {
-                if (interaction.customId === "buttonDetectLang") {
-                    msg.edit({
-                        content: "**🇫🇷 ➜ Veuillez sélectionner un raison.\n🇺🇸 ➜ Please select a reason.**",
-                        embeds: [],
-                        components: [
-                            {
-                                type: 1,
-                                components: [
-                                    {
-                                        type: 3,
-                                        custom_id: "menuReason",
-                                        options: [
-                                            {
-                                                label: "Signaler un bug / Report a bug",
-                                                emoji: {
-                                                    name: "🐛"
-                                                },
-                                                value: "A"
-                                            }, {
-                                                label: "Recevoir de l'aide / Get help",
-                                                emoji: {
-                                                    name: "🆘"
-                                                },
-                                                value: "B"
-                                            }, {
-                                                label: "Autre / Other",
-                                                emoji: {
-                                                    name: "☎"
-                                                },
-                                                value: "C"
-                                            }
-                                        ],
-                                        placeholder: "Raison / Reason"
-                                    }
-                                ]
-                            }
-                        ]
-                    })
-                }
+                if (interaction.customId === "buttonDetectLang") msg.edit({
+                    content: "**🇫🇷 ➜ Veuillez sélectionner un raison.\n🇺🇸 ➜ Please select a reason.**",
+                    embeds: [],
+                    components: [
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 3,
+                                    custom_id: "menuReason",
+                                    options: [
+                                        {
+                                            label: "Signaler un bug / Report a bug",
+                                            emoji: {
+                                                name: "🐛"
+                                            },
+                                            value: "A"
+                                        }, {
+                                            label: "Recevoir de l'aide / Get help",
+                                            emoji: {
+                                                name: "🆘"
+                                            },
+                                            value: "B"
+                                        }, {
+                                            label: "Autre / Other",
+                                            emoji: {
+                                                name: "☎"
+                                            },
+                                            value: "C"
+                                        }
+                                    ],
+                                    placeholder: "Raison / Reason"
+                                }
+                            ]
+                        }
+                    ]
+                });
             }
             
             if (interaction.isSelectMenu()) {
@@ -288,9 +284,7 @@ export default class TicketsDM {
     
     async _checkUser(user: User, type: string): Promise<boolean> {
         const getUser = await users.findOne({ userId: user.id });
-        if (type === "inDb") {
-            return getUser ? true : false;
-        }
+        if (type === "inDb") return getUser ? true : false;
         if (type === "blacklist") {
             if (!getUser) return false;
             
