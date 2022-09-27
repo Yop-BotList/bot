@@ -26,14 +26,12 @@ class Reload extends Command {
         
         if (['s', 'slash'].includes(args[0])) args[1] === 'ALL' ? client.reloadAllSlashCommands().then(async (res: string) => await message.reply({ content: res })) : client.reloadSlashCommand(args[1]).then(async (res: string) => await message.reply({ content: res }));
         
-        if (['b', 'bot', 'yop', 'yopbot'].includes(args[0])) {
-            message.reply({
-                content: `**${client.emotes.loading} ➜ Redémarrage dans 5 secondes...**`
-            }).then(() => setTimeout(() => {
-                client.destroy()
-                process.exit(0)
-            }, 5000));
-        }
+        if (['b', 'bot', 'yop', 'yopbot'].includes(args[0])) message.reply({
+            content: `**${client.emotes.loading} ➜ Redémarrage dans 5 secondes...**`
+        }).then(() => setTimeout(() => {
+            client.destroy()
+            process.exit(0)
+        }, 5000));
     }
 }
 
