@@ -384,60 +384,58 @@ class TeamManager extends Command {
             }
 
             if (interaction.isButton()) {
-                if (interaction.customId === "btnNo") {
-                    msg.edit({
-                        embeds: [
-                            {
-                                title: 'Gestion de la team',
-                                color: client.config.color.integer,
-                                thumbnail: {
-                                    url: member.user.displayAvatarURL()
-                                },
-                                timestamp: new Date().toISOString(),
-                                footer: {
-                                    text: 'YopBot V' + client.version
-                                },
-                                description: `Veuillez sélectionner l’une des options ci-dessous. ${data!.team.length > 0 ? `La liste actuelle des membres de votre team est la suivante :\n${data!.team.map(x => `> - <@${x}>${client.users.cache.get(x) ? " - " + client.users.cache.get(x)?.tag : ""}`).join('\n')}` : "Aucun autre membre dans la team"}`
-                            }
-                        ],
-                        components: [
-                            {
-                                type: 1,
-                                components: [
-                                    {
-                                        type: 3,
-                                        custom_id: "menuTeamManager",
-                                        options: [
-                                            {
-                                                label: "Transférer",
-                                                value: "transfer",
-                                                description: "Transférer la propriété de " + member.user.username,
-                                                emoji: {
-                                                    name: "🔄"
-                                                }
-                                            }, {
-                                                label: "Ajouter",
-                                                value: "add",
-                                                description: "Ajouter un utilisateur à la team",
-                                                emoji: {
-                                                    name: "🆕"
-                                                }
-                                            }, {
-                                                label: "Retirer",
-                                                value: "delete",
-                                                description: "Retirer un utilisateur de la team.",
-                                                emoji: {
-                                                    name: "⛔"
-                                                }
+                if (interaction.customId === "btnNo") msg.edit({
+                    embeds: [
+                        {
+                            title: 'Gestion de la team',
+                            color: client.config.color.integer,
+                            thumbnail: {
+                                url: member.user.displayAvatarURL()
+                            },
+                            timestamp: new Date().toISOString(),
+                            footer: {
+                                text: 'YopBot V' + client.version
+                            },
+                            description: `Veuillez sélectionner l’une des options ci-dessous. ${data!.team.length > 0 ? `La liste actuelle des membres de votre team est la suivante :\n${data!.team.map(x => `> - <@${x}>${client.users.cache.get(x) ? " - " + client.users.cache.get(x)?.tag : ""}`).join('\n')}` : "Aucun autre membre dans la team"}`
+                        }
+                    ],
+                    components: [
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 3,
+                                    custom_id: "menuTeamManager",
+                                    options: [
+                                        {
+                                            label: "Transférer",
+                                            value: "transfer",
+                                            description: "Transférer la propriété de " + member.user.username,
+                                            emoji: {
+                                                name: "🔄"
                                             }
-                                        ],
-                                        placeholder: "Veuillez sélectionner une action"
-                                    }
-                                ]
-                            }
-                        ]
-                    });
-                }
+                                        }, {
+                                            label: "Ajouter",
+                                            value: "add",
+                                            description: "Ajouter un utilisateur à la team",
+                                            emoji: {
+                                                name: "🆕"
+                                            }
+                                        }, {
+                                            label: "Retirer",
+                                            value: "delete",
+                                            description: "Retirer un utilisateur de la team.",
+                                            emoji: {
+                                                name: "⛔"
+                                            }
+                                        }
+                                    ],
+                                    placeholder: "Veuillez sélectionner une action"
+                                }
+                            ]
+                        }
+                    ]
+                });
 
                 if (interaction.customId === "btnYes") {
                     data!.ownerId = memberToTransfer;
