@@ -29,12 +29,10 @@ class Help extends Command {
                 }
             ];
             
-            if (client.config.owners.includes(message.author.id)) {
-                commandsList.push({
-                    name: "➜ Développeur :",
-                    value: client.commands.filter(c => c.category === 'Developpeur').map(c => `\`${c.name}\``).join(', ')
-                });
-            }
+            if (client.config.owners.includes(message.author.id)) commandsList.push({
+                name: "➜ Développeur :",
+                value: client.commands.filter(c => c.category === 'Developpeur').map(c => `\`${c.name}\``).join(', ')
+            });
             
             commandsList.push({
                 name: "➜ Liens :",
