@@ -31,9 +31,7 @@ class Counter extends Command {
             
             let footerText = "";
             
-            fullList.map((r, i) => {
-                (r.userId === message.author.id ? footerText = `#${i + 1} ${client.users.cache.get(`${r.userId}`)?.tag || r.userId} avec ${r.totalNumbers} numéros !` : "");
-            });
+            fullList.map((r, i) => (r.userId === message.author.id ? footerText = `#${i + 1} ${client.users.cache.get(`${r.userId}`)?.tag || r.userId} avec ${r.totalNumbers} numéros !` : ""));
             
             message.reply({
                 embeds: [
@@ -59,11 +57,7 @@ class Counter extends Command {
                 content: `**${client.emotes.no} ➜ Impossible d'afficher les objectifs car le compteur n'est pas mis en place.**`
             });
 
-            client.counterObjectifs.forEach((objectif: number) => {
-                (objectif < counterDb!.counter) ?
-                    objectifs.push(`**${client.emotes.yes} Atteint ➜ ${objectif}**`) :
-                    objectifs.push(`**${client.emotes.no} Non atteint ➜ ${objectif}**`);
-            });
+            client.counterObjectifs.forEach((objectif: number) => (objectif < counterDb!.counter) ? objectifs.push(`**${client.emotes.yes} Atteint ➜ ${objectif}**`) : objectifs.push(`**${client.emotes.no} Non atteint ➜ ${objectif}**`));
 
             message.reply({
                 embeds: [
