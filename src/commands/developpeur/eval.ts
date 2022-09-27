@@ -27,12 +27,8 @@ class Eval extends Command {
             result = await error.message;
         }
 
-        if (code.length > 1024) {
-            code = code.substring(0, 1021) + "...";
-        }
-        if (result.length > 1024) {
-            result = result.substring(0, 1021) + "...";
-        }
+        if (code.length > 1024) code = code.substring(0, 1021) + "...";
+        if (result.length > 1024) result = result.substring(0, 1021) + "...";
 
         if (code.toLowerCase().includes('token') || result.includes(client.config.token) || code.toLowerCase().includes("token")) return message.reply(`**${client.emotes.no} ➜ Vous ne pouvez pas utiliser le token du bot.**`);
         if (code.toLowerCase().includes("client.destroy()")) return message.reply(`**${client.emotes.no} ➜ Vous ne pouvez pas utiliser la commande \`client.destroy()\`.**`);
