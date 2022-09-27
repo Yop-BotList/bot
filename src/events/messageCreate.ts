@@ -61,12 +61,11 @@ export = async (client: Class, message: Message) => {
 
         const userGet = await user.findOne({ userId: message.author.id });
 
-        if (!userGet) {
-            new user({
-                userId: message.author.id,
-                totalNumbers: 1
-            }).save();
-        } else {
+        if (!userGet) new user({
+            userId: message.author.id,
+            totalNumbers: 1
+        }).save();
+        else {
             if (!userGet.totalNumbers) userGet.totalNumbers = 1;
             else userGet.totalNumbers = userGet.totalNumbers + 1;
 
