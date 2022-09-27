@@ -67,36 +67,32 @@ class Profil extends Command {
     if (member.user.bot) {
       let db = await bots.findOne({ botId: member.user.id });
 
-      if (!db) {
-        message.reply({
-          embeds: [
-            {
-              title: `Informations sur ${member.user.tag}`,
-              color: client.config.color.integer,
-              thumbnail: {
-                url: member.user.displayAvatarURL()
-              },
-              fields: [
-                {
-                  name: '__🏷 Nom :__',
-                  value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
-                  inline: false
-                },
-                {
-                  name: '__📆 Date de création :__',
-                  value: `> ${moment(member.user.createdAt).format('Do MMMM YYYY')}`,
-                  inline: false
-                },
-                {
-                  name: '__📆 A rejoint le :__',
-                  value: `> ${moment(member.joinedAt).format('Do MMMM YYYY')}`,
-                  inline: true
-                }
-              ]
-            }
-          ]
-        });
-      }
+      if (!db) message.reply({
+        embeds: [
+          {
+            title: `Informations sur ${member.user.tag}`,
+            color: client.config.color.integer,
+            thumbnail: {
+              url: member.user.displayAvatarURL()
+            },
+            fields: [
+              {
+                name: '__🏷 Nom :__',
+                value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
+                inline: false
+              }, {
+                name: '__📆 Date de création :__',
+                value: `> ${moment(member.user.createdAt).format('Do MMMM YYYY')}`,
+                inline: false
+              }, {
+                name: '__📆 A rejoint le :__',
+                value: `> ${moment(member.joinedAt).format('Do MMMM YYYY')}`,
+                inline: true
+              }
+            ]
+          }
+        ]
+      });
 
       if (db) {
         const site = db.site || "*Aucun site web...*",
