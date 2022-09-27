@@ -9,13 +9,9 @@ export = async (client: Class, oldMember: GuildMember, newMember: GuildMember) =
 
     if (!newMember.guild.roles.cache.get(roles.premium) || !newMember.guild.roles.cache.get(roles.premiumbot)) return console.error(red("Please enter a valid id for premium and premiumbot role in the configuration file."));
     
-    if (oldMember.roles.cache.has(roles.premium) && !newMember.roles.cache.has(roles.premium)) {
-        toggleRole(newMember, false);
-    }
+    if (oldMember.roles.cache.has(roles.premium) && !newMember.roles.cache.has(roles.premium)) toggleRole(newMember, false);
     
-    if (!oldMember.roles.cache.has(roles.premium) && newMember.roles.cache.has(roles.premium)) {
-        toggleRole(newMember, true);
-    }
+    if (!oldMember.roles.cache.has(roles.premium) && newMember.roles.cache.has(roles.premium)) toggleRole(newMember, true);
 }
 
 async function toggleRole(newMember: GuildMember, toggle: boolean) {
