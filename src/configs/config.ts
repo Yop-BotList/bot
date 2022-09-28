@@ -13,5 +13,6 @@ export default {
         "650664078649458699"
     ],
     mainguildid: "839895687340753026",
-    antiinvite: true
+    antiinvite: true,
+    citations: true
 };
