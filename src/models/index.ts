@@ -4,6 +4,7 @@ import users from './users';
 import counter from './counter';
 import avis from './avis';
 import tickets from './tickets';
+import suggests from './suggests';
 
 export {
     bots,
@@ -11,5 +12,6 @@ export {
     users,
     counter,
     avis,
-    tickets
+    tickets,
+    suggests
 }

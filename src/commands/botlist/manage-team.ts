@@ -39,7 +39,6 @@ class TeamManager extends Command {
         });
 
         let msg = await message.reply({
-            content: null,
             embeds: [
                 {
                     title: 'Gestion de la team',

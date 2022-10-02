@@ -36,7 +36,6 @@ class Eval extends Command {
         if (code.toLowerCase().includes(client.config.mongooseConnectionString) || result.includes(client.config.mongooseConnectionString) || code.toLowerCase().includes("mongooseConnectionString") ) return message.reply(`**${client.emotes.no} ➜ Vous ne pouvez pas utiliser l'url de connexion de mongodb.**`);
 
         message.reply({
-            content: null,
             embeds: [
                 {
                     title: "Évaluation d'un code en Javascript :",

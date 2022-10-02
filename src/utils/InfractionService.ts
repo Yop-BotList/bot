@@ -11,7 +11,7 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         if (!user) return new Error("L'argument user est requis");
         
         if (!mod) return new Error("L'argument mod est requis");
-        if (!type || type !== "WARN" && type !== "BAN" && type !== "KICK" && type !== "TIMEOUT") return new Error("L'argument type n'est pas valide.");
+        if (!type || !["TIMEOUT", "KICK", "BAN", "WARN", "EDIT"].includes(type)) return new Error("L'argument type n'est pas valide.");
         
         const member = await guild.members.fetch(user.id).catch(() => null);
         
@@ -48,7 +48,8 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
             duration: duration,
             finishOn: endOn,
             date: Date.now(),
-            deleted: false
+            deleted: false,
+            historyLogs: []
         }
         
         const db = await users.findOne({ userId: user.id });

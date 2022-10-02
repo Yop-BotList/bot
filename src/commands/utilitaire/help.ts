@@ -40,7 +40,6 @@ class Help extends Command {
             });
             
             return message.reply({
-                content: null,
                 embeds: [
                     {
                         title: `Menu d'aide de ${client.user?.username}`,
@@ -64,7 +63,6 @@ class Help extends Command {
         if (!command) return message.reply(`**${client.emotes.no} ➜ La commande \`${args[0]}\` n'existe pas.**`);
         
         return message.reply({
-            content: null,
             embeds: [
                 {
                     title: `Aide de ${command.name}`,

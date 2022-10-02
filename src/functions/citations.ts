@@ -93,7 +93,7 @@ export default async (client: Class, message: Message) => {
 
             await interaction.reply({
                 ephemeral: true,
-                content: messageData.content || null,
+                content: messageData.content,
                 embeds: messageData.embeds.length !== 0 ? messageData.embeds : [],
                 components: messageData.components.length !== 0 ? components : []
             }).catch(console.error);

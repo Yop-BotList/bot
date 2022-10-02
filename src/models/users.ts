@@ -14,8 +14,15 @@ export default model("users", new Schema({
             reason: { type: String, required: false },
             duration: { type: Number, required: false },
             finishOn: { type: Number, required: false },
-            date: { type: Number, required: false },
-            deleted: { type: Boolean, required: false, default: false }
+            date: { type: Number, required: false, default: Date.now() },
+            deleted: { type: Boolean, required: false, default: false },
+            historyLogs: [
+                {
+                    title: { type: String, required: false, default: "Action inconnue" },
+                    mod: { type: String, required: false },
+                    date: { type: Number, required: false, default: Date.now() }
+                }
+            ]
         }
     ],
     totalNumbers: { type: Number, required: false, default: 0 },

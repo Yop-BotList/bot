@@ -58,7 +58,6 @@ class Accept extends Command {
         if (!owner) return;
 
         owner.user.send({
-            content: null,
             embeds : [
                 {
                     title: "Acceptation...",

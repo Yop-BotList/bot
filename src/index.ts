@@ -15,7 +15,7 @@ class Class extends Client {
     commands: Collection<string | undefined, any>;
     slashs: Collection<string | undefined, any>;
     config: { token: string; prefix: string; mongooseConnectionString: string; color: { hexa: string; integer: number; }; autokick: boolean; staffGuildId: string; owners: string[]; mainguildid: string; antiinvite: boolean; citations: boolean };
-    emotes: { yes: string; no: string; bof: string; offline: string; online: string; streaming: string; idle: string; dnd: string; boost: string; loading: string; sort: string; entre: string; alerte: string; notif: string; question: string; cadena: string; badges: { verifieddevelopper: string; balance: string; mod: string; bravery: string; bughuntergold: string; bughunter: string; brillance: string; hypesquadevent: string; partner: string; staff: string; earlysupporter: string; verifiedbot: string; system: string; badges: string; }; discordicons: { list: string; bot: string; textchannel: string; wave: string; entre: string; game: string; id: string; hierarchie: string; key: string; man: string; img: string; tag: string; clyde: string; horloge: string; }; };
+    emotes: { yes: string; no: string; bof: string; offline: string; online: string; streaming: string; idle: string; dnd: string; boost: string; loading: string; sort: string; entre: string; alerte: string; notif: string; question: string; cadena: string; loadBar: { red: { start: string; middle: string; end: string; }; blue: { start: string; middle: string; end: string; }; }; badges: { verifieddevelopper: string; balance: string; mod: string; bravery: string; bughuntergold: string; bughunter: string; brillance: string; hypesquadevent: string; partner: string; staff: string; earlysupporter: string; verifiedbot: string; system: string; badges: string; }; discordicons: { list: string; bot: string; textchannel: string; wave: string; entre: string; game: string; id: string; hierarchie: string; key: string; man: string; img: string; tag: string; clyde: string; horloge: string; }; };
     counterObjectifs: number[];
 
     constructor(token: string) {
@@ -236,7 +236,7 @@ class Class extends Client {
         });
     }
 
-    _commandsHandler(): any {
+    private _commandsHandler(): any {
         let count = 0;
         const folders = readdirSync(join(__dirname, "commands"));
         for (let i = 0; i < folders.length; i++) {
@@ -254,7 +254,7 @@ class Class extends Client {
         console.log(`${green('[COMMANDS]')} ${this.commands.size}/${count} commandes chargée(s) !`)
     }
 
-    _slashHandler(): any {
+    private _slashHandler(): any {
         let count = 0;
         const folders = readdirSync(join(__dirname, "slashs"));
         for (let i = 0; i < folders.length; i++) {
@@ -272,7 +272,7 @@ class Class extends Client {
         console.log(`${green('[SLASHCOMMANDS]')} ${this.slashs.size}/${count} commandes slash chargée(s)`)
     }
 
-    _eventsHandler(): any {
+    private _eventsHandler(): any {
         let count = 0;
         const files = readdirSync(join(__dirname, "events"));
         files.forEach((event) => {
@@ -288,7 +288,7 @@ class Class extends Client {
         console.log(`${green('[EVENTS]')} ${count}/${files.length} évènements chargé(s) !`)
     }
 
-    _processEvent() {
+    private _processEvent() {
         process.on('unhandledRejection', async (error: any) => {
             writeFile(join(__dirname, "./logs", "errors/") + `${moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')}.txt`, error.stack, (err) => {
                 if (err) console.log(err.stack);
@@ -308,7 +308,7 @@ class Class extends Client {
         });
     }
 
-    _startingMessage() {
+    private _startingMessage() {
         const cpuCores = cpus().length;
         //Custom Starting Message
         text('Yop-Bot', {

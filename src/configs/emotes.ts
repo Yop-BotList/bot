@@ -15,7 +15,18 @@ export default {
     notif: "<a:notifs:903926942439473203>",
     question: "<a:question:933275771521359903>",
     cadena: "<a:cadena:935804916348354620>",
-
+    loadBar: {
+        red: {
+            start: "<:red_loadbar_start:1025743552413712424>",
+            middle: "<:red_loadbar_middle:1025743546193563770>",
+            end: "<:red_loadbar_end:1025743539801432124>"
+        },
+        blue: {
+            start: "<:blue_loadbar_start:1025743525666623568>",
+            middle: "<:blue_loadbar_middle:1025743517831663686>",
+            end: "<:blue_loadbar_end:1025743498059726899>"
+        }
+    },
     badges: {
         verifieddevelopper: "<:verified_developper:907702152166785034>",
         balance: "<:balance_hype_squad:907702154079375430>",

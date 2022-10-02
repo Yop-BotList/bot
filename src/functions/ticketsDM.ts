@@ -38,7 +38,6 @@ export default class TicketsDM {
                     files: [...this.message!.attachments.values()]
                 }).catch(() => {});
                 else await hook!.send({
-                    content: null,
                     files: [...this.message!.attachments.values()]
                 }).catch(() => {});
             } else await hook!.send({
@@ -49,7 +48,7 @@ export default class TicketsDM {
         }
     }
     
-    async _createTicket(reason: string, locale: string): Promise<void> {
+    private async _createTicket(reason: string, locale: string): Promise<void> {
         const guild = await this.client.guilds.cache.get(this.client.config.mainguildid);
         
         const newTicketChannel = await guild!.channels.create({
@@ -123,7 +122,6 @@ export default class TicketsDM {
         const ticketsLogs = this.client.channels.cache.get(channels.ticketslogs) as TextChannel;
         
         ticketsLogs.send({
-            content: null,
             embeds: [
                 {
                     title: `New ticket of ${this.message!.author.username}#${this.message!.author.discriminator}`,
@@ -154,7 +152,6 @@ export default class TicketsDM {
                     files: [...this.message!.attachments.values()]
                 }).catch(() => {});
                 else await hook.send({
-                    content: null,
                     files: [...this.message!.attachments.values()]
                 }).catch(() => {});
             } else await hook.send({
@@ -163,7 +160,7 @@ export default class TicketsDM {
         }, 1000);
     }
     
-    async _noTicket(): Promise<void> {
+    private async _noTicket(): Promise<void> {
         const msg = await this.message!.reply({
             embeds: [
                 {
@@ -282,7 +279,7 @@ export default class TicketsDM {
         });
     }
     
-    async _checkUser(user: User, type: string): Promise<boolean> {
+    private async _checkUser(user: User, type: string): Promise<boolean> {
         const getUser = await users.findOne({ userId: user.id });
         if (type === "inDb") return getUser ? true : false;
         if (type === "blacklist") {
@@ -294,7 +291,7 @@ export default class TicketsDM {
         return false;
     }
     
-    async _handleTicket(msg: any, collector: InteractionCollector<SelectMenuInteraction | ButtonInteraction>, interaction: SelectMenuInteraction, reason: string): Promise<void> {
+    private async _handleTicket(msg: any, collector: InteractionCollector<SelectMenuInteraction | ButtonInteraction>, interaction: SelectMenuInteraction, reason: string): Promise<void> {
         const checkResult = await this._checkUser(this.message!.author, "inDb");
         
         if (checkResult) {
@@ -379,7 +376,7 @@ export default class TicketsDM {
             user.send(`**:warning: ➜ Votre ticket vient d'être transféré aux administrateurs. Ils sont maintenant les seuls à pouvoir le voir. / Your ticket has been transferred to the administrators. They are now the only ones who can see it.**`);
 
             interaction.message.edit({
-                content: null,
+                content: "",
                 embeds: interaction.message!.embeds,
                 components: [
                     {
@@ -440,7 +437,6 @@ export default class TicketsDM {
             });
 
             ticketsLogs.send({
-                content: null,
                 files: [attachment],
                 embeds: [
                     {
