@@ -52,7 +52,19 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
             historyLogs: []
         }
         
-        const db = await users.findOne({ userId: user.id });
+        let db = await users.findOne({ userId: user.id });
+
+        if (!db) {
+            new users({
+                userId: user.id,
+                avis: null,
+                cmdbl: false,
+                ticketsbl: false,
+                warns: [],
+                totalNumbers: 0
+            }).save()
+            db = await users.findOne({ userId: user.id });
+        }
         
         db!.warns.push(data);
         db!.save();

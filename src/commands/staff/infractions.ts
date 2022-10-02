@@ -1,6 +1,5 @@
-import { ChannelType, Message, ButtonInteraction } from "discord.js";
+import { Message, ButtonInteraction, CollectorFilter } from "discord.js";
 import Class from "../..";
-import { channels, roles } from "../../configs";
 import Command from "../../utils/Command";
 import moment from "moment";
 import { users } from "../../models"
@@ -24,21 +23,22 @@ class Infractions extends Command {
 
         if (args[0].length > 10) {
             const member = message.mentions.members?.first() || await message?.guild?.members.fetch(args[0]).catch(() => null);
-            if (!member) return message.channel.send(`**${client.emotes.no} Membre introuvable.**`);
+            if (!member) return message.reply(`**${client.emotes.no} Membre introuvable.**`);
 
-            const data = await users.find({ userId: member.id });
-            if (data!.warns.length === 0) return message.channel.send(`**${client.emotes.no} Aucune infraction pour cet utilisateur.**`);
+            const data = await users.findOne({ userId: member.id });
+
+            if (data?.warns.length === 0) return message.reply(`**${client.emotes.no} Aucune infraction pour cet utilisateur.**`);
 
             let i0 = 0;
             let i1 = 10;
             let page = 1;
-            let array = []
+            let array: any[] = []
 
-            for (const warn in data?.warns) {
-                const mod = await client?.users.fetch(warn?.modId)
+            data?.warns.forEach(async (warn) => {
+                const mod = await client?.users.fetch(warn?.modId!)
 
-                array.push({ name: `[${warn.id} - ${warn.type}] - le ${moment(warn.date).format("DD/MM/YY")} - par ${mod ? mod.tag : warn.modId}${warn.duration !== null && warn.duration > 0 ? ` - se termine dans ${parseDuration(Date.now()-warn.finishOn)}` : ""}`, value: "```md\n# " + warn.reason + "```", inline: false });
-
+                array.push({ name: `[${warn?.id} - ${warn?.type}] - le ${moment(warn?.date).format("DD/MM/YY")} - par ${mod ? mod.tag : warn?.modId}${warn?.duration !== null && warn?.duration! > 0 ? ` - durant ${parseDuration(warn.duration!)}` : ""}`, value: "```md\n# " + warn?.reason + "```", inline: false });
+            })
             let fields = array.slice(i0, i1)
 
             message.reply({
@@ -63,7 +63,6 @@ class Infractions extends Command {
                                 type: 2,
                                 style: 1,
                                 emoji: {
-                                    id: null,
                                     name: "◀"
                                 },
                                 custom_id: "leftPage",
@@ -73,7 +72,6 @@ class Infractions extends Command {
                                 type: 2,
                                 style: 1,
                                 emoji: {
-                                    id: null,
                                     name: "▶"
                                 },
                                 custom_id: "rightPage",
@@ -84,6 +82,7 @@ class Infractions extends Command {
                 ]
             }).then(async(m) => {
                     const filter = (btn: ButtonInteraction) => btn.user.id === message.author.id;
+                    // @ts-ignore
                     const collector = m.createMessageComponentCollector({ filter, time: 60000 });
 
                     collector.on("collect", async (button: ButtonInteraction) => {
@@ -119,7 +118,6 @@ class Infractions extends Command {
                                                 type: 2,
                                                 style: 1,
                                                 emoji: {
-                                                    id: null,
                                                     name: "◀"
                                                 },
                                                 custom_id: "leftPage",
@@ -129,7 +127,6 @@ class Infractions extends Command {
                                                 type: 2,
                                                 style: 1,
                                                 emoji: {
-                                                    id: null,
                                                     name: "▶"
                                                 },
                                                 custom_id: "rightPage",
@@ -171,7 +168,6 @@ class Infractions extends Command {
                                                 type: 2,
                                                 style: 1,
                                                 emoji: {
-                                                    id: null,
                                                     name: "◀"
                                                 },
                                                 custom_id: "leftPage",
@@ -181,7 +177,6 @@ class Infractions extends Command {
                                                 type: 2,
                                                 style: 1,
                                                 emoji: {
-                                                    id: null,
                                                     name: "▶"
                                                 },
                                                 custom_id: "rightPage",
@@ -196,87 +191,87 @@ class Infractions extends Command {
                 })
         }
 
-        if (args[0].length < 18) {
-            const data = await infractions.findOne({ id: Number(args[0]) });
-            if (!data) return message.reply(`**${client.e.no} Infraction introuvable.**`);
+        // if (args[0].length < 18) {
+        //     const data = await infractions.findOne({ id: Number(args[0]) });
+        //     if (!data) return message.reply(`**${client.e.no} Infraction introuvable.**`);
 
-            const member = client.users.cache.get(data.userID) || await client.users.fetch(data.userID).catch(() => null);
-            if (!member) return message.reply(`**${client.e.no} J'ai l'impression que l'utilisateur ayant reçu cette sanction a supprimé son compte...**`);
-            const embed = new MessageEmbed()
-                .setTitle(`Infraction ${data.id}`)
-                .setColor(client.embed.colors.default)
-                .setFooter({ text: client.embed.footer.text, iconURL: client.embed.footer.icon })
-                .setTimestamp(new Date())
-                .setThumbnail(member.displayAvatarURL({ dynamic: true }))
-                .addField(`${client.e.discordicons.man} ➜ Utilisateur :`, "```md\n# " + member.tag + " (" + member.id + ")" + "```")
-                .addField(`${client.e.badges.staff} ➜ Modérateur :`, "```md\n# " + client.users.cache.get(data.modID).tag + " (" + data.modID + ")" + "```")
-                .addField(`${client.e.discordicons.tag} ➜ Type :`, "```md\n# " + data.type + "```")
-                .addField(`${client.e.badges.mod} ➜ Raison :`, "```md\n# " + data.reason + "```")
+        //     const member = client.users.cache.get(data.userID) || await client.users.fetch(data.userID).catch(() => null);
+        //     if (!member) return message.reply(`**${client.e.no} J'ai l'impression que l'utilisateur ayant reçu cette sanction a supprimé son compte...**`);
+        //     const embed = new MessageEmbed()
+        //         .setTitle(`Infraction ${data.id}`)
+        //         .setColor(client.embed.colors.default)
+        //         .setFooter({ text: client.embed.footer.text, iconURL: client.embed.footer.icon })
+        //         .setTimestamp(new Date())
+        //         .setThumbnail(member.displayAvatarURL({ dynamic: true }))
+        //         .addField(`${client.e.discordicons.man} ➜ Utilisateur :`, "```md\n# " + member.tag + " (" + member.id + ")" + "```")
+        //         .addField(`${client.e.badges.staff} ➜ Modérateur :`, "```md\n# " + client.users.cache.get(data.modID).tag + " (" + data.modID + ")" + "```")
+        //         .addField(`${client.e.discordicons.tag} ➜ Type :`, "```md\n# " + data.type + "```")
+        //         .addField(`${client.e.badges.mod} ➜ Raison :`, "```md\n# " + data.reason + "```")
 
-            if (data.duration !== null) embed.addField(`${client.e.discordicons.horloge} ➜ Durée :`, "```md\n# " + prettyMilliseconds(data.duration, { compact: true }) + "```")
+        //     if (data.duration !== null) embed.addField(`${client.e.discordicons.horloge} ➜ Durée :`, "```md\n# " + prettyMilliseconds(data.duration, { compact: true }) + "```")
 
-            const btnDelete = new MessageButton()
-                .setEmoji("❌")
-                .setLabel("Supprimer l'infraction.")
-                .setStyle("DANGER")
-                .setCustomId("btnDeleteInfraction")
-            const row = new MessageActionRow()
-                .addComponents(btnDelete)
+        //     const btnDelete = new MessageButton()
+        //         .setEmoji("❌")
+        //         .setLabel("Supprimer l'infraction.")
+        //         .setStyle("DANGER")
+        //         .setCustomId("btnDeleteInfraction")
+        //     const row = new MessageActionRow()
+        //         .addComponents(btnDelete)
 
-            message.reply({ embeds: [embed], components: [row] })
-            .then(async(m) => {
-                const filter = x => x.user.id === message.author.id;
-                const collector = m.createMessageComponentCollector({ filter, time: 60000 });
-                collector.on("collect", async(interaction) => {
-                    if (interaction.customId === "btnDeleteInfraction") {
-                        if (data.type === "WARN" || data.type === "KICK") {
-                            await data.deleteOne();
-                            m.edit({ content: `**${client.e.yes} Infraction supprimée.**`, embeds: [], components: [] });
-                        }
-                        if (data.type === "BAN") {
-                            let bb = await message.guild.bans.fetch(member.id).catch(() => null);
-                            if (!interaction.member.permissions.has("BAN_MEMBERS")) return message.reply(`**${client.e.no} Vous n'avez pas la permission de débannir des membres.**`);
-                            if (bb) message.guild.bans.remove(member.id);
-                            await data.deleteOne();
-                            m.edit({ content: `**${client.e.yes} Infraction supprimée.**`, embeds: [], components: [] });
-                        }
-                        if (data.type === "TIMEOUT") {
-                            if (!interaction.member.permissions.has("MODERATE_MEMBERS")) return message.reply(`**${client.e.no} Vous n'avez pas la permission de rendre la voix des membres.**`);
-                            const user = message.guild.members.cache.get(member.id) || await message.guild.members.fetch(member.id).catch(() => null);
-                            if (user.user) user.timeout(null)
-                            await data.deleteOne();
-                            m.edit({ content: `**${client.e.yes} Infraction supprimée.**`, embeds: [], components: [] });
-                        }
-
-
-                        const embedLogs = new MessageEmbed()
-                            .setColor(client.embed.colors.default)
-                            .setFooter({ text: client.embed.footer.text, iconURL: client.embed.footer.icon })
-                            .setTimestamp(new Date())
-                            .setThumbnail(member.displayAvatarURL({ dynamic: true }))
-                            .setTitle("Suppression de sanction")
-                            .addField(`${client.e.discordicons.man} ➜ Utilisateur :`, "```md\n# " + member.tag + " (" + member.id + ")" + "```")
-                            .addField(`${client.e.badges.staff} ➜ Modérateur :`, "```md\n# " + message.author.tag + " (" + message.author.id + ")" + "```")
-                            .addField(`${client.e.discordicons.tag} ➜ Type :`, "```md\n# " + data.type + "```")
-                            .addField(`${client.e.badges.mod} ➜ Raison :`, "```md\n# " + data.reason + "```")
-
-                        const embedMP = new MessageEmbed()
-                            .setColor(client.embed.colors.default)
-                            .setFooter({ text: client.embed.footer.text, iconURL: client.embed.footer.icon })
-                            .setTimestamp(new Date())
-                            .setThumbnail(member.displayAvatarURL({ dynamic: true }))
-                            .setTitle("Suppression de sanction")
-                            .addField(`${client.e.discordicons.man} ➜ Utilisateur :`, "```md\n# " + member.tag + " (" + member.id + ")" + "```")
-                            .addField(`${client.e.discordicons.tag} ➜ Type :`, "```md\n# " + data.type + "```")
-                            .addField(`${client.e.badges.mod} ➜ Raison :`, "```md\n# " + data.reason + "```")
+        //     message.reply({ embeds: [embed], components: [row] })
+        //     .then(async(m) => {
+        //         const filter = x => x.user.id === message.author.id;
+        //         const collector = m.createMessageComponentCollector({ filter, time: 60000 });
+        //         collector.on("collect", async(interaction) => {
+        //             if (interaction.customId === "btnDeleteInfraction") {
+        //                 if (data.type === "WARN" || data.type === "KICK") {
+        //                     await data.deleteOne();
+        //                     m.edit({ content: `**${client.e.yes} Infraction supprimée.**`, embeds: [], components: [] });
+        //                 }
+        //                 if (data.type === "BAN") {
+        //                     let bb = await message.guild.bans.fetch(member.id).catch(() => null);
+        //                     if (!interaction.member.permissions.has("BAN_MEMBERS")) return message.reply(`**${client.e.no} Vous n'avez pas la permission de débannir des membres.**`);
+        //                     if (bb) message.guild.bans.remove(member.id);
+        //                     await data.deleteOne();
+        //                     m.edit({ content: `**${client.e.yes} Infraction supprimée.**`, embeds: [], components: [] });
+        //                 }
+        //                 if (data.type === "TIMEOUT") {
+        //                     if (!interaction.member.permissions.has("MODERATE_MEMBERS")) return message.reply(`**${client.e.no} Vous n'avez pas la permission de rendre la voix des membres.**`);
+        //                     const user = message.guild.members.cache.get(member.id) || await message.guild.members.fetch(member.id).catch(() => null);
+        //                     if (user.user) user.timeout(null)
+        //                     await data.deleteOne();
+        //                     m.edit({ content: `**${client.e.yes} Infraction supprimée.**`, embeds: [], components: [] });
+        //                 }
 
 
-                        client.channels.cache.get(db.modLogs)?.send({ embeds: [embedLogs] });
-			member.send({ embeds: [embedMP] }).catch(() => {})
-                    }
-                })
-            })
-        }
+        //                 const embedLogs = new MessageEmbed()
+        //                     .setColor(client.embed.colors.default)
+        //                     .setFooter({ text: client.embed.footer.text, iconURL: client.embed.footer.icon })
+        //                     .setTimestamp(new Date())
+        //                     .setThumbnail(member.displayAvatarURL({ dynamic: true }))
+        //                     .setTitle("Suppression de sanction")
+        //                     .addField(`${client.e.discordicons.man} ➜ Utilisateur :`, "```md\n# " + member.tag + " (" + member.id + ")" + "```")
+        //                     .addField(`${client.e.badges.staff} ➜ Modérateur :`, "```md\n# " + message.author.tag + " (" + message.author.id + ")" + "```")
+        //                     .addField(`${client.e.discordicons.tag} ➜ Type :`, "```md\n# " + data.type + "```")
+        //                     .addField(`${client.e.badges.mod} ➜ Raison :`, "```md\n# " + data.reason + "```")
+
+        //                 const embedMP = new MessageEmbed()
+        //                     .setColor(client.embed.colors.default)
+        //                     .setFooter({ text: client.embed.footer.text, iconURL: client.embed.footer.icon })
+        //                     .setTimestamp(new Date())
+        //                     .setThumbnail(member.displayAvatarURL({ dynamic: true }))
+        //                     .setTitle("Suppression de sanction")
+        //                     .addField(`${client.e.discordicons.man} ➜ Utilisateur :`, "```md\n# " + member.tag + " (" + member.id + ")" + "```")
+        //                     .addField(`${client.e.discordicons.tag} ➜ Type :`, "```md\n# " + data.type + "```")
+        //                     .addField(`${client.e.badges.mod} ➜ Raison :`, "```md\n# " + data.reason + "```")
+
+
+        //                 client.channels.cache.get(db.modLogs)?.send({ embeds: [embedLogs] });
+		// 	member.send({ embeds: [embedMP] }).catch(() => {})
+        //             }
+        //         })
+        //     })
+        // }
     }
 }
 

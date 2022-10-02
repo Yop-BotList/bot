@@ -1,6 +1,7 @@
 import { Message, PermissionResolvable, TextChannel } from "discord.js";
 import Class from "..";
 import onCooldown from "./onCooldown";
+import moment from "moment"
 
 //🎫・ticket-
 
@@ -43,5 +44,16 @@ export default function execCommand(command: any, client: Class, message: Messag
         command.run(client, message, args);
     } catch (error: any) {
         client.emit('error', error);
+        message.reply({
+            embeds: [
+                {
+                    title: 'Une erreur est survenue',
+                    description: '```js\n' + error + '```',
+                    footer: {
+                        text: moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')
+                    }
+                }
+            ]
+        });
     }
 }
