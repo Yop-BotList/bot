@@ -4,7 +4,7 @@ import TicketsDM from "../functions/ticketsDM";
 import { users } from "../models";
 import FaqModal from "../utils/FaqModal";
 import SendModal from "../utils/SendModal";
-import suggestManager from "../utils/suggestManager";
+import suggestManager from "../functions/suggestManager";
 
 export = async (client: Class, interaction: Interaction) => {
     const ticketManager = new TicketsDM(client);
