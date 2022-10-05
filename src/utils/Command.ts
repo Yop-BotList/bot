@@ -1,7 +1,8 @@
-import { PermissionResolvable } from "discord.js";
+import { Awaitable, Message, PermissionResolvable } from "discord.js";
+import Class from "..";
 import CommandOptions from "./CommandOptions";
 
-export default class Command {
+export default abstract class Command {
     name: string;
     category?: string;
     description?: string;
@@ -31,4 +32,6 @@ export default class Command {
         this.minArgs = commandOptions.minArgs || 0;
         this.requiredRole = commandOptions.requiredRole || "";
     }
+
+    abstract run(client: Class, message: Message, args?: string[]): Awaitable<unknown>
 }

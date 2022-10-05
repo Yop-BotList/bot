@@ -4,9 +4,7 @@ import Class from "..";
 import Modal from "./Modal";
 
 export default async function SendModal(client: Class, interaction: Interaction, modal: Modal) {
-    const apiUri = 'https://discord.com/api/v10/interactions/{interaction_id}/{interaction_token}/callback';
-    
-    const uri = apiUri.replace('{interaction_id}', interaction.id).replace('{interaction_token}', interaction.token);
+    const apiUrl = `https://discord.com/api/v10/interactions/${interaction.id}/${interaction.token}/callback`;
     
     const headers = {
         'Authorization': `Bot ${client.token}`,
@@ -16,7 +14,7 @@ export default async function SendModal(client: Class, interaction: Interaction,
     try {
         await axios({
             method: 'post',
-            url: uri,
+            url: apiUrl,
             headers: headers,
             data: {
                 type: 9,

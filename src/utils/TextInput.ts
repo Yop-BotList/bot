@@ -1,5 +1,5 @@
 export default class TextInput {
-    type: number = 4;
+    readonly type: number = 4;
     custom_id: string;
     style: any;
     label: string;

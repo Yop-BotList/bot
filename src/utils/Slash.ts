@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionData, ApplicationCommandType, Awaitable, CacheType, CommandInteraction, LocalizationMap, PermissionResolvable } from "discord.js";
+import { ApplicationCommandOptionData, ApplicationCommandType, Awaitable, CommandInteraction, LocalizationMap, PermissionResolvable } from "discord.js";
 import Class from "..";
 
 export default abstract class Slash {
