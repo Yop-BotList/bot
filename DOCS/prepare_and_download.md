@@ -51,7 +51,10 @@ Maintenant, retournes sur ton invite de commandes et tapes : `cd COLLESICITONCHE
    
 Lorsque tu es invité(e) à entrer une nouvelle commande, c'est que les modules sont installés !
 
+***
 
 Voilà donc pour cette partie de l’installation de YopBot. Si tu as des questions dessus ou que tu n’as pas compris quelque chose, n’hésites surtout pas à [ouvrir une issue](https://github.com/Nonolanlan1007/Yop-Bot/issues/new), nous nous ferons un plaisir de te répondre !
 
-Si tu le veux, je t’invite à passer à l’étape suivante qui est : [la création d’une base de données]() pour permettre à ton robot de stocker toutes les données nécessaires à son fonctionnement !
+***
+
+Si tu le veux, je t’invite à passer à l’étape suivante qui est : [la création d’une base de données](https://github.com/Nonolanlan1007/Yop-Bot/blob/Version-4/DOCS/create_db.md) pour permettre à ton robot de stocker toutes les données nécessaires à son fonctionnement !
