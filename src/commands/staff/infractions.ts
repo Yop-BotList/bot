@@ -33,7 +33,7 @@ class Infractions extends Command {
             let i1 = 10;
             let page = 1;
 
-            let description = data?.warns.map(async (warn) => `**[${warn?.id} - ${warn?.type}] - le ${moment(warn?.date).format("DD/MM/YY")} - par ${client.users.cache.get(warn.modId!) ? client.users?.cache.get(warn.modId!)?.tag : "<@" + warn?.modId + ">"}${warn?.duration !== null && warn?.duration! > 0 ? ` - durant ${parseDuration(warn.duration!)}` : ""}**\n` + "```md\n# " + warn?.reason + "```").slice(i0, i1).join("\n");
+            let description = `${data?.warns.map((warn) => `**[${warn?.id} - ${warn?.type}] - le ${moment(warn?.date).format("DD/MM/YY")} - par ${client.users.cache.get(warn.modId!) ? client.users?.cache.get(warn.modId!)?.tag : "<@" + warn?.modId + ">"}${warn?.duration !== null && warn?.duration! > 0 ? ` - durant ${parseDuration(warn.duration!)}` : ""}**\n\`\`\`md\n# ${warn.reason?.replace(/`/g, "\`")}\`\`\``).slice(i0, i1).join("\n")}`;
 
             console.log(typeof description)
             console.log(description)
@@ -91,7 +91,7 @@ class Infractions extends Command {
 
                             if (page < 1) return collector.stop();
 
-                            description = data?.warns.map(async (warn) => `**[${warn?.id} - ${warn?.type}] - le ${moment(warn?.date).format("DD/MM/YY")} - par ${client.users.cache.get(warn.modId!) ? client.users?.cache.get(warn.modId!)?.tag : "<@" + warn?.modId + ">"}${warn?.duration !== null && warn?.duration! > 0 ? ` - durant ${parseDuration(warn.duration!)}` : ""}**\n` + "```md\n# " + warn?.reason + "```").slice(i0, i1).join("\n")
+                            description = `${data?.warns.map((warn) => `**[${warn?.id} - ${warn?.type}] - le ${moment(warn?.date).format("DD/MM/YY")} - par ${client.users.cache.get(warn.modId!) ? client.users?.cache.get(warn.modId!)?.tag : "<@" + warn?.modId + ">"}${warn?.duration !== null && warn?.duration! > 0 ? ` - durant ${parseDuration(warn.duration!)}` : ""}**\n` + "```md\n# " + warn?.reason + "```").slice(i0, i1).join("\n")}`
 
                             m.edit({
                                 embeds: [
@@ -141,7 +141,7 @@ class Infractions extends Command {
 
                             if (page < Math.round(data!.warns.length/10)) return collector.stop();
 
-                            description = data?.warns.map(async (warn) => `**[${warn?.id} - ${warn?.type}] - le ${moment(warn?.date).format("DD/MM/YY")} - par ${client.users.cache.get(warn.modId!) ? client.users?.cache.get(warn.modId!)?.tag : "<@" + warn?.modId + ">"}${warn?.duration !== null && warn?.duration! > 0 ? ` - durant ${parseDuration(warn.duration!)}` : ""}**\n` + "```md\n# " + warn?.reason + "```").slice(i0, i1).join("\n")
+                            description = `${data?.warns.map((warn) => `**[${warn?.id} - ${warn?.type}] - le ${moment(warn?.date).format("DD/MM/YY")} - par ${client.users.cache.get(warn.modId!) ? client.users?.cache.get(warn.modId!)?.tag : "<@" + warn?.modId + ">"}${warn?.duration !== null && warn?.duration! > 0 ? ` - durant ${parseDuration(warn.duration!)}` : ""}**\n` + "```md\n# " + warn?.reason + "```").slice(i0, i1).join("\n")}`
 
                             m.edit({
                                 embeds: [
