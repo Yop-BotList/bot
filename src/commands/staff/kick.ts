@@ -3,15 +3,15 @@ import Class from "../..";
 import Command from "../../utils/Command";
 import { newInfraction } from "../../utils/InfractionService";
 
-class Warn extends Command {
+class Kick extends Command {
     constructor() {
         super({
-            name: 'warn',
+            name: 'kick',
             category: 'Staff',
-            description: 'Avertir un utilisateur.',
-            usage: 'warn <utilisateur> <raison>',
-            botPerms: ["EmbedLinks", "SendMessages", "ReadMessageHistory"],
-            perms: ["ManageMessages"],
+            description: 'Exclure un membre.',
+            usage: 'kick <utilisateur> <raison>',
+            botPerms: ["EmbedLinks", "SendMessages", "ReadMessageHistory", "KickMembers"],
+            perms: ["KickMembers"],
             minArgs: 2
         });
     }
@@ -21,16 +21,16 @@ class Warn extends Command {
         if (!member || !member.user) return message.reply({ content: `**${client.emotes.no} ➜ Veuillez entrer un membre valide.**` });
         
         if (member?.roles?.highest.position >= message.member!.roles.highest.position) return message.reply({ content: `**${client.emotes.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**` });
-        if (member?.user.bot) return message.reply({ content: `**${client.emotes.no} ➜ Le saviez-vous, avertir un bot est entièrement inutile puisqu'il n'en tiendra pas compte.**` });
+        if (member?.user.bot) return message.reply({ content: `**${client.emotes.no} ➜ Pour exclure un robot listé, veuillez utiliser la commande \`${client.config.prefix}delete\` et pour un robot non listé, veuillez effectuer l'exclusion manuellement.**` });
         
         const reason = args.slice(1).join(" ") || null;
         
         if (!reason) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer une raison.**`);
         
-        await newInfraction(client, member.user, message.member!, message.guild!, "WARN", reason, 0).then(async (res: any) => {
+        await newInfraction(client, member.user, message.member!, message.guild!, "KICK", reason, 0).then(async (res: any) => {
             if (res) await message.reply(res)
         })
     }
 }
 
-export = new Warn;
+export = new Kick;

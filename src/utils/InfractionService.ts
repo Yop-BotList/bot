@@ -11,7 +11,7 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         if (!user) return new Error("L'argument user est requis");
         
         if (!mod) return new Error("L'argument mod est requis");
-        if (!type || !["TIMEOUT", "KICK", "BAN", "WARN", "EDIT"].includes(type)) return new Error("L'argument type n'est pas valide.");
+        if (!type || !["TIMEOUT", "KICK", "BAN", "WARN"].includes(type)) return new Error("L'argument type n'est pas valide.");
         
         const member = await guild.members.fetch(user.id).catch(() => null);
         
@@ -25,7 +25,7 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         
         if (!reason) return resolve(`**${client.emotes.no} ➜ Veuillez entrer une raison.**`);
         
-        if (type === "TIMEOUT" || type === 'BAN' && !duration) return resolve(`**${client.emotes.no} ➜ Veuillez entrer une durée.**`);
+        if (!duration && type === "TIMEOUT" || !duration && type === 'BAN') return resolve(`**${client.emotes.no} ➜ Veuillez entrer une durée.**`);
         
         const dataUsers = await users.find();
         
@@ -62,9 +62,10 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
                 ticketsbl: false,
                 warns: [],
                 totalNumbers: 0
-            }).save()
-            db = await users.findOne({ userId: user.id });
+            }).save();
         }
+        
+        db = await users.findOne({ userId: user.id });
         
         db!.warns.push(data);
         db!.save();
@@ -77,7 +78,7 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
             if (!member || !member.kickable) return resolve(`**${client.emotes.no} ➜ Cet utilisateur n'est pas présent sur le serveur.**`);
             member.kick(REASON);
         }
-        if (type === "WARN") {
+        if (type === "TIMEOUT") {
             if (!member || !member.moderatable) return resolve(`**${client.emotes.no} ➜ Cet utilisateur n'est pas présent sur le serveur.**`);
             member.timeout(duration, REASON);
         }

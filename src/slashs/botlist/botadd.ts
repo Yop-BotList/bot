@@ -15,7 +15,7 @@ class BotAdd extends Slash {
             default_member_permissions: PermissionsBitField.Flags.SendMessages,
             options: [
                 {
-                    name: "bot_id",
+                    name: "bot-id",
                     type: ApplicationCommandOptionType.String,
                     description: "L'id du bot",
                     descriptionLocalizations: {
@@ -38,7 +38,10 @@ class BotAdd extends Slash {
     }
 
     async run(client: Class, interaction: CommandInteraction) {
-        interaction.reply("bonjour");
+        const botId = interaction.options.get("bot-id");
+        const botPrefix = interaction.options.get("prefix");
+
+        const user = await client.users.fetch("")
     }
 }
 
