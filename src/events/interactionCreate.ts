@@ -9,6 +9,18 @@ import suggestManager from "../functions/suggestManager";
 export = async (client: Class, interaction: Interaction) => {
     const ticketManager = new TicketsDM(client);
 
+    if (interaction.isChatInputCommand()) {
+        const slash = client.slashs.get(interaction.commandName);
+
+        if (!slash) return;
+
+        try {
+            await slash.run(client, interaction);
+        } catch (error: any) {
+            interaction.reply("Une erreur s'est produite lors de l'utilisation de cette commande.");
+            new Error(error.stack || error);
+        }
+    }
     if (interaction.isButton()) {
         if (interaction.customId === "faqVerifBtn") {
             const userFind = await users.findOne({ userId: interaction.user.id });

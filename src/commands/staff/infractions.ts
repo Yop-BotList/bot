@@ -1,4 +1,4 @@
-import { Message, ButtonInteraction, CollectorFilter } from "discord.js";
+import { Message, ButtonInteraction } from "discord.js";
 import Class from "../..";
 import Command from "../../utils/Command";
 import moment from "moment";
@@ -78,8 +78,7 @@ class Infractions extends Command {
                     }
                 ]
             }).then(async(m) => {
-                    const filter = (btn: ButtonInteraction) => btn.user.id === message.author.id;
-                    // @ts-ignore
+                    const filter = (btn: any) => btn.user.id === message.author.id;
                     const collector = m.createMessageComponentCollector({ filter, time: 60000 });
 
                     collector.on("collect", async (button: ButtonInteraction) => {

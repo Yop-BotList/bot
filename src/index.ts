@@ -58,11 +58,10 @@ class Class extends Client {
 
         try {
             this.launch().then(() => { console.log(blue('Tout est prêt, connexion à Discord !')); })
+            this.login(token);
         } catch (error: any) {
             throw new Error(error)
         }
-
-        this.login(token);
     }
 
     async launch(): Promise<any> {
@@ -84,8 +83,8 @@ class Class extends Client {
         const guild = this.guilds.cache?.get(this.config.mainguildid);
         if (!guild) throw new Error("Impossible de trouver le serveur de slashs commands test.");
 
-        const clientSlashs = slashsArray.filter((slash: any) => slash?.guildOnly !== true).toJSON();
-        const guildSlashs = slashsArray.filter((slash: any) => slash?.guildOnly === true).toJSON();
+        const clientSlashs = slashsArray.filter((slash: any) => slash.guild_id === undefined).toJSON();
+        const guildSlashs = slashsArray.filter((slash: any) => slash?.guild_id !== undefined).toJSON();
 
         try {
             await this?.application?.commands.set(clientSlashs);
