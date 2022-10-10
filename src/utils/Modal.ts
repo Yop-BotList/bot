@@ -1,6 +1,8 @@
+import { Awaitable, ButtonInteraction, CommandInteraction } from "discord.js";
+import Class from "..";
 import TextInput from "./TextInput";
 
-export default class Modal {
+export default abstract class Modal {
     data: any;
     
     constructor(options: ModalData) {
@@ -22,6 +24,8 @@ export default class Modal {
             'components': componentsRows ?? []
         };
     }
+
+    abstract handleSubmit(client: Class, interaction: ButtonInteraction | CommandInteraction): Awaitable<unknown>
 }
 
 interface ModalData {

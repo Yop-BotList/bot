@@ -2,7 +2,7 @@ import { Interaction } from "discord.js";
 import Class from "..";
 import TicketsDM from "../functions/ticketsDM";
 import { users } from "../models";
-import FaqModal from "../utils/FaqModal";
+import FaqModal from "../modals/FaqModal";
 import SendModal from "../utils/SendModal";
 import suggestManager from "../functions/suggestManager";
 
@@ -17,7 +17,10 @@ export = async (client: Class, interaction: Interaction) => {
         try {
             await slash.run(client, interaction);
         } catch (error: any) {
-            interaction.reply("Une erreur s'est produite lors de l'utilisation de cette commande.");
+            interaction.reply({
+                content: "Une erreur s'est produite lors de l'utilisation de cette commande.",
+                ephemeral: true
+            });
             new Error(error.stack || error);
         }
     }
@@ -44,7 +47,7 @@ export = async (client: Class, interaction: Interaction) => {
 
             const faqModal = new FaqModal();
             SendModal(client, interaction, faqModal);
-            faqModal.handleSubmit(interaction);
+            faqModal.handleSubmit(client, interaction);
         }
 
         if (interaction.customId === "forSugg") suggestManager("FOR", client, interaction);
