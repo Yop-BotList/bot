@@ -11,14 +11,11 @@ Dans cette partie, tu vas installer différents logiciels et modules pour te per
 
 Pour l'installation, la configuration et la mise en service de YopBot, tu devras être équipé(e) des logiciels suivants :
 
-* [NodeJS Version 16](https://nodejs.org/dist/v16.13.1/node-v16.13.1-x64.msi)
-* [GIT](https://github.com/git-for-windows/git/releases/download/v2.34.1.windows.1/Git-2.34.1-64-bit.exe)
-* [Visual Studio Code](https://code.visualstudio.com/) ou un tout autre éditeur de code.
-* Posséder Windows 8.1 *(pour les utilisateurs de Windows)*  ou une version supérieure *(NodeJS V16 ne fonctionne que sur ces versions là)*.
+* [NodeJS Version 16](https://nodejs.org/en/download/package-manager/)
+* [GIT](https://git-scm.com/book/fr/v2/Démarrage-rapide-Installation-de-Git)
+* [Visual Studio Code](https://code.visualstudio.com/docs/setup/linux) ou un tout autre éditeur de code.
 
-* Pour ceux qui ont linux merci d'aller [içi](https://github.com/Nonolanlan1007/Yop-Bot/blob/Version-4/DOCS/linux/prepare_and_download.md)
-
-> Les liens que je t’ai mis sont des liens d'installation pour Windows, une version de la documentation pour linux sera faite plus tard !!
+> Les liens que je t’ai mis sont des liens d'installation pour Linux.
 ## Téléchargement des fichiers
 
 ***
@@ -26,11 +23,7 @@ Dans cette étape, nous allons télécharger les fichier disponibles sur GitHub.
 
 Commençons donc par ouvrir une invite de commandes.
 
-Pour cela, nous allons faire *Win + R*.
-Une fenêtre comme celle-ci vas s'ouvrir :
-![Alt text](https://i.imgur.com/QKET6E0.png)
-Une fois ouverte, tapes `cmd` dans la zone de texte et valides.
-![Alt text](https://i.imgur.com/mRqGkbN.png)
+![Alt text](https://i.imgur.com/MnJyDWy.png)
 Nous voici donc sur l'invite de commandes !
 
 Dans cet invite de commandes, tu vas taper ceci : `cd Desktop` pour te déplacer vers ton bureau *(c’est comme si tu ouvrais le dossier bureau depuis l’explorateur de fichiers)*
@@ -47,7 +40,7 @@ Les modules que tu vas télécharger permettront à ton robot de pouvoir démarr
 
 Du coup, tu vas pouvoir retourner sur ton bureau. Ouvrir le dossier `Yop-Bot` et copier l’adresse se trouvant dans la barre d’en haut.
 
-Maintenant, retournes sur ton invite de commandes et tapes : `cd COLLESICITONCHEMIND’ACCÈS` puis `npm install`
+Maintenant, retournes sur ton invite de commandes et tapes : `cd COLLES_ICI_TON_CHEMIN_D_ACCÈS` puis `npm install`
 
 > Cela risque d'être un peu long en fonction de la rapidité de ta connexion internet ^^
    
