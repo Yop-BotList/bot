@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ButtonInteraction, CommandInteraction, Interaction } from "discord.js";
+import { ButtonInteraction, CommandInteraction } from "discord.js";
 import Class from "..";
 import Modal from "./Modal";
 
