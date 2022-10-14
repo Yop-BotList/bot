@@ -11,5 +11,16 @@ export default {
     owners: [],
     mainguildid: "",
     antiinvite: true,
-    citations: true
+    citations: true,
+    automod: {
+        ignoreBots: true,
+        ignoreStaff: true,
+        maxMessages: {
+            antispam: 10,
+            antilink: 10,
+            antiinvites: 5,
+            massmentions: 5
+        },
+        badwords: []
+    }
 };

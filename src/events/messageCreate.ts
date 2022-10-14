@@ -8,11 +8,14 @@ import { existsSync, readFileSync, writeFile } from "fs";
 import { join } from "path";
 import TicketsDM from "../functions/ticketsDM";
 import citations from "../functions/citations";
+import AutoMod from "../utils/AutoMod";
 
 moment.locale("fr");
 
 export = async (client: Class, message: Message) => {
     if (message.author.bot) return;
+
+    new AutoMod(client, message);
 
     const ticketsManager = new TicketsDM(client, message);
 
