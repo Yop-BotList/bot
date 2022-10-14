@@ -5,6 +5,7 @@ import moment from "moment";
 import { users } from "../../models"
 import parseDuration from "../../functions/parseDuration"
 import { channels } from "../../configs";
+import { deleteInfraction } from "../../utils/InfractionService";
 
 class Infractions extends Command {
     constructor() {
@@ -34,9 +35,6 @@ class Infractions extends Command {
             let page = 1;
 
             let description = `${data?.warns.map((warn) => `**[${warn?.id} - ${warn?.type}] - le ${moment(warn?.date).format("DD/MM/YY")} - par ${client.users.cache.get(warn.modId!) ? client.users?.cache.get(warn.modId!)?.tag : "<@" + warn?.modId + ">"}${warn?.duration !== null && warn?.duration! > 0 ? ` - durant ${parseDuration(warn.duration!)}` : ""}**\n\`\`\`md\n# ${warn.reason?.replace(/`/g, "\`")}\`\`\``).slice(i0, i1).join("\n")}`;
-
-            console.log(typeof description)
-            console.log(description)
 
             message.reply({
                 embeds: [
@@ -187,18 +185,20 @@ class Infractions extends Command {
                 })
         }
 
+        if (member) return;
         const u = await users.find();
-        let data: any;
+        let data:any;
         u.forEach((x) => {
-            const y = x.warns.filter((z: any) => z.id === args[0])
+            const y = x.warns.filter((z: any) => z.id === Number(args[0]))
             if (y.length === 1) data = y[0]
+            console.log(x.warns)
         })
         if (!member && !data) return message.reply(`**${client.emotes.no} Membre ou infraction introuvable.**`);
 
         const user = client.users.cache.get(data!.userId) || await client.users.fetch(data!.userId).catch(() => null);
         if (!user) return message.reply(`**${client.emotes.no} J'ai l'impression que l'utilisateur ayant reçu cette sanction a supprimé son compte...**`);
 
-        const mod = await client.users.fetch(data.modId).catch(() => null)
+        const mod = await client.users.fetch(data!.modId).catch(() => null)
 
         let fields = [
             {
@@ -225,6 +225,23 @@ class Infractions extends Command {
 
         if (data.duration !== null) fields.push({ name: `${client.emotes.discordicons.horloge} ➜ Durée :`, value: "```md\n# " + parseDuration(data.duration) + "```", inline: false })
 
+        let components = []
+
+        if (data.deleted === false) components.push({
+            type: 1,
+            components: [
+                {
+                    type: 2,
+                    style: 4,
+                    custom_id: "btnDeleteInfraction",
+                    emoji: {
+                        name: "❌"
+                    },
+                    label: "Supprimer l'infraction."
+                }
+            ]
+        })
+
         message.reply({
             embeds: [
                 {
@@ -239,23 +256,16 @@ class Infractions extends Command {
                     fields: fields
                 }
             ],
-            components: [
-                {
-                    type: 1,
-                    components: [
-                        {
-                            type: 2,
-                            style: 4,
-                            custom_id: "btnDeleteInfraction",
-                            emoji: {
-                                name: "❌"
-                            },
-                            label: "Supprimer l'infraction."
-                        }
-                    ]
-                }
-            ]
-        });
+            components: components
+        }).then(async (msg: Message) => {
+            const filter = (x: any) => x.user.id === message.author.id && x.customId === "btnDeleteInfraction";
+
+            const collector = await msg.createMessageComponentCollector({ filter })
+
+            collector.on("collect", async (interaction: ButtonInteraction) => {
+                await deleteInfraction(client, user, data.code)
+            })
+        })
     }
 }
 
