@@ -3,8 +3,6 @@ import Class from "..";
 import onCooldown from "./onCooldown";
 import moment from "moment"
 
-//🎫・ticket-
-
 export default function execCommand(command: any, client: Class, message: Message, args: string[]): Promise<Message<boolean>> | undefined {
     const channel = message.channel as TextChannel;
     if (channel.name.startsWith("🎫・ticket-")) return;
