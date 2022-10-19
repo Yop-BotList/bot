@@ -173,10 +173,10 @@ export default class TicketsDM {
                     fields: [
                         {
                             name: "🇫🇷 ➜ Français :",
-                            value: `Bonjour/Bonsoir et bienvenue dans le service de support de PubTool. Pour confirmer votre entrée en contact avec l'équipe administrative, veuillez cliquer sur le bouton ci-dessous. En cliquant dessus, vous acceptez que je collecte la langue de votre client Discord. Vous acceptez aussi d'utiliser ce système à bon esscient sous peine de sanctions.`
+                            value: `Bonjour/Bonsoir et bienvenue dans le service de support de YopBot. Pour confirmer votre entrée en contact avec l'équipe administrative, veuillez cliquer sur le bouton ci-dessous. En cliquant dessus, vous acceptez que je collecte la langue de votre client Discord. Vous acceptez aussi d'utiliser ce système à bon esscient sous peine de sanctions.`
                         }, {
                             name: "🇺🇸 ➜ English :",
-                            value: `Hi and welcome to the PubTool's support service. To confirm your contact, please click the button bellow. By clicking on it, you agree that I collect the language of your Discord client. You also agree to use this system properly.`
+                            value: `Hi and welcome to the YopBot's support service. To confirm your contact, please click the button bellow. By clicking on it, you agree that I collect the language of your Discord client. You also agree to use this system properly.`
                         }
                     ]
                 }
