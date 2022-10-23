@@ -191,7 +191,6 @@ class Infractions extends Command {
         u.forEach((x) => {
             const y = x.warns.filter((z: any) => z.id === Number(args[0]))
             if (y.length === 1) data = y[0]
-            console.log(x.warns)
         })
         if (!member && !data) return message.reply(`**${client.emotes.no} Membre ou infraction introuvable.**`);
 
@@ -208,7 +207,7 @@ class Infractions extends Command {
             },
             {
                 name: `${client.emotes.badges.staff} ➜ Modérateur :`, 
-                value: "```md\n# " + mod ? mod!.tag : "User#0000" + " (" + data.modId + ")" + "```",
+                value: "```md\n# " + mod ? mod!.tag : "User#0000" + " (" + data.modId + ")```",
                 inline: false
             },
             {

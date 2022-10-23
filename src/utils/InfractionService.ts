@@ -28,11 +28,12 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         if (!duration && type === "TIMEOUT" || !duration && type === 'BAN') return resolve(`**${client.emotes.no} ➜ Veuillez entrer une durée.**`);
         
         const dataUsers = await users.find();
-        
+
         let warns = 0;
         
         dataUsers.forEach(async (x) => {
-            if (x.warns && x.warns.length > 0) warns + x.warns.length;
+            console.log(x.warns)
+            if (x.warns && x.warns.length > 0) warns = warns + x.warns.length;
         });
         
         const warnCode = warns + 1,
@@ -156,11 +157,12 @@ async function deleteInfraction(client: Class, user: User, code: Number) {
 
         let infraction = data.warns.filter(warn => warn.id === code)[0];
 
+        console.log(infraction)
+
+        infraction!.deleted = true;
+
         data.warns = data.warns.filter(warn => warn.id !== code);
-
-        infraction.deleted = true;
-
-        data.warns.push(infraction);
+        data.warns.push(infraction!);
         data.save();
         
         return resolve(`**${client.emotes.yes} ➜ Infraction supprimée.**`);
