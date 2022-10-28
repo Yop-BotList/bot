@@ -1,11 +1,11 @@
-import { Message, ButtonInteraction, GuildMember, TextChannel } from "discord.js";
+import { Message, ButtonInteraction, SelectMenuInteraction } from "discord.js";
 import Class from "../..";
 import Command from "../../utils/Command";
 import moment from "moment";
 import { users } from "../../models"
 import parseDuration from "../../functions/parseDuration"
-import { channels } from "../../configs";
-import { deleteInfraction } from "../../utils/InfractionService";
+import EditInfractionReasonModal from "../../modals/EditInfractionReasonModal";
+import SendModal from "../../utils/SendModal";
 
 class Infractions extends Command {
     constructor() {
@@ -207,7 +207,7 @@ class Infractions extends Command {
             },
             {
                 name: `${client.emotes.badges.staff} ➜ Modérateur :`, 
-                value: "```md\n# " + mod ? mod!.tag : "User#0000" + " (" + data.modId + ")```",
+                value: `\`\`\`md\n# ${mod ? mod!.tag : "User#0000"} (${data.modId})\`\`\``,
                 inline: false
             },
             {
@@ -224,27 +224,10 @@ class Infractions extends Command {
 
         if (data.duration !== null) fields.push({ name: `${client.emotes.discordicons.horloge} ➜ Durée :`, value: "```md\n# " + parseDuration(data.duration) + "```", inline: false })
 
-        let components = []
-
-        if (data.deleted === false) components.push({
-            type: 1,
-            components: [
-                {
-                    type: 2,
-                    style: 4,
-                    custom_id: "btnDeleteInfraction",
-                    emoji: {
-                        name: "❌"
-                    },
-                    label: "Supprimer l'infraction."
-                }
-            ]
-        })
-
         message.reply({
             embeds: [
                 {
-                    title: `${data.deleted === true ? "[DELETED] - " : ""}Infraction ${data.id}`,
+                    title: `${data.deleted === true ? "[DELETED] - " : ""}Infraction #${data.id}`,
                     color: client.config.color.integer,
                     footer: {
                         text: `YopBot V${client.version}`
@@ -255,14 +238,177 @@ class Infractions extends Command {
                     fields: fields
                 }
             ],
-            components: components
+            components: [
+                {
+                    type: 1,
+                    components: [
+                        {
+                            type: 2,
+                            style: 4,
+                            custom_id: "btnDeleteInfraction",
+                            emoji: {
+                                name: "❌"
+                            },
+                            label: "Supprimer l'infraction.",
+                            disabled: data.deleted === true ? true : false
+                        },
+                        {
+                            type: 2,
+                            style: 1,
+                            custom_id: "btnEditInfraction",
+                            emoji: {
+                                name: "✏"
+                            },
+                            label: "Modifier l'infraction.",
+                            disabled: data.deleted === true ? true : false
+                        },
+                        {
+                            type: 2,
+                            style: 2,
+                            custom_id: "btnLogsInfraction",
+                            emoji: {
+                                name: "📜"
+                            },
+                            label: "Historique",
+                            disabled: data.historyLogs.length > 0 ? false : true
+                        }
+                    ]
+                }
+            ]
         }).then(async (msg: Message) => {
-            const filter = (x: any) => x.user.id === message.author.id && x.customId === "btnDeleteInfraction";
+            const filter = (x: any) => x.user.id === message.author.id;
 
             const collector = await msg.createMessageComponentCollector({ filter })
 
-            collector.on("collect", async (interaction: ButtonInteraction) => {
-                await deleteInfraction(client, user, data.code)
+            // @ts-ignore
+            collector.on("collect", async (interaction: ButtonInteraction | SelectMenuInteraction) => {
+                let MsG:any;
+                if (interaction.isButton()) {
+                    if (interaction.customId === "btnDeleteInfraction") {
+                        async function del() {
+                            const uu = await users.findOne({ userId: user?.id })
+
+                            if (!uu) return
+
+                            data.deleted = true;
+                            data.historyLogs.push({
+                                title: "Suppression de l'infraction",
+                                mod: message.author.id,
+                                date: Date.now()
+                            })
+                            const array = uu.warns.filter((warn: any) => warn.id !== data.id)
+                            array.push(data)
+                            uu.warns = array
+                            uu.save()
+                        }
+
+                        if (data.type === "WARN" || data.type === "KICK") {
+                            del();
+                            msg.edit({ content: `**${client.emotes.yes} ➜ Infraction supprimée.**`, embeds: [], components: [] });
+                        }
+                        if (data.type === "BAN") {
+                            let bb = await message.guild!.bans.fetch(user.id).catch(() => null);
+                            if (!message.member!.permissions.has("BanMembers")) return interaction.reply({ content: `**${client.emotes.no} ➜ Vous n'avez pas la permission de débannir des membres.**`, ephemeral: true });
+                            if (bb) message.guild!.bans.remove(user.id);
+                            del()
+                            msg.edit({ content: `**${client.emotes.yes} ➜ Infraction supprimée.**`, embeds: [], components: [] });
+                        }
+                        if (data.type === "TIMEOUT") {
+                            if (!message.member!.permissions.has("ModerateMembers")) return interaction.reply({ content: `**${client.emotes.no} ➜ Vous n'avez pas la permission de rendre la voix des membres.**`, ephemeral: true });
+                            const mem = message.guild!.members.cache.get(user.id) || await message.guild!.members.fetch(user.id).catch(() => null);
+                            if (mem!.user) mem!.timeout(null)
+                            await del()
+                            msg.edit({ content: `**${client.emotes.yes} Infraction supprimée.**`, embeds: [], components: [] });
+                        }
+                        collector.stop()
+                    }
+                    if (interaction.customId === "btnLogsInfraction") {
+
+                        fields = []
+                        data.historyLogs.forEach(async (action: any) => {
+                            fields.push({
+                                name: `Le ${moment(action.date!).format("DD/MM/YY")} par ${client.users.cache.get(action.mod!) ? client.users?.cache.get(action.mod!)?.tag : "<@" + action.mod! + ">"}`,
+                                value: `> ${action.title!}`,
+                                inline: true
+                            })
+                        })
+
+                        interaction.reply({
+                            embeds: [
+                                {
+                                    title: `Historique des modifications de l'infraction #${data.id}`,
+                                    color: client.config.color.integer,
+                                    footer: {
+                                        text: `YopBot V${client.version}`
+                                    },
+                                    thumbnail: {
+                                        url: user.displayAvatarURL()
+                                    },
+                                    fields: fields
+                                }
+                            ],
+                            components: [],
+                            ephemeral: true
+                        })
+                        collector.stop()
+                    }
+                    if (interaction.customId === "btnEditInfraction") {
+                        let options:any;
+                        options = []
+                        options.push({
+                            label: "Raison",
+                            emoji: {
+                                name: "📝"
+                            },
+                            description: "Modifier la raison de la sanction.",
+                            value: "reason"
+                        })
+                        if (data.finishOn && data.finishOn > Date.now()) options.push({
+                            label: "Durée",
+                            emoji: {
+                                name: "⏰"
+                            },
+                            description: "Modifier la durée de la sanction.",
+                            value: "duration"
+                        })
+
+
+                        interaction.reply({
+                            content: `**${client.emotes.question} ➜ Que souhaitez-vous modifier ?**`,
+                            components: [
+                                {
+                                    type: 1,
+                                    components: [
+                                        {
+                                            type: 3,
+                                            custom_id: "SelectMenuToEdit",
+                                            placeholder: "Sélectionner une option",
+                                            options: options
+                                        }
+                                    ]
+                                }
+                            ],
+                            ephemeral: true,
+                            fetchReply: true
+                        }).then(async(mmmmm: Message) => MsG = mmmmm)
+                    }
+                }
+                if (interaction.isSelectMenu()) {
+                    if (interaction.customId === "SelectMenuToEdit") {
+                        if (interaction.values[0] === "reason") {
+                            const editmodal = new EditInfractionReasonModal(data, user);
+                            SendModal(client, interaction, editmodal);
+                            editmodal.handleSubmit(client, interaction);
+                            msg.delete()
+                            message.delete()
+                            collector.stop()
+                        }
+
+                        if (interaction.values[0] === "duration") {
+
+                        }
+                    }
+                }
             })
         })
     }

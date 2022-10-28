@@ -32,7 +32,6 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         let warns = 0;
         
         dataUsers.forEach(async (x) => {
-            console.log(x.warns)
             if (x.warns && x.warns.length > 0) warns = warns + x.warns.length;
         });
         
@@ -147,29 +146,6 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
     });
 }
 
-async function deleteInfraction(client: Class, user: User, code: Number) {
-    return new Promise(async (resolve) => {
-        const data = await users.findOne({ userId: user.id });
-
-        if (!data) return resolve(`**${client.emotes.no} ➜ Utilisateur introuvable !**`);
-
-        if (!data.warns || data.warns.filter(warn => warn.id === code && warn.deleted === false).length === 0) resolve(`**${client.emotes.no} ➜ Infraction introuvable pour cet utilisateur.**`);
-
-        let infraction = data.warns.filter(warn => warn.id === code)[0];
-
-        console.log(infraction)
-
-        infraction!.deleted = true;
-
-        data.warns = data.warns.filter(warn => warn.id !== code);
-        data.warns.push(infraction!);
-        data.save();
-        
-        return resolve(`**${client.emotes.yes} ➜ Infraction supprimée.**`);
-    });
-}
-
 export {
-    newInfraction,
-    deleteInfraction
+    newInfraction
 };
