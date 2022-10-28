@@ -1,9 +1,9 @@
 import axios from "axios";
-import { ButtonInteraction, CommandInteraction } from "discord.js";
+import {ButtonInteraction, CommandInteraction, SelectMenuInteraction} from "discord.js";
 import Class from "..";
 import Modal from "./Modal";
 
-export default async function SendModal(client: Class, interaction: CommandInteraction | ButtonInteraction, modal: Modal) {
+export default async function SendModal(client: Class, interaction: CommandInteraction | ButtonInteraction | SelectMenuInteraction, modal: Modal) {
     const apiUrl = `https://discord.com/api/v10/interactions/${interaction.id}/${interaction.token}/callback`;
     
     const headers = {

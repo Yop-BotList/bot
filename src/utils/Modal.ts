@@ -1,4 +1,4 @@
-import { Awaitable, ButtonInteraction, CommandInteraction } from "discord.js";
+import {Awaitable, ButtonInteraction, CommandInteraction, SelectMenuInteraction} from "discord.js";
 import Class from "..";
 import TextInput from "./TextInput";
 
@@ -25,7 +25,7 @@ export default abstract class Modal {
         };
     }
 
-    abstract handleSubmit(client: Class, interaction: ButtonInteraction | CommandInteraction): Awaitable<unknown>
+    abstract handleSubmit(client: Class, interaction: ButtonInteraction | CommandInteraction | SelectMenuInteraction): Awaitable<unknown>
 }
 
 interface ModalData {

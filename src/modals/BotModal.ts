@@ -32,7 +32,7 @@ export default class BotModal extends Modal {
 
         this.botId = botId;
         this.type = type;
-        this.oldValue = oldValue
+        this.oldValue = oldValue;
     }
 
     async handleSubmit(client: Class, interaction: CommandInteraction) {
