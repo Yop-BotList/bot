@@ -56,6 +56,16 @@ export = async (client: Class, interaction: Interaction) => {
             ephemeral: true
         });
         if (interaction.customId === "againstSugg") suggestManager("AGAINST", client, interaction);
+        if (interaction.customId === "suggestThread") {
+            interaction.message.edit({
+                embeds: interaction.message.embeds,
+                components: [interaction.message.components[0]]
+            });
+
+            interaction.message.startThread({
+                name: `Suggestion de ${interaction.message.embeds[0].title!.split(" ! ")[0].split(" ").slice(3).join(" ")}`
+            });
+        }
 
         if (interaction.customId === "buttonTransfer") ticketManager.transfer(interaction);
 

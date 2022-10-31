@@ -373,7 +373,7 @@ class Infractions extends Command {
                         })
 
 
-                        interaction.reply({
+                        interaction.update({
                             content: `**${client.emotes.question} ➜ Que souhaitez-vous modifier ?**`,
                             components: [
                                 {
@@ -388,7 +388,6 @@ class Infractions extends Command {
                                     ]
                                 }
                             ],
-                            ephemeral: true,
                             fetchReply: true
                         }).then(async(mmmmm: Message) => MsG = mmmmm)
                     }

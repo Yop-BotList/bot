@@ -4,7 +4,7 @@ import Modal from "../utils/Modal";
 import TextInput from "../utils/TextInput";
 
 export default class EditInfractionReasonModal extends Modal {
-    data: {
+    transfer: {
         id: number,
         userId: string,
         modId: string,
@@ -24,7 +24,7 @@ export default class EditInfractionReasonModal extends Modal {
     };
     user: User;
 
-    constructor(data: {
+    constructor(transfer: {
         id: number,
         userId: string,
         modId: string,
@@ -44,7 +44,7 @@ export default class EditInfractionReasonModal extends Modal {
     }, user: User) {
         super({
             title: "EditInfractionModal",
-            customId: "EditInfractionModal",
+            customId: "editinfractionmodal",
             components: [
                 {
                     type: 1,
@@ -53,7 +53,7 @@ export default class EditInfractionReasonModal extends Modal {
                             customId: "reason",
                             placeholder: "Insultes envers l'un des membres du STAFF.",
                             required: true,
-                            label: "Quelle est la nouvelle raison de la sanction ?",
+                            label: "Nouvelle raison de la sanction ?",
                             style: 2
                         })
                     ]
@@ -61,7 +61,7 @@ export default class EditInfractionReasonModal extends Modal {
             ]
         });
 
-        this.data = data;
+        this.transfer = transfer;
         this.user = user;
     }
 
@@ -69,7 +69,7 @@ export default class EditInfractionReasonModal extends Modal {
     async handleSubmit(client: Class, interaction: SelectMenuInteraction) {
         await interaction.awaitModalSubmit({
             time: 120000,
-            filter: (modal: ModalSubmitInteraction) => modal.customId === "EditInfractionModal"
+            filter: (modal: ModalSubmitInteraction) => modal.customId === "editinfractionmodal"
         }).then(async (modal: ModalSubmitInteraction) => {
             let reason = modal.fields.getTextInputValue("reason");
 

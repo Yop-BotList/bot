@@ -75,6 +75,19 @@ class Suggest extends Command {
                                 }
                             }
                         ]
+                    }, {
+                        type: 1,
+                        components: [
+                            {
+                                type: 2,
+                                style: 2,
+                                custom_id: "suggestThread",
+                                emoji: {
+                                    id: "907996994943995924",
+                                    name: "tag"
+                                }
+                            }
+                        ]
                     }
                 ]
             });

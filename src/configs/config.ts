@@ -1,7 +1,7 @@
 export default {
-    token: "Nzg4MDg0OTk4ODAwMjc3NTY0.Gq-UHN.RDA3ImQFRDhYiKiZNU-DgQes4tT0WmqY4v4EpU",
+    token: "token",
     prefix: "y/",
-    mongooseConnectionString: "mongodb+srv://DBTestUser:6u8BafubLERcRB2W@cluster0.pqoag.mongodb.net/?retryWrites=true&w=majority",
+    mongooseConnectionString: "mongodb",
     color: {
         hexa: "#f2ac34",
         integer: 0xf2ac34
