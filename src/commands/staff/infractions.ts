@@ -398,8 +398,6 @@ class Infractions extends Command {
                             const editmodal = new EditInfractionReasonModal(data, user);
                             SendModal(client, interaction, editmodal);
                             editmodal.handleSubmit(client, interaction);
-                            msg.delete()
-                            message.delete()
                             collector.stop()
                         }
 
