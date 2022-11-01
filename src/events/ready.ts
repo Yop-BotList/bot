@@ -7,11 +7,11 @@ import Class from '..';
 moment.locale("fr");
 
 export = async (client: Class) => {
-  const lasts = existsSync(join(__dirname, "../logs/") + "connectionHistory.txt") ? readFileSync(join(__dirname, "../logs/") + "connectionHistory.txt") : null
+  const lasts = existsSync("./logs/" + "connectionHistory.txt") ? readFileSync("./logs/connectionHistory.txt") : null
 
   const newText = lasts !== null ? lasts + `\n[${moment(Date.now()).format("DD/MM/YYYY kk:mm:ss")}]` : `[${moment(Date.now()).format("DD/MM/YYYY kk:mm:ss")}]`
 
-  writeFile(join(__dirname, "../logs/") + `connectionHistory.txt`, newText, (err) => {
+  writeFile("./logs/connectionHistory.txt", newText, (err) => {
     if (err) console.log(err.stack);
   });
 

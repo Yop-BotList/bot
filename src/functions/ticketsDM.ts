@@ -261,12 +261,18 @@ export default class TicketsDM {
             }
             
             if (interaction.isSelectMenu()) {
+
+                if (interaction.values[0] === "A") { // @ts-ignore
+                    this._handleTicket(msg, collector, interaction, "Signaler un bug / Report a bug");
+                }
                 
-                if (interaction.values[0] === "A") this._handleTicket(msg, collector, interaction, "Signaler un bug / Report a bug");
+                if (interaction.values[0] === "B") { // @ts-ignore
+                    this._handleTicket(msg, collector, interaction, "Recevoir de l'aide / Get help");
+                }
                 
-                if (interaction.values[0] === "B") this._handleTicket(msg, collector, interaction, "Recevoir de l'aide / Get help");
-                
-                if (interaction.values[0] === "C") this._handleTicket(msg, collector, interaction, "Autre / Other");
+                if (interaction.values[0] === "C") { // @ts-ignore
+                    this._handleTicket(msg, collector, interaction, "Autre / Other");
+                }
             }
         });
         

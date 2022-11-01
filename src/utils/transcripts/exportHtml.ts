@@ -17,7 +17,7 @@ import {
 } from './types';
 
 import { downloadImageToDataURL } from './utils';
-const template = readFileSync(join(__dirname, 'template.html'), 'utf8').replace('{{staticTypes.timestampShort}}', JSON.stringify(staticTypes.timestampShort));
+const template = readFileSync('./template.html', 'utf8').replace('{{staticTypes.timestampShort}}', JSON.stringify(staticTypes.timestampShort));
 
 const version = require('../../../package.json').version;
 

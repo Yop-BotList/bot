@@ -113,11 +113,11 @@ export = async (client: Class, message: Message) => {
     const channel = client.channels.cache?.get(channels.botlogs);
     if (channel?.type !== ChannelType.GuildText) return;
 
-    const userCmds = existsSync(join(__dirname, "../logs", "commands/") + message.author.id + ".txt") ? readFileSync(join(__dirname, "../logs", "commands/") + message.author.id + ".txt") : null;
+    const userCmds = existsSync(`./logs/commands/${message.author.id}.txt`) ? readFileSync(`./logs/commands/${message.author.id}.txt`) : null;
 
     const newText = userCmds !== null ? userCmds + `\n\n[${moment(Date.now()).format("DD/MM/YYYY kk:mm:ss")}] [${message.guild!.id} - ${message.guild!.name}] [${message.channel.id} - ${message.channel.name}] [${message.id}] - ${message.content}` : `${message.author.id} - ${message.author.tag} - ${moment(message.author.createdAt).format("DD/MM/YYYY kk:mm:ss")}\n\n-------------------------------------------------------------------------------------------------------------------------\n\n` + `[${moment(Date.now()).format("DD/MM/YYYY kk:mm:ss")}] [${message.guild!.id} - ${message.guild!.name}] [${message.channel.id} - ${message.channel.name}] [${message.id}] - ${message.content}`;
 
-    writeFile(join(__dirname, "../logs", "commands/") + `${message.author.id}.txt`, newText, (err) => {
+    writeFile(`./logs/commands/${message.author.id}.txt`, newText, (err) => {
         if (err) console.log(err.stack);
     });
 

@@ -289,7 +289,7 @@ class Class extends Client {
 
     private _processEvent() {
         process.on('unhandledRejection', async (error: any) => {
-            writeFile(join(__dirname, "./logs", "errors/") + `${moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')}.txt`, error.stack, (err) => {
+            writeFile("./logs/errors/" + `${moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')}.txt`, error.stack, (err) => {
                 if (err) console.log(err.stack);
             });
             const owner = await this.users.fetch(config.owners[0]).catch(() => { });

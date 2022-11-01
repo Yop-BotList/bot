@@ -20,7 +20,7 @@ export default model("users", new Schema({
                 {
                     title: { type: String, required: false, default: "Action inconnue" },
                     mod: { type: String, required: false },
-                    date: { type: Number, required: false, default: Date.now() }
+                    date: { type: Number, required: false }
                 }
             ]
         }
