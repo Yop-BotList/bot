@@ -6,6 +6,7 @@ import { users } from "../../models"
 import parseDuration from "../../functions/parseDuration"
 import EditInfractionReasonModal from "../../modals/EditInfractionReasonModal";
 import SendModal from "../../utils/SendModal";
+import EditInfractionDurationModal from "../../modals/EditInfractionDurationModal";
 
 class Infractions extends Command {
     constructor() {
@@ -81,7 +82,7 @@ class Infractions extends Command {
 
                     collector.on("collect", async (button: ButtonInteraction) => {
                         button.deferUpdate()
-                        if (button.customId === "servsLeftPage") {
+                        if (button.customId === "leftPage") {
                             i0 = i0 - 10;
                             i1 = i1 - 10;
                             page = page - 1;
@@ -131,7 +132,7 @@ class Infractions extends Command {
                                 ]
                             });
                         }
-                        if (button.customId === "servsRightPage") {
+                        if (button.customId === "rightPage") {
                             i0 = i0 + 10;
                             i1 = i1 + 10;
                             page = page + 1;
@@ -402,7 +403,10 @@ class Infractions extends Command {
                         }
 
                         if (interaction.values[0] === "duration") {
-
+                            const editModal = new EditInfractionDurationModal(data, user)
+                            SendModal(client, interaction, editModal)
+                            editModal.handleSubmit(client, interaction)
+                            collector.stop()
                         }
                     }
                 }

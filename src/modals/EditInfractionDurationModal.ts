@@ -4,8 +4,10 @@ import Modal from "../utils/Modal";
 import TextInput from "../utils/TextInput";
 import {channels} from "../configs";
 import { users } from "../models"
+import prettyMilliseconds from "pretty-ms";
+import ms from "ms";
 
-export default class EditInfractionReasonModal extends Modal {
+export default class EditInfractionDurationModal extends Modal {
     transfer: {
         id: number,
         userId: string,
@@ -45,18 +47,18 @@ export default class EditInfractionReasonModal extends Modal {
         ]
     }, user: User) {
         super({
-            title: "Modifier la raison",
-            customId: "editinfractionmodal",
+            title: "Modifier la durée",
+            customId: "editdurationmodal",
             components: [
                 {
                     type: 1,
                     components: [
                         new TextInput({
-                            customId: "reason",
-                            placeholder: "Insultes envers l'un des membres du STAFF.",
+                            customId: "duration",
+                            placeholder: "5d",
                             required: true,
-                            label: "Nouvelle raison de la sanction ?",
-                            style: 2
+                            label: "Nouvelle durée de la sanction ?",
+                            style: 1
                         })
                     ]
                 }
@@ -71,17 +73,22 @@ export default class EditInfractionReasonModal extends Modal {
     async handleSubmit(client: Class, interaction: SelectMenuInteraction) {
         await interaction.awaitModalSubmit({
             time: 120000,
-            filter: (modal: ModalSubmitInteraction) => modal.customId === "editinfractionmodal"
+            filter: (modal: ModalSubmitInteraction) => modal.customId === "editdurationmodal"
         }).then(async (modal: ModalSubmitInteraction) => {
-            let reason = modal.fields.getTextInputValue("reason");
+            let duration = modal.fields.getTextInputValue("duration");
 
-            if (!reason) return modal.reply({
+            if (!duration) return modal.reply({
                 content: `**${client.emotes.no} ➜ Merci de répondre correctement au modal.**`,
                 ephemeral: true
             });
 
+            if (!ms(duration) || this.transfer.date + ms(duration) <= Date.now()) return modal.reply({
+                content: `**${client.emotes.no} ➜ Durée invalide ou moment où l'infraction (après modification) se termine antérieur à l'instant présent.**`,
+                ephemeral: true
+            });
+
             this.transfer.historyLogs.push({
-                title: "Modification de la raison.",
+                title: `Modification de la durée (avant : ${prettyMilliseconds(this.transfer.duration || 0, { compact: true })}).`,
                 mod: interaction.user.id,
                 date: Date.now()
             })
@@ -102,12 +109,12 @@ export default class EditInfractionReasonModal extends Modal {
                     },
                     {
                         name: `${client.emotes.badges.mod} ➜ Avant :`,
-                        value: "```md\n# " + this.transfer.reason + "```",
+                        value: "```md\n# " + this.transfer.duration + "```",
                         inline: false
                     },
                     {
                         name: `${client.emotes.badges.mod} ➜ Après :`,
-                        value: "```md\n# " + reason + "```",
+                        value: "```md\n# " + duration + "```",
                         inline: false
                     }
                 ];
@@ -129,7 +136,7 @@ export default class EditInfractionReasonModal extends Modal {
                 }));
 
                 embed = {
-                    title: 'Modification de la raison',
+                    title: 'Modification de la durée',
                     color: client.config.color.integer,
                     timestamp: new Date().toISOString(),
                     thumbnail: {
@@ -145,7 +152,8 @@ export default class EditInfractionReasonModal extends Modal {
                 })
             }
 
-            this.transfer.reason = reason
+            this.transfer.duration = ms(duration)
+            this.transfer.finishOn = this.transfer.date + ms(duration)
 
             let data = await users.findOne({ userId: this.user.id })
             let warns = data!.warns.filter((warn: any) => warn.id !== this.transfer.id)
@@ -154,7 +162,7 @@ export default class EditInfractionReasonModal extends Modal {
             data!.save()
 
             modal.reply({
-                content: `**${client.emotes.yes} ➜ Raison modifiée.**`
+                content: `**${client.emotes.yes} ➜ Durée modifiée.**`
             })
         });
     }
