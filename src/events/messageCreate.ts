@@ -110,9 +110,6 @@ export = async (client: Class, message: Message) => {
     let db = await user.findOne({ userID: message.author.id, cmdbl: true });
     if (db) return message.reply({ content: `**${client.emotes.no} ➜ Vous êtes sur la liste noire des commandes. Vous ne pouvez donc pas en utiliser.**` });
 
-    const channel = client.channels.cache?.get(channels.botlogs);
-    if (channel?.type !== ChannelType.GuildText) return;
-
     const userCmds = existsSync(`./logs/commands/${message.author.id}.txt`) ? readFileSync(`./logs/commands/${message.author.id}.txt`) : null;
 
     const newText = userCmds !== null ? userCmds + `\n\n[${moment(Date.now()).format("DD/MM/YYYY kk:mm:ss")}] [${message.guild!.id} - ${message.guild!.name}] [${message.channel.id} - ${message.channel.name}] [${message.id}] - ${message.content}` : `${message.author.id} - ${message.author.tag} - ${moment(message.author.createdAt).format("DD/MM/YYYY kk:mm:ss")}\n\n-------------------------------------------------------------------------------------------------------------------------\n\n` + `[${moment(Date.now()).format("DD/MM/YYYY kk:mm:ss")}] [${message.guild!.id} - ${message.guild!.name}] [${message.channel.id} - ${message.channel.name}] [${message.id}] - ${message.content}`;

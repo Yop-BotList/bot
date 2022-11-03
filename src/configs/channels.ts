@@ -1,7 +1,6 @@
 export default {
     botslogs: "849687171702325348",
     suggests: "849687171702325348",
-    botlogs: "849687171702325348",
     ticketslogs: "966671943937978368",
     ticketcategory: "849688352915718155",
     avischannel: "921770581689503814",
