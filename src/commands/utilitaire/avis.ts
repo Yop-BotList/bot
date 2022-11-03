@@ -45,7 +45,7 @@ class Avis extends Command {
                         description: `${avisMsg}`
                     }
                 ]
-            });
+            }).then(async (m:Message) => m.react("💜"))
 
             new avis({
                 avis: avisMsg,
