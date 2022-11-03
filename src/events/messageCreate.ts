@@ -69,7 +69,7 @@ export = async (client: Class, message: Message) => {
             totalNumbers: 1
         }).save();
         else {
-            userGet.totalNumbers = userGet.totalNumbers ? 1 : userGet.totalNumbers + 1;
+            userGet.totalNumbers = !userGet.totalNumbers ? 1 : userGet.totalNumbers + 1;
             userGet.save();
         }
 
