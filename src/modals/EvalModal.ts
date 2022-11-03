@@ -41,9 +41,9 @@ export default class EvalModal extends Modal {
             let result = "";
             
             try {
-                result = (await eval(code)).toString();
+                result = await eval(code);
             } catch (error: any) {
-                result = (await error.message).toString();
+                result = await error.message;
             }
             
             if (code.length > 1024) code = code.substring(0, 1021) + "...";
