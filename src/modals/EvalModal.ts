@@ -45,7 +45,7 @@ export default class EvalModal extends Modal {
             } catch (error: any) {
                 result = await error.message;
             }
-            
+            result = String(result)
             if (code.length > 1024) code = code.substring(0, 1021) + "...";
             if (result.length > 1024) result = result.substring(0, 1021) + "...";
             
