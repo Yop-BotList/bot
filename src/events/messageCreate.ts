@@ -38,15 +38,15 @@ export = async (client: Class, message: Message) => {
         const counterDb = await counter.findOne();
 
         if (!counterDb || !counterDb.counter) {
-            if (Number(message.content) !== 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est 1.**`);
+            if (Number(message.content) !== 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est 1.**`).catch(() => {})
 
             new counter({
                 counter: 1,
                 lastCountUser: message.author.id
             }).save();
         } else {
-            if (counterDb.lastCountUser === message.author.id) return message.author.send(`**${client.emotes.no} ➜ Vous êtes déjà le dernier utilisateur a avoir envoyé un nombre. Veuillez patienter...**`);
-            if (Number(message.content) !== counterDb.counter + 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est ${counterDb.counter + 1}.**`);
+            if (counterDb.lastCountUser === message.author.id) return message.author.send(`**${client.emotes.no} ➜ Vous êtes déjà le dernier utilisateur a avoir envoyé un nombre. Veuillez patienter...**`).catch(() => {})
+            if (Number(message.content) !== counterDb.counter + 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est ${counterDb.counter + 1}.**`).catch(() => {})
 
             let actual = 100;
             let next = 100;

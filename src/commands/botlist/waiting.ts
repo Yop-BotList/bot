@@ -11,7 +11,7 @@ class Waiting extends Command {
             category: 'Botlist',
             description: 'Recevoir un liste de tous les robots en attente de vérification sur le serveur.',
             cooldown: 5,
-            requiredRole: roles.verificator
+            //requiredRole: roles.verificator
         })
     }
 
