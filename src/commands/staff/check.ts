@@ -94,13 +94,13 @@ class Check extends Command {
             const channel = client.channels.cache.get(channels.botslogs);
             if (channel?.type !== ChannelType.GuildText) throw new Error("Le channel botslogs n'est pas un channel textuel ou n'a pas été trouvé.");
 
-            let getBot = await bots.findOne({ botID: member.user.id, checked: false, verified: true });
+            let getBot = await bots.findOne({ botId: member.user.id, checked: false, verified: true });
             if (!getBot) return message.reply({ content: `**${client.emotes.no} ➜ ${member.user.tag} ne nécessite pas une re-vérification.**` });
 
             getBot.checked = true;
             getBot.save();
 
-            getBot = await bots.findOne({ botID: member.user.id });
+            getBot = await bots.findOne({ botId: member.user.id });
 
             channel.send({
                 content: `<@${getBot!.ownerId}>`,
@@ -140,14 +140,14 @@ class Check extends Command {
             const channel = client.channels.cache.get(channels.botslogs);
             if (channel?.type !== ChannelType.GuildText) throw new Error("Le channel botslogs n'est pas un channel textuel ou n'a pas été trouvé.");
 
-            let getBot = await bots.findOne({ botID: member.user.id, checked: false, verified: true });
+            let getBot = await bots.findOne({ botId: member.user.id, checked: false, verified: true });
             if (!getBot) return message.reply({ content: `**${client.emotes.no} ➜ ${member.user.tag} ne nécessite pas une re-vérification.**` })
 
             let reason = args.slice(2).join(' ')
 
             if (!reason) return message.reply({ content: `**${client.emotes.no} ➜ Veuillez entrer une raison.**` })
 
-            await bots.findOneAndDelete({ botID: member.user.id });
+            await bots.findOneAndDelete({ botId: member.user.id });
 
             channel.send({
                 content: `<@${getBot!.ownerId}>`,
