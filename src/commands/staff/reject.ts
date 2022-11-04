@@ -1,9 +1,10 @@
-import { Message } from "discord.js";
+import { Message, ButtonInteraction } from "discord.js";
 import Class from "../..";
 import { channels, config, roles } from "../../configs";
 import bots from "../../models/bots";
 import verificators from "../../models/verificators";
 import Command from "../../utils/Command";
+import { newInfraction } from "../../utils/InfractionService"
 
 class Reject extends Command {
     constructor() {
@@ -60,10 +61,35 @@ class Reject extends Command {
         }).save()
 
         message.channel.send({
-            content: `**${client.emotes.yes} ➜ Le bot ${member?.username}#${member?.discriminator} vient bien d'être refusé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`**`
-        });
+            content: `**${client.emotes.yes} ➜ Le bot ${member?.username}#${member?.discriminator} vient bien d'être refusé pour la raison suivante :\n\`\`\`${args.slice(1).join(' ')}\`\`\`**`,
+            components: [
+                    {
+                        type: 1,
+                        components: [
+                                {
+                                    type: 2,
+                                    custom_id: 'button',
+                                    label: 'Avertir l’utilisateur',
+                                    emoji: {
+                                        name: '⚠️'
+                                    },
+                                    style: 1
+                                }
+                            ]
+                    }
+                ]
+        }).then(async (msg: Message) => {
+            const filter = (x: any) => x.user.id === message.author.id
+            const collector = await msg.createMessageComponentCollector({ filter })
+            collector.on("collect", async (interaction: ButtonInteraction) => {
+                const user = await client.users.fetch(botGet.ownerId!)
+                await newInfraction(client, user!, message.member!, message.guild!, "WARN", 'Non respect des conditions d’ajout de bot.', 0).then(async (res: any) => {
+                    if (res) await interaction.reply(res)
+                })
+            })
+        })
 
-        await bots.deleteOne({ botID: args[0] });
+        await botGet.deleteOne();
 
         const guildMember = await message.guild!.members.fetch(args[0]).catch(() => { })
 
