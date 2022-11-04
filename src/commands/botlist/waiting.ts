@@ -23,7 +23,7 @@ class Waiting extends Command {
             content: `**🎉 ➜ Félicitations, tous les robots en attente sont vérifiés !**`
         });
 
-        let description = data.length === 0 && dataChecked.length > 0 ? dataChecked.map(bot => `- [${client.users.cache.get(`${bot.botId}`)?.tag || bot.botId}](https://discord.com/oauth2/authorize?client_id=${bot.botId}&permissions=0&scope=bot%20applications.commands)`).join(",\n") : data.map(bot => `- [${client.users.cache.get(`${bot.botId}`)?.tag || bot.botId}](https://discord.com/oauth2/authorize?client_id=${bot.botId}&permissions=0&scope=bot%20applications.commands)`).join(",\n");
+        let description = data.length === 0 && dataChecked.length > 0 ? dataChecked.map(bot => `- [${client.users.cache.get(`${bot.botId}`)?.tag || bot.botId}](https://discord.com/oauth2/authorize?client_id=${bot.botId}&permissions=0&scope=bot%20applications.commands)`).slice(0, 10).join(",\n") : data.map(bot => `- [${client.users.cache.get(`${bot.botId}`)?.tag || bot.botId}](https://discord.com/oauth2/authorize?client_id=${bot.botId}&permissions=0&scope=bot%20applications.commands)`).slice(0, 10).join(",\n");
 
         let components = data.length > 0 ? [{
             type: 1,
@@ -75,7 +75,7 @@ class Waiting extends Command {
                             footer: {
                                 text: 'YopBot V' + client.version
                             },
-                            description: dataChecked.map(x => `- [${client.users.cache.get(`${x.botId}`)?.tag || x.botId}](https://discord.com/oauth2/authorize?client_id=${x.botId}&permissions=0&scope=bot%20applications.commands)`).join(",\n")
+                            description: dataChecked.map(x => `- [${client.users.cache.get(`${x.botId}`)?.tag || x.botId}](https://discord.com/oauth2/authorize?client_id=${x.botId}&permissions=0&scope=bot%20applications.commands)`).slice(0, 10).join(",\n")
                         }
                     ],
                     components: []
