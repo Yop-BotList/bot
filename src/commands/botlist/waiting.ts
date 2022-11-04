@@ -2,6 +2,7 @@ import { ButtonInteraction, Message } from "discord.js";
 import Class from "../..";
 import { bots } from "../../models";
 import Command from "../../utils/Command";
+import { roles } from '../../configs'
 
 class Waiting extends Command {
     constructor() {
@@ -9,7 +10,8 @@ class Waiting extends Command {
             name: 'waiting',
             category: 'Botlist',
             description: 'Recevoir un liste de tous les robots en attente de vérification sur le serveur.',
-            cooldown: 5
+            cooldown: 5,
+            requiredRole: roles.verificator
         })
     }
 
