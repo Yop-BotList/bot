@@ -14,5 +14,7 @@ export default model("bots", new Schema({
     likes: { type: Number, required: false },
     latestLikeDate: { type: Date, required: false },
     team: { type: [String], required: false },
-    checked: { type: Boolean, required: false, default: true }
+    checked: { type: Boolean, required: false, default: true },
+    avatar: { type: String, required: false, default: "https://cdn.discordapp.com/embed/avatars/0.png" },
+    username: { type: String, required: false }
 }));
