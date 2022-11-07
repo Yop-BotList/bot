@@ -46,8 +46,8 @@ export = async (client: Class, member: GuildMember) => {
       if (data && data.verified === true) member.roles.add(roles.listedbot)
       if (data && data.verified === false) member.roles.add(roles.botintests)
       
-      const member = await member.guild.members.fetch(data.ownerId)
+      const owner = await member.guild.members.fetch(data.ownerId)
       
-      if (member && member.roles.cache.has(roles.premium)) member.roles.add(roles.premiumbot)
+      if (owner && owner.roles.cache.has(roles.premium)) member.roles.add(roles.premiumbot)
   }
 }
