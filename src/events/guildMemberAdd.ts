@@ -1,7 +1,7 @@
 import { GuildMember } from "discord.js";
 import Class from "..";
 import { bots, users } from '../models';
-import { channels } from '../configs';
+import { channels, roles } from '../configs';
 
 export = async (client: Class, member: GuildMember) => {
   if (member.guild.id === client.config.staffGuildId) {
@@ -36,5 +36,18 @@ export = async (client: Class, member: GuildMember) => {
       totalNumbers: 0,
       readFaq: false
     }).save();
+  }
+  
+  if (member.guildId === client.config.mainguildid && member.user.bot) {
+      const data = await bots.findOne({ botId: member.user.id })
+      
+      member.roles.add(roles.botrole)
+      
+      if (data && data.verified === true) member.roles.add(roles.listedbot)
+      if (data && data.verified === false) member.roles.add(roles.botintests)
+      
+      const member = await member.guild.members.fetch(data.ownerId)
+      
+      if (member && member.roles.cache.has(roles.premium)) member.roles.add(roles.premiumbot)
   }
 }
