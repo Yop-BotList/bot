@@ -107,7 +107,9 @@ class BotAdd extends Slash {
                     ownerId: interaction.user.id,
                     verified: false,
                     team: team,
-                    checked: true
+                    checked: true,
+                    avatar: user.displayAvatarURL(),
+                    username: user.username
                 }).save();
 
                 channel.send({

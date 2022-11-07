@@ -72,7 +72,9 @@ class Botadd extends Command {
                     ownerId: message.author.id,
                     verified: false,
                     team: team,
-                    checked: true
+                    checked: true,
+                    avatar: user.displayAvatarURL(),
+                    username: user.username
                 }).save();
 
                 channel.send({
