@@ -16,5 +16,8 @@ export default model("bots", new Schema({
     team: { type: [String], required: false },
     checked: { type: Boolean, required: false, default: true },
     avatar: { type: String, required: false, default: "https://cdn.discordapp.com/embed/avatars/0.png" },
-    username: { type: String, required: false }
+    username: { type: String, required: false },
+    serverCount: { type: Number, required: false, default: 0 },
+    userCount: { type: Number, required: false, default: 0 },
+    shardCount: { type: Number, required: false, default: 0 }
 }));
