@@ -21,5 +21,7 @@ export default model("bots", new Schema({
     userCount: { type: Number, required: false, default: 0 },
     shardCount: { type: Number, required: false, default: 0 },
     latestsStastsUpdate: { type: Date, required: false },
-    tags: { type: [String], required: false }
+    tags: { type: [String], required: false },
+    voteHook: { type: String, required: false },
+    hookCode: { type: String, required: false }
 }));
