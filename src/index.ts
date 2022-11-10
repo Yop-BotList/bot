@@ -166,7 +166,6 @@ class Class extends Client {
                         this.on(fileName, file.bind(null, this));
                         delete require.cache[require.resolve(join(__dirname, "events", event))];
                         console.log(`${green('[EVENTS]')} Évenèment ${eventName} rechargé avec succès !`);
-                        const channel = this.channels.cache?.get(channels.botlogs);
                         _resolve(`**${emotes.yes} ➜ Évènement \`${eventName}\` rechargé avec succès !**`);
                     }
                 } catch (error: any) {
@@ -292,18 +291,22 @@ class Class extends Client {
             writeFile("./logs/errors/" + `${moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')}.txt`, error.stack, (err) => {
                 if (err) console.log(err.stack);
             });
-            const owner = await this.users.fetch(config.owners[0]).catch(() => { });
-            if (owner && owner.id) owner.send({
-                embeds: [
-                    {
-                        title: 'Une erreur est survenue',
-                        description: '```js\n' + error + '```',
-                        footer: {
-                            text: moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')
-                        }
-                    }
-                ]
-            }).catch(() => { })
+            this.config.owners.forEach(async (owner: string) => {
+            	const o = await this.users.fetch(owner).catch(() => { });
+            	if (o && o.id) {
+                	o.send({
+                    	embeds: [
+                        	{
+                            	title: 'Une erreur est survenue',
+                            	description: '```js\n' + error + '```',
+                            	footer: {
+                                	text: moment(Date.now()).format('DD_MM_YYYY_kk_mm_ss_ms')
+                            	}
+                        	}
+                    	]
+                	}).catch(() => { });
+                }
+            })
         });
     }
 
