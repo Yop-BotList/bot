@@ -27,5 +27,6 @@ export default model("users", new Schema({
     ],
     totalNumbers: { type: Number, required: false, default: 0 },
     readFaq: { type: Boolean, required: false, default: false },
-    locale: { type: String, required: false }
+    locale: { type: String, required: false },
+    lastVoteDate: { type: Number, required: false }
 }));
