@@ -187,6 +187,8 @@ class TeamManager extends Command {
                 }
 
                 if (interaction.values[0] === "add") {
+                    if (data.length > 4) return interaction.reply({ content: `**${client.emotes.no} ➜ Une team ne peut pas dépasser les 5 membres.**`, ephemeral: true })
+
                     msg.edit({
                         embeds: [
                             {
