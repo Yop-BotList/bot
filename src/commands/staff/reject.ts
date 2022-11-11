@@ -82,7 +82,7 @@ class Reject extends Command {
             const filter = (x: any) => x.user.id === message.author.id
             const collector = await msg.createMessageComponentCollector({ filter })
             collector.on("collect", async (interaction: ButtonInteraction) => {
-                const user = await client.users.fetch(botGet.ownerId!)
+                const user = await client.users.fetch(botGet!.ownerId!)
                 await newInfraction(client, user!, message.member!, message.guild!, "WARN", 'Non respect des conditions d’ajout de bot.', 0).then(async (res: any) => {
                     if (res) await interaction.reply(res)
                 })

@@ -33,7 +33,7 @@ class Avis extends Command {
         if (args[0] === "send") {
             if (checkAvis) return message.reply({ content: `**${client.emotes.no} ➜ Vous avez déjà envoyé un avis sur le serveur, vous pouvez le modifier avec \`${client.config.prefix}avis edit Nouveau avis\`**` });
 
-            const msg = await avisChannel.send({
+            await avisChannel.send({
                 embeds: [
                     {
                         title: `Avis de ${message.author.username} sur la vérification de son robot :`,
@@ -45,13 +45,15 @@ class Avis extends Command {
                         description: `${avisMsg}`
                     }
                 ]
-            }).then(async (m:Message) => m.react("💜"))
+            }).then(async (msg:Message) => {
+                new avis({
+                    avis: avisMsg,
+                    messageId: msg.id,
+                    userId: message.author.id
+                }).save();
 
-            new avis({
-                avis: avisMsg,
-                messageId: msg.id,
-                userId: message.author.id
-            }).save();
+                msg.react("💜")
+            })
 
             message.reply({ content: `**${client.emotes.yes} ➜ Votre avis a bien été envoyé !**` });
         }

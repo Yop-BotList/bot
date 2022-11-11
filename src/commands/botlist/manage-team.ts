@@ -96,6 +96,7 @@ class TeamManager extends Command {
         const filter = (x: any) => x.user.id === message.author.id
         const collector = await msg.createMessageComponentCollector({ filter, time: 300000 });
 
+        // @ts-ignore
         collector.on("collect", async (interaction: MessageComponentInteraction) => {
             await interaction.deferUpdate();
             const data = await bots.findOne({ botId: member.user.id });
@@ -187,7 +188,7 @@ class TeamManager extends Command {
                 }
 
                 if (interaction.values[0] === "add") {
-                    if (data.length > 4) return interaction.reply({ content: `**${client.emotes.no} ➜ Une team ne peut pas dépasser les 5 membres.**`, ephemeral: true })
+                    if (data!.team.length > 4) return msg.edit(`**${client.emotes.no} ➜ Une team ne peut pas dépasser les 5 membres.**`)
 
                     msg.edit({
                         embeds: [
