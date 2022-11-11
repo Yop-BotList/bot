@@ -23,5 +23,20 @@ export default model("bots", new Schema({
     latestsStastsUpdate: { type: Date, required: false },
     tags: { type: [String], required: false },
     voteHook: { type: String, required: false },
-    hookCode: { type: String, required: false }
+    hookCode: { type: String, required: false },
+    receiveBugs: { type: Boolean, required: false },
+    bugThread: notReqString,
+    bugs: [{
+        id: { type: Number, required: false },
+        submitter: notReqString,
+        status: { type: Number, required: false }
+        /*
+        Différents status des bugs :
+        0 : Envoyé au développeur
+        1 : Vu par le développeur, recherche de l'origine du bug en cours.
+        2 : Résolution du bug en cours.
+        3 : Bug patché lors de la prochaine mise à jour;
+        4 : Bug corrigé.
+         */
+    }]
 }));

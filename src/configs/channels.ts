@@ -9,5 +9,6 @@ export default {
     sugglogs: "782661811291815947",
     counter: "1010907609542426714",
     faq: "905014644048007179",
-    commandsChannel: ["967139585350062120"]
+    commandsChannel: ["967139585350062120"],
+    buglogs: "1040627298833027152"
 }
