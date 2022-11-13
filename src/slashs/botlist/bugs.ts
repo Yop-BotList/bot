@@ -1,6 +1,6 @@
 import {
     ApplicationCommandOptionType,
-    ChatInputCommandInteraction, GuildMemberRoleManager,
+    ChatInputCommandInteraction, GuildMemberRoleManager, Message,
     PermissionsBitField, TextChannel, ThreadChannel
 } from "discord.js";
 import Class from "../..";
@@ -72,6 +72,8 @@ class Bugs extends Slash {
     async run(client: Class, interaction: ChatInputCommandInteraction) {
         switch (interaction.options.getSubcommand()) {
             case "submit": {
+                const image = interaction.options.getAttachment("image")
+
                 const buglogs = client.channels.cache.get(channels.buglogs) as TextChannel
 
                 if (!buglogs) return interaction.reply(`**${client.emotes.no} ➜ Le système de signalement des bugs est désactivé.**`)
@@ -83,6 +85,10 @@ class Bugs extends Slash {
                 const data = await bots.findOne({ botId: user!.id, receiveBugs: true })
 
                 if (!data) return interaction.reply(`**${client.emotes.no} ➜ Ce robot n'est pas sur la liste ou alors son développeur n'accepte pas de recevoir des signalements de bugs.**`)
+
+                if (image && image?.contentType?.startsWith("video") && !image?.contentType?.endsWith("mp4")) return interaction.reply({ content: `**${client.emotes.no} ➜ Format vidéo non pris en charge !**`, ephemeral: true })
+
+                if (image && !image?.contentType?.startsWith("image") && !image?.contentType?.startsWith("video")) return interaction.reply({ content: `**${client.emotes.no} ➜ Seuls les images et le vidéos au format .mp4 sont prises en charge.**`, ephemeral: true })
 
                 let comp = []
 
@@ -112,12 +118,39 @@ class Bugs extends Slash {
                             },
                             timestamp: new Date().toISOString(),
                             color: client.config.color.integer,
-                            description: data.bugThread && client.channels.cache.get(data.bugThread) as ThreadChannel ? `${interaction.user.tag} vient tout juste de trouver un bug sur ${user!.tag}. Rends toi sur le fil dédié à ton robot en cliquant sur le bouton juste en dessous !` : `${interaction.user.tag} vient tout juste de trouver un bug sur ${user!.tag}. Rends toi sur le fil juste en dessous pour plus d'informations !`
+                            description: data.bugThread && client.channels.cache.get(data.bugThread) as ThreadChannel ? `🐛 \`${interaction.user.tag}\` vient tout juste de **trouver un bug** sur \`${user!.tag}\`. Rends toi sur le fil dédié à ton robot en cliquant sur le bouton juste en dessous !` : `🐛 \`${interaction.user.tag}\` vient tout juste de **trouver un bug** sur \`${user!.tag}\`. Rends toi sur le fil juste en dessous pour plus d'informations !`
                         }
                     ],
                     components: comp || []
-                })
+                }).then(async (message: Message) => {
+                    let thread: ThreadChannel;
+                    //@ts-ignore
+                    if (!data.bugThread || !client.channels.cache.get(data.bugThread) as ThreadChannel) {
+                        message.startThread({ name: `Bug(s) signalé sur ${user!.tag}` }).then((t: ThreadChannel) => {
+                            thread = t
+                        })
+                    }
+                    if (data.bugThread && client.channels.cache.get(data.bugThread) as ThreadChannel) {
+                        thread = client.channels.cache.get(data.bugThread) as ThreadChannel
+                    }
 
+                    setTimeout(async () => {
+                        if (thread) thread.send({
+                            content: `<@${interaction.user.id}> veuillez détailler ici comment en êtes vous arrivé(e) à tomber sur ce bug pour que l'équipe de <@${data.botId}> puisse avoir le plus de facilités possible pour régler ce problème.`,
+                            embeds: [
+                                {
+                                    footer: {
+                                        text: "Interagissez avec les bouons ci-dessous ! - Version " + client.version
+                                    },
+                                    timestamp: new Date().toISOString(),
+                                    color: client.config.color.integer,
+                                    description: `\`\`\`md\n# ${interaction.options.getString("description")}\`\`\``
+                                }
+                            ],
+                            components: []
+                        })
+                    }, 1000)
+                })
                 break;
             }
 
