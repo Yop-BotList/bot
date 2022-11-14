@@ -86,9 +86,7 @@ class Bugs extends Slash {
 
                 if (!data) return interaction.reply(`**${client.emotes.no} ➜ Ce robot n'est pas sur la liste ou alors son développeur n'accepte pas de recevoir des signalements de bugs.**`)
 
-                if (image && image?.contentType?.startsWith("video") && !image?.contentType?.endsWith("mp4")) return interaction.reply({ content: `**${client.emotes.no} ➜ Format vidéo non pris en charge !**`, ephemeral: true })
-
-                if (image && !image?.contentType?.startsWith("image") && !image?.contentType?.startsWith("video")) return interaction.reply({ content: `**${client.emotes.no} ➜ Seuls les images et le vidéos au format .mp4 sont prises en charge.**`, ephemeral: true })
+                if (image && !image?.contentType?.startsWith("image")) return interaction.reply({ content: `**${client.emotes.no} ➜ Seuls les images sont prises en charge.**`, ephemeral: true })
 
                 let comp = []
 
@@ -126,7 +124,7 @@ class Bugs extends Slash {
                     let thread: ThreadChannel;
                     //@ts-ignore
                     if (!data.bugThread || !client.channels.cache.get(data.bugThread) as ThreadChannel) {
-                        message.startThread({ name: `Bug(s) signalé sur ${user!.tag}` }).then((t: ThreadChannel) => {
+                        message.startThread({ name: `Bug(s) signalé(s) sur ${user!.tag}` }).then((t: ThreadChannel) => {
                             thread = t
                         })
                     }
@@ -140,14 +138,56 @@ class Bugs extends Slash {
                             embeds: [
                                 {
                                     footer: {
-                                        text: "Interagissez avec les bouons ci-dessous ! - Version " + client.version
+                                        text: "Version " + client.version
                                     },
                                     timestamp: new Date().toISOString(),
                                     color: client.config.color.integer,
-                                    description: `\`\`\`md\n# ${interaction.options.getString("description")}\`\`\``
+                                    description: `\`\`\`md\n# ${interaction.options.getString("description")}\`\`\``,
+                                    image: image && image?.contentType?.startsWith("image") ? { url: image.url, proxy_url: image.proxyURL, height: image.height || undefined, width: image.width || undefined } : undefined
                                 }
                             ],
                             components: []
+                        }).then(async (msg: Message) => {
+                            data.bugThread = thread.id
+                            data.bugs.push({
+                                submitter: interaction.user.id,
+                                status: 0,
+                                msgId: msg.id
+                            })
+                            data.save()
+
+                            msg.edit({
+                                content: `<@${interaction.user.id}> veuillez détailler ici comment en êtes vous arrivé(e) à tomber sur ce bug pour que l'équipe de <@${data.botId}> puisse avoir le plus de facilités possible pour régler ce problème.`,
+                                embeds: [
+                                    {
+                                        footer: {
+                                            text: "Interagissez avec le bouton ci-dessous ! - Version " + client.version
+                                        },
+                                        timestamp: new Date().toISOString(),
+                                        color: client.config.color.integer,
+                                        description: `\`\`\`md\n# ${interaction.options.getString("description")}\`\`\``,
+                                        image: image && image?.contentType?.startsWith("image") ? { url: image.url, proxy_url: image.proxyURL, height: image.height || undefined, width: image.width || undefined } : undefined
+                                    }
+                                ],
+                                components: [
+                                    {
+                                        type: 1,
+                                        components: [
+                                            {
+                                                type: 2,
+                                                style: 1,
+                                                customId: `${data.botId}.${msg.id}.bugChangeStatus`,
+                                                label: "Modifier le statut",
+                                                emoji: { name: "📝" }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            })
+
+                            interaction.reply({
+                                content: `**${client.emotes.yes} ➜ Signalement envoyé au développeur. Vous pouvez détailler votre signalement dans le <#${thread.id}>.**`
+                            })
                         })
                     }, 1000)
                 })

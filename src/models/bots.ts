@@ -27,9 +27,8 @@ export default model("bots", new Schema({
     receiveBugs: { type: Boolean, required: false },
     bugThread: notReqString,
     bugs: [{
-        id: { type: Number, required: false },
         submitter: notReqString,
-        status: { type: Number, required: false }
+        status: { type: Number, required: false },
         /*
         Différents status des bugs :
         0 : Envoyé au développeur
@@ -38,5 +37,6 @@ export default model("bots", new Schema({
         3 : Bug patché lors de la prochaine mise à jour;
         4 : Bug corrigé.
          */
+        msgId: notReqString
     }]
 }));
