@@ -1,4 +1,4 @@
-import { Interaction } from "discord.js";
+import {Interaction, Message, SelectMenuInteraction, ThreadChannel} from "discord.js";
 import Class from "..";
 import TicketsDM from "../functions/ticketsDM";
 import { users, bots } from "../models";
@@ -91,7 +91,7 @@ export = async (client: Class, interaction: Interaction) => {
                             {
                                 type: 3,
                                 customId: "menuSelectBugStatus",
-                                placeholder: "Status de bugs",
+                                placeholder: "Statuts de bugs",
                                 options: [
                                     {
                                         label: "Investigations en cours...",
@@ -126,7 +126,67 @@ export = async (client: Class, interaction: Interaction) => {
                         ]
                     }
                 ],
-                ephemeral: true
+                ephemeral: true,
+                fetchReply: true
+            }).then(async (msg: Message) => {
+                const filter = (x: any) => x.user.id === interaction.user.id && x.customId === "menuSelectBugStatus";
+                const collector = await msg.createMessageComponentCollector({ filter, max: 1 })
+
+                collector.on("collect", async (int: SelectMenuInteraction) => {
+                    await int.deferUpdate()
+
+                    const oldStatus = bugData.status
+
+                    bugData.status = Number(int.values[0])
+
+                    db.bugs = db.bugs.filter((x: any) => x.msgId !== bugData.msgId)
+
+                    db.bugs.push(bugData)
+
+                    db.save()
+
+                    function getTextStatus (status: number | undefined) {
+                        if (status === 0) return "none"
+                        if (status === 1) return "En cours d'investigation"
+                        if (status === 2) return "En cours résolution"
+                        if (status === 3) return "Résolu, publié lors de prochaine màj"
+                        if (status === 4) return "Résolu & publié"
+                    }
+
+                    interaction.message!.reply({
+                        content: `<@${bugData.submitter}>`,
+                        embeds: [
+                            {
+                                footer: {
+                                    text: "Version " + client.version
+                                },
+                                timestamp: new Date().toISOString(),
+                                color: client.config.color.integer,
+                                description: `<@${interaction.user.id}> a passé le statut de ce bug de \`${getTextStatus(oldStatus)}\` à \`${getTextStatus(bugData.status)}\`.`
+                            }
+                        ]
+                    })
+
+                    interaction.editReply({ content: `**${client.emotes.yes} ➜ Statut modifié.**`, components: [] })
+
+                    if (int.values[0] === "3" || int.values[0] === "4") {
+                        let bugLength = db.bugs.filter((x: any) => x.status !== 3 && x.status !== 4).length || 0
+
+                        await interaction.message.edit({
+                            content: interaction.message.content,
+                            embeds: interaction.message.embeds,
+                            components: []
+                        })
+
+                        if (bugLength > 0) return;
+
+                        const ch = interaction.channel as ThreadChannel
+
+                        await ch!.edit({
+                            archived: true
+                        })
+                    }
+                })
             })
         }
     }

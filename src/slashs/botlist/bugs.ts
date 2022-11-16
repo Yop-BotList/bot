@@ -124,7 +124,7 @@ class Bugs extends Slash {
                     let thread: ThreadChannel;
                     //@ts-ignore
                     if (!data.bugThread || !client.channels.cache.get(data.bugThread) as ThreadChannel) {
-                        message.startThread({ name: `Bug(s) signalé(s) sur ${user!.tag}` }).then((t: ThreadChannel) => {
+                        message.startThread({ name: `Bug(s) signalé(s) sur ${user!.username}` }).then((t: ThreadChannel) => {
                             thread = t
                         })
                     }
