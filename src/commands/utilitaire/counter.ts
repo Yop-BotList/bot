@@ -13,8 +13,8 @@ class Counter extends Command {
             aliases: ['count'],
             cooldown: 5,
             minArgs: 1,
-            example: ['counter <leaderboard/objectifs/me>'],
-            usage: 'counter <leaderboard/objectifs/me>'
+            example: ['counter <leaderboard | objectifs>'],
+            usage: 'counter <leaderboard | objectifs>'
         });
     }
     
