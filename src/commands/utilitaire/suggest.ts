@@ -110,7 +110,7 @@ class Suggest extends Command {
         if (args[0] === "accept") {
             if (this.getMemberPerms(message.member!, "Administrator") !== true) return message.reply(`**${client.emotes.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`);
             
-            if (!args[1]) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer un identifiant de suggestion.**`);
+            if (!args[1] || isNaN(parseInt(args[1]))) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer un identifiant de suggestion.**`);
             
             const suggestGet = await suggests.findOne({ suggId: args[1], accepted: false, deleted: false });
             
@@ -163,7 +163,7 @@ class Suggest extends Command {
         if (args[0] === "reject") {
             if (this.getMemberPerms(message.member!, "Administrator") !== true) return message.reply(`**${client.emotes.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`);
             
-            if (!args[1]) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer un identifiant de suggestion.**`);
+            if (!args[1] || isNaN(parseInt(args[1]))) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer un identifiant de suggestion.**`);
             
             const suggestGet = await suggests.findOne({ suggId: args[1], accepted: false, deleted: false });
             
@@ -218,7 +218,7 @@ class Suggest extends Command {
         if (args[0] === "mask") {
             if (this.getMemberPerms(message.member!, "Administrator") !== true) return message.reply(`**${client.emotes.no} ➜ Vous n'avez pas la permission d'utiliser cet argument.**`);
             
-            if (!args[1]) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer un identifiant de suggestion.**`);
+            if (!args[1] || isNaN(parseInt(args[1]))) return message.reply(`**${client.emotes.no} ➜ Veuillez entrer un identifiant de suggestion.**`);
             
             const suggestGet = await suggests.findOne({ suggId: args[1], accepted: false, deleted: false });
             
