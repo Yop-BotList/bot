@@ -60,15 +60,16 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
                 avis: null,
                 cmdbl: false,
                 ticketsbl: false,
-                warns: [],
+                warns: [data],
                 totalNumbers: 0
             }).save();
+            
         }
         
-        db = await users.findOne({ userId: user.id });
-        
-        db!.warns.push(data);
-        db!.save();
+        if (db) {
+            db!.warns.push(data);
+            db!.save();
+        }
         
         if (type === "BAN") {
             if (member && !member.bannable) return resolve(`**${client.emotes.no} ➜ Je ne peux pas bannir ce membre.**`);
