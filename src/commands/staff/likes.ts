@@ -44,7 +44,7 @@ class Likes extends Command {
             if (!user) return message.reply(`**${client.emotes.no} ➜ Merci de donner un identifiant correct pour que je puisse trouver ce bot**`);
             if (!user.bot) return message.reply(`**${client.emotes.no} ➜ Cet utilisateur n'est pas uun robot.**`);
 
-            if (!args[2]) return message.reply(`**${client.emotes.no} ➜ Vous n'avez pas précisé le nombre de like à mettre.**`);
+          //  if (!args[2]) return message.reply(`**${client.emotes.no} ➜ Vous n'avez pas précisé le nombre de like à mettre.**`);
 
             const getBot = await bots.findOne({ botId: args[1] });
 
