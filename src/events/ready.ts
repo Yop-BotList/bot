@@ -4,6 +4,7 @@ import moment from 'moment';
 import { join } from 'path';
 import Class from '..';
 import {users, avis, bots, counter, suggests, tickets, verificators } from "../models"
+import ms from "ms"
 
 moment.locale("fr");
 
@@ -96,6 +97,7 @@ export = async (client: Class) => {
     const data = await users.find()
     data.forEach(async(x: any) => {
            x.warns.forEach(async (w: any) => {
+               if (w.type !== "BAN") return;
                if (Date.now() <= moment(x.finishOn).format("x")) {
                let guild = client.guilds.cache.get(client.config.mainguildid);
                if (!guild) return;
