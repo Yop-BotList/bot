@@ -67,8 +67,8 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         }
         
         if (db) {
-            db!.warns.push(data);
-            db!.save();
+            db.warns.push(data);
+            db.save();
         }
         
         if (type === "BAN") {
