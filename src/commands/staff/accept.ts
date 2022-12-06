@@ -72,7 +72,7 @@ class Accept extends Command {
                     description: `Votre bot \`${member.user.tag}\` vient juste d'être accepté par nos vérificateurs.\nN'oublie pas nous laisser un avis via la commande \`${client.config.prefix}avis\` !`
                 }
             ]
-        });
+        }).catch(() => {})
 
         member.roles.remove(roles.botintests);
         member.roles.add(roles.listedbot);
