@@ -34,7 +34,28 @@ export = async (client: Class, member: GuildMember) => {
       ticketsbl: false,
       warns: [],
       totalNumbers: 0,
-      readFaq: false
+      readFaq: false,
+      badges : [
+          {
+              id: "dev",
+              acquired: false
+          }, {
+              id: "partner",
+              acquired: false
+          }, {
+              id: "premium",
+              acquired: false
+          }, {
+              id: "staff",
+              acquired: false
+          }, {
+              id: "support",
+              acquired: false
+          }, {
+              id: "verificator",
+              acquired: false
+          }
+      ]
     }).save();
   }
   
