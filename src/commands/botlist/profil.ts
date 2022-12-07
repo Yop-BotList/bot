@@ -1,8 +1,9 @@
 import Class from '../..';
 import Command from '../../utils/Command';
 import { Message } from 'discord.js';
-import bots from '../../models/bots';
+import {bots, users} from '../../models';
 import moment from "moment";
+import {emotes} from "../../configs"
 
 moment.locale("fr");
 
@@ -33,6 +34,50 @@ class Profil extends Command {
         if (x.ownerId === member.user.id || x.team.includes(member.user.id)) robots.push(x.botId)
       })
 
+      /**
+       * Créer la liste des badges avec des emojis.
+       * @return String
+       */
+      async function drawBadges () {
+        const user = await users.findOne({ userId: member!.user.id })
+
+        if (!user) return ""
+
+        let list = ""
+
+        user.badges.forEach(async (badge: { id: string; acquired: boolean; }) => {
+          if (!badge.acquired) return;
+
+          switch (badge.id) {
+            case "dev": {
+              list = list + emotes.badges.dev
+              break;
+            }
+            case "partner": {
+              list = list + emotes.badges.partner
+              break;
+            }
+            case "premium": {
+              list = list + emotes.badges.premium
+              break;
+            }
+            case "staff": {
+              list = list + emotes.badges.staff
+              break;
+            }
+            case "support": {
+              list = list + emotes.badges.support
+              break;
+            }
+            case "verificator": {
+              list = list + emotes.badges.verificator
+              break;
+            }
+          }
+        })
+          return list
+      }
+
       message.reply({
         embeds: [
           {
@@ -44,7 +89,7 @@ class Profil extends Command {
             fields: [
               {
                 name: '__🏷 Nom :__',
-                value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
+                value: `> <@${member.user.id}> (\`${member.user.tag}\`) ${await drawBadges()}`,
                 inline: false
               }, {
                 name: '__📆 Date de création :__',

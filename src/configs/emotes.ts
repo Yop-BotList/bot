@@ -36,12 +36,16 @@ export default {
         bughunter: "<:bug_hunter:907702156717592727>",
         brillance: "<:brillance_hype_squad:907702156944097372>",
         hypesquadevent: "<:hypesquad_event:907702157099286550>",
-        partner: "<:partner:907718760394268673>",
-        staff: "<:discord_staff:907718915508019251>",
         earlysupporter: "<:early_supporter:907719041773355068>",
         verifiedbot: "<:verified_bot:907997299962163251>",
         system: "<:system:908000945475031120>",
-        badges: "<a:badges:907996994595848195>"
+        badges: "<a:badges:907996994595848195>",
+        partner: "<:partnerBadge:1050055811432448020>",
+        staff: "<:supportBadge:1050054561441796147>",
+        dev: "<:devBadge:1050054279844610058>",
+        premium: "<:premiumBadge:1050054380889575435>",
+        verificator: "<:verificatorBadge:1050054657491349504>",
+        support: "<:supportBadge:1050054561441796147>"
     },
     discordicons: {
         list: "<:list:907877680395993110>",
@@ -58,5 +62,5 @@ export default {
         tag: "<:tag:907996994943995924>",
         clyde: "<:clyde:909065946050723930>",
         horloge: "<:horloge:949578037509382166>"
-}
+    }
 }

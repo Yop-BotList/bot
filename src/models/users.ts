@@ -29,7 +29,7 @@ export default model("users", new Schema({
     readFaq: { type: Boolean, required: false, default: false },
     locale: { type: String, required: false },
     lastVoteDate: { type: Number, required: false },
-    badges : [
+    badges: [
         {
             id: { type: String, required: false, default : "dev" },
             acquired: { type: Boolean, required: false, default: false },
