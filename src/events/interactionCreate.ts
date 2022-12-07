@@ -36,7 +36,28 @@ export = async (client: Class, interaction: Interaction) => {
                 avis: null,
                 cmdbl: false,
                 ticketsbl: false,
-                userId: interaction.user.id
+                userId: interaction.user.id,
+                badges: [
+                    {
+                        id: "dev",
+                        acquired: false
+                    }, {
+                        id: "partner",
+                        acquired: false
+                    }, {
+                        id: "premium",
+                        acquired: false
+                    }, {
+                        id: "staff",
+                        acquired: false
+                    }, {
+                        id: "support",
+                        acquired: false
+                    }, {
+                        id: "verificator",
+                        acquired: false
+                    }
+                ]
             }).save();
 
             const userGet = await users.findOne({ userId: interaction.user.id });
