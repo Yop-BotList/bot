@@ -66,7 +66,28 @@ export = async (client: Class) => {
         cmdbl: false,
         ticketsbl: false,
         warns: warns,
-        totalNumbers: totalNumbers ? totalNumbers.number : 0
+        totalNumbers: totalNumbers ? totalNumbers.number : 0,
+        badges : [
+            {
+                id: "dev",
+                acquired: false
+            }, {
+                id: "partner",
+                acquired: false
+            }, {
+                id: "premium",
+                acquired: false
+            }, {
+                id: "staff",
+                acquired: false
+            }, {
+                id: "support",
+                acquired: false
+            }, {
+                id: "verificator",
+                acquired: false
+            }
+        ]
       }).save()
 
       if (user.verifications && user.verifications > 0) {
