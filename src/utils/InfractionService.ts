@@ -61,7 +61,28 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
                 cmdbl: false,
                 ticketsbl: false,
                 warns: [data],
-                totalNumbers: 0
+                totalNumbers: 0,
+                badges : [
+                    {
+                        id: "dev",
+                        acquired: false
+                    }, {
+                        id: "partner",
+                        acquired: false
+                    }, {
+                        id: "premium",
+                        acquired: false
+                    }, {
+                        id: "staff",
+                        acquired: false
+                    }, {
+                        id: "support",
+                        acquired: false
+                    }, {
+                        id: "verificator",
+                        acquired: false
+                    }
+                ]
             }).save();
             
         }
