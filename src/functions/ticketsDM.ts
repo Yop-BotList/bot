@@ -213,7 +213,28 @@ export default class TicketsDM {
                 userId: interaction.user.id,
                 locale: interaction.locale,
                 ticketsbl: false,
-                cmdbl: false
+                cmdbl: false,
+                badges : [
+                    {
+                        id: "dev",
+                        acquired: false
+                    }, {
+                        id: "partner",
+                        acquired: false
+                    }, {
+                        id: "premium",
+                        acquired: false
+                    }, {
+                        id: "staff",
+                        acquired: false
+                    }, {
+                        id: "support",
+                        acquired: false
+                    }, {
+                        id: "verificator",
+                        acquired: false
+                    }
+                ]
             }).save();
             else {
                 getUser.locale = interaction.locale;
