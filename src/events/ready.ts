@@ -115,33 +115,36 @@ export = async (client: Class) => {
       if (err) console.log(err.stack);
     });
     
-    const data = await users.find()
-    data.forEach(async(x: any) => {
-           x.warns.forEach(async (w: any) => {
-               if (w.type !== "BAN") return;
-               if (Date.now() <= moment(x.finishOn).format("x")) {
-               let guild = client.guilds.cache.get(client.config.mainguildid);
-               if (!guild) return;
-               if (w.deleted === true) return;
+    setInterval(async () => {
+        const data = await users.find()
+        data.forEach(async(x: any) => {
+            x.warns.forEach(async (w: any) => {
+                if (w.type !== "BAN") return;
+                if (Number(Date.now()) <= Number(moment(x.finishOn).format("x"))) {
+                    let guild = client.guilds.cache.get(client.config.mainguildid);
+                    if (!guild) return;
+                    if (w.deleted === true) return;
 
-               let bb = await guild.bans.fetch(x.userID).catch(() => null);
-               if (bb) guild.bans.remove(x.userID, { reason: "Sanction terminée." })
-               
-               w.historyLogs.push({
-                   title: "Infraction terminée",
-                   mod: client.user.id,
-                   date: Date.now()
-               })
-               w.deleted = true
-               const array = x.warns.filter((warn: any) => warn.id !== w.id)
-               array.push(w)
-               x.warns = array
-               x.save()
-               
-               w.deleted = true
-           })
-       })
-   }, ms("1h"))
+                    let bb = await guild.bans.fetch(x.userID).catch(() => null);
+                    if (bb) guild.bans.remove(x.userID, "Sanction terminée.")
+
+                    w.historyLogs.push({
+                        title: "Infraction terminée",
+                        mod: client.user!.id,
+                        date: Date.now()
+                    })
+                    w.deleted = true
+                    const array = x.warns.filter((warn: any) => warn.id !== w.id)
+                    array.push(w)
+                    x.warns = array
+                    x.save()
+
+                    w.deleted = true
+                }
+            });
+        })
+    }, ms("1h"))
+
 
     console.log(blue(`[BOT] Connecté en tant que ${client.user?.tag}`));
     client.postSlashs(client.slashs);
