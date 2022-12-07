@@ -28,5 +28,26 @@ export default model("users", new Schema({
     totalNumbers: { type: Number, required: false, default: 0 },
     readFaq: { type: Boolean, required: false, default: false },
     locale: { type: String, required: false },
-    lastVoteDate: { type: Number, required: false }
+    lastVoteDate: { type: Number, required: false },
+    badges : [
+        {
+            id: { type: String, required: false, default : "dev" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            id: { type: String, required: false, default : "partner" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            id: { type: String, required: false, default : "premium" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            id: { type: String, required: false, default : "staff" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            id: { type: String, required: false, default : "support" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            id: { type: String, required: false, default : "verificator" },
+            acquired: { type: Boolean, required: false, default: false },
+        }
+    ]
 }));
