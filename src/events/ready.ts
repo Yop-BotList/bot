@@ -3,8 +3,9 @@ import {existsSync, readFileSync, unlink, writeFile} from 'fs';
 import moment from 'moment';
 import { join } from 'path';
 import Class from '..';
-import {users, avis, bots, counter, suggests, tickets, verificators } from "../models"
+import { users, avis, bots, counter, suggests, tickets, verificators } from "../models"
 import ms from "ms"
+import {roles} from "../configs"
 
 moment.locale("fr");
 
@@ -142,8 +143,80 @@ export = async (client: Class) => {
                     w.deleted = true
                 }
             });
+
+            const guild = client.guilds.cache.get(client.config.mainguildid);
+            const member = await guild?.members.fetch(x.userId).catch(() => null);
+            if (!member) return;
+            let newBadges: any[] = [];
+
+            x.badges.forEach(async (b: { id: string; acquired: boolean; }) => {
+                switch (b.id) {
+                    case "dev": {
+                        if (client.config.owners.includes(x.userId)) {
+                            b.acquired = true
+                            break
+                        } else {
+                            b.acquired = false
+                            break
+                        }
+                    }
+                    case "partner": {
+                        if (member!.roles.cache.get(roles.partner)) {
+                            b.acquired = true
+                            break
+                        } else {
+                            b.acquired = false
+                            break
+                        }
+                    }
+                    case "premium": {
+                        if (member!.roles.cache.get(roles.premium)) {
+                            b.acquired = true
+                            break
+                        } else {
+                            b.acquired = false
+                            break
+                        }
+                    }
+                    case "staff": {
+                        if (member!.roles.cache.get(roles.staffrole)) {
+                            b.acquired = true
+                            break
+                        } else {
+                            b.acquired = false
+                            break
+                        }
+                    }
+                    case "support": {
+                        if (member!.roles.cache.get(roles.ticketsaccess)) {
+                            b.acquired = true
+                            break
+                        } else {
+                            b.acquired = false
+                            break
+                        }
+                    }
+                    case "verificator": {
+                        if (member!.roles.cache.get(roles.verificator)) {
+                            b.acquired = true
+                            break
+                        } else {
+                            b.acquired = false
+                            break
+                        }
+                    }
+                }
+                setTimeout(() => {
+                    newBadges.push(b)
+                }, 100)
+            })
+            setTimeout(() => {
+                console.log(newBadges)
+                x.badges = newBadges
+                x.save()
+            }, 2000)
         })
-    }, ms("1h"))
+    }, ms("30s"))
 
 
     console.log(blue(`[BOT] Connecté en tant que ${client.user?.tag}`));

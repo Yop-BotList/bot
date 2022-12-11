@@ -43,7 +43,7 @@ class Class extends Client {
                 "DirectMessageReactions",
                 "DirectMessageTyping",
                 "MessageContent"
-            ]
+            ],
         });
 
         this.config = config;
