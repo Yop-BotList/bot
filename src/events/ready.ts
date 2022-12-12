@@ -231,11 +231,8 @@ export = async (client: Class) => {
 
     const botsData = await bots.find();
 
-    // reset bot votes every month (30 days or 31 days)
     setInterval(async () => {
         botsData.forEach(async (bot: any) => {
-            // verify if the current day is the 1st day of the month
-
             if (moment(Date.now()).format("DD") !== "01") return;
             
             const botData = await bots.findOne({ botId: bot.botId });
