@@ -146,77 +146,32 @@ export = async (client: Class) => {
 
             const guild = client.guilds.cache.get(client.config.mainguildid);
             const member = await guild?.members.fetch(x.userId).catch(() => null);
-            if (!member) return;
-            let newBadges: any[] = [];
+            if (!member || member.user.bot) return;
 
-            x.badges.forEach(async (b: { id: string; acquired: boolean; }) => {
-                switch (b.id) {
-                    case "dev": {
-                        if (client.config.owners.includes(x.userId)) {
-                            b.acquired = true
-                            break
-                        } else {
-                            b.acquired = false
-                            break
-                        }
-                    }
-                    case "partner": {
-                        if (member!.roles.cache.get(roles.partner)) {
-                            b.acquired = true
-                            break
-                        } else {
-                            b.acquired = false
-                            break
-                        }
-                    }
-                    case "premium": {
-                        if (member!.roles.cache.get(roles.premium)) {
-                            b.acquired = true
-                            break
-                        } else {
-                            b.acquired = false
-                            break
-                        }
-                    }
-                    case "staff": {
-                        if (member!.roles.cache.get(roles.staffrole)) {
-                            b.acquired = true
-                            break
-                        } else {
-                            b.acquired = false
-                            break
-                        }
-                    }
-                    case "support": {
-                        if (member!.roles.cache.get(roles.ticketsaccess)) {
-                            b.acquired = true
-                            break
-                        } else {
-                            b.acquired = false
-                            break
-                        }
-                    }
-                    case "verificator": {
-                        if (member!.roles.cache.get(roles.verificator)) {
-                            b.acquired = true
-                            break
-                        } else {
-                            b.acquired = false
-                            break
-                        }
-                    }
+            x.badges = [
+                {
+                    id: "dev",
+                    acquired: client.config.owners.includes(x.userId) ? true : false
+                }, {
+                    id: "partner",
+                    acquired: member.roles.cache.has(roles.partner) ? true : false,
+                }, {
+                    id: "premium",
+                    acquired: member.roles.cache.has(roles.premium) ? true : false,
+                }, {
+                    id: "staff",
+                    acquired: member.roles.cache.has(roles.staffrole) ? true : false,
+                }, {
+                    id: "support",
+                    acquired: member.roles.cache.has(roles.ticketsaccess) ? true : false,
+                }, {
+                    id: "verificator",
+                    acquired: member.roles.cache.has(roles.verificator) ? true : false,
                 }
-                setTimeout(() => {
-                    newBadges.push(b)
-                }, 100)
-            })
-            setTimeout(() => {
-                console.log(newBadges)
-                x.badges = newBadges
-                x.save()
-            }, 2000)
+            ]
+            x.save()
         })
-    }, ms("30s"))
+    }, ms("1h"))
 
 
     console.log(blue(`[BOT] Connecté en tant que ${client.user?.tag}`));
