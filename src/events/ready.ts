@@ -228,5 +228,23 @@ export = async (client: Class) => {
     setInterval(async () => {
       await client.user!.setActivity(activities[Math.floor(Math.random() * activities.length)], { type: 1, url: "https://twitch.tv/discord" });
     }, 12000);
+
+    const botsData = await bots.find();
+
+    // reset bot votes every month (30 days or 31 days)
+    setInterval(async () => {
+        botsData.forEach(async (bot: any) => {
+            // verify if the current day is the 1st day of the month
+
+            if (moment(Date.now()).format("DD") !== "01") return;
+            
+            const botData = await bots.findOne({ botId: bot.botId });
+
+            if (!botData) return;
+
+            botData.likes = 0;
+            await botData.save();
+        });
+    }, ms("1h"));
   }
 }
