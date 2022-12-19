@@ -15,23 +15,23 @@ class Profil extends Command {
       description: 'Voir le profil d’un utilisateur.',
       usage: 'profil <utilisateur>',
       aliases: ['ui', 'userinfo'],
-      cooldown: 5,
-      minArgs: 1
+      cooldown: 5
     });
   }
 
-  async run(client: Class, message: Message): Promise<Message<boolean> | undefined> {
-    const member = message.mentions.members?.first();
+  // @ts-ignore
+  async run(client: Class, message: Message, args: string[]): Promise<Message<boolean> | undefined> {
+    let member = message.mentions.members?.first() || message.member;
 
-    if (!member || !member.user) return message.reply({ content: `**${client.emotes.no} ➜ Membre introuvable !**` });
+    if (!member || !member.user) return message.reply(`**${client.emotes.no} ➜ Membre introuvable.**`)
 
-    if (!member.user.bot) {
+    if (!member!.user.bot) {
       const data = await bots.find();
 
       let robots: any[] = []
 
       data.forEach(x => {
-        if (x.ownerId === member.user.id || x.team.includes(member.user.id)) robots.push(x.botId)
+        if (x.ownerId === member!.user.id || x.team.includes(member!.user.id)) robots.push(x.botId)
       })
 
       /**
@@ -81,23 +81,23 @@ class Profil extends Command {
       message.reply({
         embeds: [
           {
-            title: `Informations sur ${member.user.tag}`,
+            title: `Informations sur ${member!.user.tag}`,
             color: client.config.color.integer,
             thumbnail: {
-              url: member.user.displayAvatarURL()
+              url: member!.user.displayAvatarURL()
             },
             fields: [
               {
                 name: '__🏷 Nom :__',
-                value: `> <@${member.user.id}> (\`${member.user.tag}\`) ${await drawBadges()}`,
+                value: `> <@${member!.user.id}> (\`${member!.user.tag}\`) ${await drawBadges()}`,
                 inline: false
               }, {
                 name: '__📆 Date de création :__',
-                value: `> ${moment(member.user.createdAt).format('Do MMMM YYYY')}`,
+                value: `> ${moment(member!.user.createdAt).format('Do MMMM YYYY')}`,
                 inline: false
               }, {
                 name: '__📆 A rejoint le :__',
-                value: `> ${moment(member.joinedAt).format('Do MMMM YYYY')}`,
+                value: `> ${moment(member!.joinedAt).format('Do MMMM YYYY')}`,
                 inline: true
               }, {
                 name: '__🧾 Robots listés :__',
@@ -105,33 +105,46 @@ class Profil extends Command {
               }
             ]
           }
+        ],
+        components: [
+          {
+            type: 1,
+            components: [
+              {
+                type: 2,
+                style: 5,
+                label: "Voir sur le site !",
+                url: `https://yopbotlist.me/users/${member!.user.id}`
+              }
+            ]
+          }
         ]
       });
     }
 
-    if (member.user.bot) {
-      let db = await bots.findOne({ botId: member.user.id });
+    if (member!.user.bot) {
+      let db = await bots.findOne({ botId: member!.user.id });
 
       if (!db) message.reply({
         embeds: [
           {
-            title: `Informations sur ${member.user.tag}`,
+            title: `Informations sur ${member!.user.tag}`,
             color: client.config.color.integer,
             thumbnail: {
-              url: member.user.displayAvatarURL()
+              url: member!.user.displayAvatarURL()
             },
             fields: [
               {
                 name: '__🏷 Nom :__',
-                value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
+                value: `> <@${member!.user.id}> (\`${member!.user.tag}\`)`,
                 inline: false
               }, {
                 name: '__📆 Date de création :__',
-                value: `> ${moment(member.user.createdAt).format('Do MMMM YYYY')}`,
+                value: `> ${moment(member!.user.createdAt).format('Do MMMM YYYY')}`,
                 inline: false
               }, {
                 name: '__📆 A rejoint le :__',
-                value: `> ${moment(member.joinedAt).format('Do MMMM YYYY')}`,
+                value: `> ${moment(member!.joinedAt).format('Do MMMM YYYY')}`,
                 inline: true
               }
             ]
@@ -151,18 +164,18 @@ class Profil extends Command {
         message.reply({
           embeds: [
             {
-              title: `Informations sur ${member.user.tag}`,
+              title: `Informations sur ${member!.user.tag}`,
               color: client.config.color.integer,
               thumbnail: {
-                url: member.user.displayAvatarURL()
+                url: member!.user.displayAvatarURL()
               },
               footer: {
-                text: `${member.user.username} a rejoint la liste le ${moment(member.joinedAt).format('Do MMMM YYYY')}`
+                text: `${member!.user.username} a rejoint la liste le ${moment(member!.joinedAt).format('Do MMMM YYYY')}`
               },
               fields: [
                 {
                   name: '__:robot: Nom :__',
-                  value: `> <@${member.user.id}> (\`${member.user.tag}\`)`,
+                  value: `> <@${member!.user.id}> (\`${member!.user.tag}\`)`,
                   inline: true
                 }, {
                   name: '__:key: Propriétaire(s) :__',
@@ -186,10 +199,36 @@ class Profil extends Command {
                   inline: true
                 }, {
                   name: '__:nut_and_bolt: Lien d\'invitation :__',
-                  value: `> [Clique ici](https://discord.com/oauth2/authorize?client_id=${member.user.id}&scope=bot%20applications.commands&permissions=-1)`,
+                  value: `> [Clique ici](https://discord.com/oauth2/authorize?client_id=${member!.user.id}&scope=bot%20applications.commands&permissions=-1)`,
                   inline: false
                 }
 
+              ]
+            }
+          ],
+          components: [
+            {
+              type: 1,
+              components: [
+                {
+                  type: 2,
+                  style: 1,
+                  label: `${db.likes || 0} vote${db.likes && db.likes > 1 || db.likes === 0 ? "s" : ""}`,
+                  customId: `likesInfoBTN`,
+                  disabled: true
+                },
+                {
+                  type: 2,
+                  style: 5,
+                  label: "Voir sur le site !",
+                  url: `https://yopbotlist.me/bots/${member!.user.id}`
+                },
+                {
+                  type: 2,
+                  style: 5,
+                  label: "Voter !",
+                  url: `https://yopbotlist.me/bots/${member!.user.id}/vote`
+                }
               ]
             }
           ]
