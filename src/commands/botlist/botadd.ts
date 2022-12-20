@@ -74,7 +74,10 @@ class Botadd extends Command {
                     team: team,
                     checked: true,
                     avatar: user.displayAvatarURL(),
-                    username: user.username
+                    username: user.username,
+                    receiveBugs: true,
+                    bugs: [],
+                    bugThread: null
                 }).save();
 
                 channel.send({
