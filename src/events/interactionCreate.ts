@@ -1,7 +1,7 @@
 import {Interaction, Message, SelectMenuInteraction, ThreadChannel} from "discord.js";
 import Class from "..";
 import TicketsDM from "../functions/ticketsDM";
-import { users, bots } from "../models";
+import { users, bots, verificators } from "../models";
 import FaqModal from "../modals/FaqModal";
 import SendModal from "../utils/SendModal";
 import suggestManager from "../functions/suggestManager";
@@ -17,12 +17,12 @@ export = async (client: Class, interaction: Interaction) => {
 
         try {
             await slash.run(client, interaction);
-        } catch (error: any) {
+        } catch (err: any) {
             interaction.reply({
-                content: "Une erreur s'est produite lors de l'utilisation de cette commande.",
+                content: "Une erreur s'est produite lors de l'utilisation de cette commande. :\n\n```\n" + err +"```",
                 ephemeral: true
             });
-            new Error(error.stack || error);
+            console.log(err.stack)
         }
     }
     if (interaction.isButton()) {

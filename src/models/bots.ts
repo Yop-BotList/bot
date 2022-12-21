@@ -5,7 +5,7 @@ const reqString = { type: String, required: true },
 
 export default model("bots", new Schema({
     botId: reqString,
-    prefix: reqString,
+    prefix: notReqString,
     ownerId: reqString,
     verified: { type: Boolean, required: false },
     supportInvite: notReqString,
