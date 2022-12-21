@@ -2,7 +2,7 @@ import { ButtonInteraction, ComponentType, GuildTextBasedChannel, Message } from
 import Class from "..";
 
 export default async (client: Class, message: Message) => {
-    if (client.config.citations === true) return;
+    if (client.config.citations === false) return;
     if (!message.content.includes("discord.com/channels/")) return;
     
     const parts = message.content.split("/");
