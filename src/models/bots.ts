@@ -5,7 +5,7 @@ const reqString = { type: String, required: true },
 
 export default model("bots", new Schema({
     botId: reqString,
-    prefix: reqString,
+    prefix: notReqString,
     ownerId: reqString,
     verified: { type: Boolean, required: false },
     supportInvite: notReqString,
@@ -30,13 +30,14 @@ export default model("bots", new Schema({
         submitter: notReqString,
         status: { type: Number, required: false },
         /*
-        Différents status des bugs :
-        0 : Envoyé au développeur
-        1 : Vu par le développeur, recherche de l'origine du bug en cours.
-        2 : Résolution du bug en cours.
-        3 : Bug patché lors de la prochaine mise à jour;
-        4 : Bug corrigé.
+            Différents status des bugs :
+            0 : Envoyé au développeur
+            1 : Vu par le développeur, recherche de l'origine du bug en cours.
+            2 : Résolution du bug en cours.
+            3 : Bug patché lors de la prochaine mise à jour;
+            4 : Bug corrigé.
          */
         msgId: notReqString
-    }]
+    }],
+    supportSlashs: { type: Boolean, required: false}
 }));

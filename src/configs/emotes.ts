@@ -45,7 +45,8 @@ export default {
         dev: "<:devBadge:1050054279844610058>",
         premium: "<:premiumBadge:1050054380889575435>",
         verificator: "<:verificatorBadge:1050054657491349504>",
-        support: "<:supportBadge:1050054561441796147>"
+        support: "<:supportBadge:1050054561441796147>",
+        supportSlashs: "<:supportSlashs:1055077634389835786>"
     },
     discordicons: {
         list: "<:list:907877680395993110>",

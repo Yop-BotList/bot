@@ -20,7 +20,7 @@
     "path": "^0.12.7",
     "pretty-ms": "^7.0.1",
     "twemoji-parser": "^14.0.0",
-    "typescript": "^4.8.3"
+    "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@types/figlet": "^1.5.4",
@@ -43,7 +43,8 @@
     "prod:restart": "pm2 restart dist/index.js",
     "prod:list": "pm2 list",
     "prod:stop": "pm2 stop dist/index.js",
-    "prod:logs": "pm2 logs"
+    "prod:logs": "pm2 logs",
+    "start:noErrors": "ts-node-transpile-only src/index.ts"
   },
   "repository": {
     "type": "git",
