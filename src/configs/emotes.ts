@@ -1,4 +1,4 @@
-// Retrouvez un exemble de la correspondance en image de ces valeurs ici : https://github.com/Yop-BotList/bot/wiki/Nos-emojis
+// Retrouvez un exemple de la correspondance en image de ces valeurs ici : https://github.com/Yop-BotList/bot/wiki/Nos-emojis
 
 export default {
     yes: "<a:oui2:909015463265173565>",
