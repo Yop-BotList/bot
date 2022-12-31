@@ -197,6 +197,6 @@ export = async (client: Class) => {
             botData.likes = 0;
             await botData.save();
         });
-    }, ms("1h"));
+    }, ms("24h"));
   }
 }
