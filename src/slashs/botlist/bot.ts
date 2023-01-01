@@ -1,4 +1,9 @@
-import { ApplicationCommandOptionType, CommandInteraction, PermissionsBitField } from "discord.js";
+import {
+    ApplicationCommandOptionType, ButtonInteraction,
+    ChatInputCommandInteraction,
+    CommandInteraction, GuildMember, Message,
+    PermissionsBitField, TextChannel, User
+} from "discord.js";
 import Class from "../..";
 import { config, channels, roles } from "../../configs";
 import BotModal from "../../modals/BotModal";
@@ -6,6 +11,7 @@ import { bots, verificators } from "../../models";
 import SendModal from "../../utils/SendModal";
 import Slash from "../../utils/Slash";
 import { newInfraction } from "../../utils/InfractionService"
+import EditDescModal from "../../modals/EditDescModal";
 
 class Bot extends Slash {
     constructor() {
@@ -120,9 +126,9 @@ class Bot extends Slash {
                                     name_localizations: {
                                         "en-US": "prefix"
                                     },
-                                    description: "Le préfixe de votre robot.",
+                                    description: "Le préfixe de votre robot (\"none\" pour supprimer).",
                                     description_localizations: {
-                                        "en-US": "The new prefix of your bot."
+                                        "en-US": "The new prefix of your bot (\"none\" to delete)."
                                     },
                                     required: true
                                 }
@@ -295,7 +301,7 @@ class Bot extends Slash {
         });
     }
     
-    async run(client: Class, interaction: CommandInteraction) {
+    async run(client: Class, interaction: ChatInputCommandInteraction) {
         const command = interaction.options.getSubcommand()
 
         switch (command) {
@@ -304,7 +310,7 @@ class Bot extends Slash {
                 const slashsSupport = interaction.options.getString("slashs");
                 const prefix = interaction.options.getString("prefix");
 
-                if (!bot.bot) return interaction.reply({
+                if (!bot || !bot.bot) return interaction.reply({
                     content: `**${client.emotes.no} ➜ Cet utilisateur n'est pas un bot.**`,
                     ephemeral: true
                 });
@@ -484,7 +490,13 @@ class Bot extends Slash {
                 break;
             }
             case "reject": {
-                const bot = interaction.options.getUser("bot")
+                // @ts-ignore
+                if (!interaction.member.roles.cache.has(roles.verificator)) return interaction.reply({
+                    content: `**${client.emotes.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**`,
+                    ephemeral: true
+                })
+
+                const bot = interaction.options.getUser("bot") as User
                 const reason = interaction.options.getString("raison")
                 const warn = interaction.options.getString("avertir")
 
@@ -525,7 +537,7 @@ class Bot extends Slash {
                 interaction.reply({
                     content: `**${client.emotes.yes} ➜ Le bot ${bot?.tag} vient bien d'être refusé pour la raison suivante :\n\`\`\`${reason}\`\`\`**`
                 })
-                if (warn === "yes") await newInfraction(client, bot, interaction.member!, interaction.guild!, "WARN", 'Non respect des conditions d’ajout de bot.', 0)
+                if (warn === "yes") await newInfraction(client, bot, interaction.member! as GuildMember, interaction.guild!, "WARN", 'Non respect des conditions d’ajout de bot.', 0)
 
                 await botGet.deleteOne();
 
@@ -533,6 +545,107 @@ class Bot extends Slash {
 
                 if (guildMember?.user && config.autokick === true) guildMember?.kick().catch(() => { });
                 break;
+            }
+            case "préfixe": {
+                const member = interaction.options.getUser("bot") as User
+                const prefix = interaction.options.getString("préfixe") as string
+
+                const db = await bots.findOne({ botId: member.id });
+                if (!db) return interaction.reply({ content: "**" + client.emotes.no + ' ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste. (Ce n\'est d\'ailleurs peut-être même pas un bot).**', ephemeral: true });
+
+                // @ts-ignore
+                if (db.ownerId !== interaction.user.id && !interaction.member!.roles.cache.get(roles.verificator) && !db.team.includes(interaction.user.id)) return interaction.reply({ content: "**" + client.emotes.no + " ➜ Désolé, mais vous n'avez pas la permission d'utiliser cette commande.**", ephemeral: true });
+
+                if (prefix === "none" && !db.supportSlashs) return interaction.reply({ content: `**${client.emotes.no} ➜ Vous avez indiqué que votre robot ne supportait pas les commandes slashs. Vous ne pouvez donc pas lui supprimer le préfixe.**`, ephemeral: true })
+
+                const channel = client.channels.cache.get(channels.botslogs);
+
+                channel?.isTextBased() ? channel.send({ content: `<@${db.ownerId}>${db.team!.length > 0 ? `, ${db.team!.map((x: string) => `<@${x}>`).join(", ")}` : ""}`, embeds: [
+                            {
+                                color: client.config.color.integer,
+                                title: "Modification du profil...",
+                                thumbnail: {
+                                    url: member.displayAvatarURL()
+                                },
+                                timestamp: new Date().toISOString(),
+                                description: `<@${interaction.user.id}> vient juste d'éditer le prefix de votre robot <@${member.id}> :`,
+                                fields: [
+                                    {
+                                        name: "➜ Avant :",
+                                        value: `\`\`\`${db.prefix}\`\`\``,
+                                        inline: false
+                                    }, {
+                                        name: "➜ Après :",
+                                        value: `\`\`\`${prefix !== "none" ? prefix : "null"}\`\`\``,
+                                        inline: false
+                                    }
+                                ]
+                            }
+                        ] })
+                    : new Error(`Channel botlogs: ${channels.botslogs} is not a text based channel.`);
+
+                interaction.reply(`**${client.emotes.yes} ➜ Modifications enregistrées !**`);
+
+                setTimeout(() => {
+                    interaction.guild?.members.cache.get(member.id)?.setNickname(`${prefix !== "none" ? `[${prefix}] ` : ""}${member.username}`).catch(() => {});
+
+                    db.prefix = prefix !== "none" ? prefix : "/";
+                    db.save();
+                }, 1000)
+
+                break;
+            }
+            case "description": {
+                const member = interaction.options.getUser("bot") as User
+                const description = interaction.options.getString("description") as string
+
+                const db = await bots.findOne({ botId: member.id });
+                if (!db) return interaction.reply({ content: "**" + client.emotes.no + ' ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste. (Ce n\'est d\'ailleurs peut-être même pas un bot).**', ephemeral: true });
+
+                // @ts-ignore
+                if (db.ownerId !== interaction.user.id && !interaction.member!.roles.cache.get(roles.verificator) && !db.team.includes(interaction.user.id)) return interaction.reply({ content: "**" + client.emotes.no + " ➜ Désolé, mais vous n'avez pas la permission d'utiliser cette commande.**", ephemeral: true });
+
+                if (description === "delete") {
+                    if (!db.description) return interaction.reply({ content: "**" + client.emotes.no + ' ➜ Tu m\'as demandé supprimer une description qui n\'a jamais été enregistrée ¯\\_(ツ)_/¯**', ephemeral: true });
+
+                    const channel = client.channels.cache.get(channels.botslogs);
+                    channel?.isTextBased() ? channel.send({ content: `<@${db.ownerId}>${db.team!.length > 0 ? `, ${db.team!.map((x: string) => `<@${x}>`).join(", ")}` : ""}`, embeds: [
+                                {
+                                    color: client.config.color.integer,
+                                    title: "Modification du profil...",
+                                    thumbnail: {
+                                        url: member.displayAvatarURL()
+                                    },
+                                    timestamp: new Date().toISOString(),
+                                    description: `<@${interaction.user.id}> vient juste d'éditer la description de votre robot <@${member.id}> :`,
+                                    fields: [
+                                        {
+                                            name: "➜ Avant :",
+                                            value: `\`\`\`${db.description}\`\`\``,
+                                            inline: false
+                                        }, {
+                                            name: "➜ Après :",
+                                            value: `\`\`\`Aucune\`\`\``,
+                                            inline: false
+                                        }
+                                    ]
+                                }
+                            ] })
+                        : new Error(`Channel botlogs: ${channels.botslogs} is not a text based channel.`);
+
+                    setTimeout(() => {
+                        db.description = "";
+                        return db.save();
+                    }, 1000)
+
+                    return interaction.reply(`**${client.emotes.yes} ➜ Modifications enregistrées !**`);
+                }
+
+                if (description === "edit") {
+                    const modal = new EditDescModal(db.botId)
+                    await SendModal(client, interaction, modal)
+                    await modal.handleSubmit(client, interaction).catch(() => interaction)
+                }
             }
         }
     }

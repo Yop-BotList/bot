@@ -8,7 +8,7 @@ export default async function suggestManager(type: string, client: Class, intera
     
     if (!suggData) return;
     
-    if (suggData.voted.includes(interaction.user.id)) return interaction.reply({
+    if (suggData.voted!.includes(interaction.user.id)) return interaction.reply({
         content: "Vous avez déjà voté pour cette suggestion.",
         ephemeral: true
     });
@@ -19,8 +19,8 @@ export default async function suggestManager(type: string, client: Class, intera
     
     if (!message) return;
     
-    const forSugg = type === "FOR" ? suggData.for + 1 : suggData.for;
-    const againstSugg = type === "AGAINST" ? suggData.against + 1 : suggData.against;
+    const forSugg = type === "FOR" ? suggData.for! + 1 : suggData.for as number
+    const againstSugg = type === "AGAINST" ? suggData.against! + 1 : suggData.against as number
     let percentF = 50;
     let percentA = 50;
     
@@ -85,9 +85,9 @@ export default async function suggestManager(type: string, client: Class, intera
         components: message.components
     });
     
-    suggData.for = type === "FOR" ? suggData.for + 1 : suggData.for;
-    suggData.against = type === "AGAINST" ? suggData.against + 1 : suggData.against;
-    suggData.voted.push(interaction.user.id);
+    suggData.for = type === "FOR" ? suggData.for! + 1 : suggData.for;
+    suggData.against = type === "AGAINST" ? suggData.against! + 1 : suggData.against;
+    suggData.voted!.push(interaction.user.id);
     suggData.save();
     
     interaction.reply({

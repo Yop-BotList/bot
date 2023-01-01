@@ -50,7 +50,7 @@ class TeamManager extends Command {
                     footer: {
                         text: 'YopBot V' + client.version
                     },
-                    description: `Veuillez sélectionner l’une des options ci-dessous. ${oldData.team.length > 0 ? `La liste actuelle des membres de votre team est la suivante :\n${oldData.team.map(x => `> - <@${x}>${client.users.cache.get(x) ? " - " + client.users.cache.get(x)?.tag : ""}`).join('\n')}` : "Aucun autre membre dans la team"}`
+                    description: `Veuillez sélectionner l’une des options ci-dessous. ${oldData.team!.length > 0 ? `La liste actuelle des membres de votre team est la suivante :\n${oldData.team!.map(x => `> - <@${x}>${client.users.cache.get(x) ? " - " + client.users.cache.get(x)?.tag : ""}`).join('\n')}` : "Aucun autre membre dans la team"}`
                 }
             ],
             components: [
@@ -101,9 +101,9 @@ class TeamManager extends Command {
             await interaction.deferUpdate();
             const data = await bots.findOne({ botId: member.user.id });
 
-            if (interaction.isSelectMenu()) {
+            if (interaction.isStringSelectMenu()) {
                 if (interaction.values[0] === "transfer") {
-                    if (data!.team.length < 1) message.reply({
+                    if (data!.team!.length < 1) message.reply({
                         content: `**${client.emotes.no} ➜ Vous n'avez aucun membre dans votre team à qui transmettre la propriété.**`
                     }).then(m => setTimeout(() => { return m.delete() }, 3000));
 
@@ -139,7 +139,7 @@ class TeamManager extends Command {
 
                             const user = m.mentions.members?.first() || await message.guild?.members.fetch(m.content);
 
-                            if (!user || !data!.team.includes(user.user.id)) message.reply({
+                            if (!user || !data!.team!.includes(user.user.id)) message.reply({
                                 content: `**${client.emotes.no} ➜ Vous ne pouvez transférer la propriété uniquement à un membre présent le serveur ET dans votre team.**`
                             }).then((mm) => setTimeout(() => { return mm.delete() }, 3000));
 
@@ -188,7 +188,7 @@ class TeamManager extends Command {
                 }
 
                 if (interaction.values[0] === "add") {
-                    if (data!.team.length > 4) return msg.edit(`**${client.emotes.no} ➜ Une team ne peut pas dépasser les 5 membres.**`)
+                    if (data!.team!.length > 4) return msg.edit(`**${client.emotes.no} ➜ Une team ne peut pas dépasser les 5 membres.**`)
 
                     msg.edit({
                         embeds: [
@@ -221,11 +221,11 @@ class TeamManager extends Command {
 
                         const user = m.mentions.members!.first() || await message.guild!.members.fetch(m.content).catch(() => { });
 
-                        if (!user || data!.team.includes(user.user.id)) message.channel.send({
+                        if (!user || data!.team!.includes(user.user.id)) message.channel.send({
                             content: `**${client.emotes.no} ➜ Membre introuvable ou déjà présent dans votre team.**`
                         }).then((mm) => setTimeout(() => { return mm.delete() }, 3000));
 
-                        data?.team.push(user!.user.id);
+                        data?.team!.push(user!.user.id);
                         data?.save();
 
                         msg.edit({
@@ -240,7 +240,7 @@ class TeamManager extends Command {
                                     footer: {
                                         text: 'YopBot V' + client.version
                                     },
-                                    description: `Veuillez sélectionner l’une des options ci-dessous. ${data!.team.length > 0 ? `La liste actuelle des membres de votre team est la suivante :\n${data!.team.map(x => `> - <@${x}>${client.users.cache.get(x) ? " - " + client.users.cache.get(x)?.tag : ""}`).join('\n')}` : "Aucun autre membre dans la team"}`
+                                    description: `Veuillez sélectionner l’une des options ci-dessous. ${data!.team!.length > 0 ? `La liste actuelle des membres de votre team est la suivante :\n${data!.team!.map(x => `> - <@${x}>${client.users.cache.get(x) ? " - " + client.users.cache.get(x)?.tag : ""}`).join('\n')}` : "Aucun autre membre dans la team"}`
                                 }
                             ],
                             components: [
@@ -318,11 +318,11 @@ class TeamManager extends Command {
 
                         const user = m.mentions.members!.first() || await message.guild!.members.fetch(m.content).catch(() => { });
 
-                        if (!user || data!.team.includes(user.user.id)) message.channel.send({
+                        if (!user || data!.team!.includes(user.user.id)) message.channel.send({
                             content: `**${client.emotes.no} ➜ Membre introuvable ou déjà présent dans votre team.**`
                         }).then((mm) => setTimeout(() => { return mm.delete() }, 3000));
 
-                        const newArray = data!.team.filter((x: string) => x !== user!.user.id);
+                        const newArray = data!.team!.filter((x: string) => x !== user!.user.id);
                         data!.team = newArray;
                         data?.save();
 
@@ -398,7 +398,7 @@ class TeamManager extends Command {
                             footer: {
                                 text: 'YopBot V' + client.version
                             },
-                            description: `Veuillez sélectionner l’une des options ci-dessous. ${data!.team.length > 0 ? `La liste actuelle des membres de votre team est la suivante :\n${data!.team.map(x => `> - <@${x}>${client.users.cache.get(x) ? " - " + client.users.cache.get(x)?.tag : ""}`).join('\n')}` : "Aucun autre membre dans la team"}`
+                            description: `Veuillez sélectionner l’une des options ci-dessous. ${data!.team!.length > 0 ? `La liste actuelle des membres de votre team est la suivante :\n${data!.team!.map(x => `> - <@${x}>${client.users.cache.get(x) ? " - " + client.users.cache.get(x)?.tag : ""}`).join('\n')}` : "Aucun autre membre dans la team"}`
                         }
                     ],
                     components: [
@@ -441,7 +441,7 @@ class TeamManager extends Command {
 
                 if (interaction.customId === "btnYes") {
                     data!.ownerId = memberToTransfer;
-                    const newArray = data!.team.filter(teammate => teammate !== memberToTransfer);
+                    const newArray = data!.team!.filter(teammate => teammate !== memberToTransfer);
                     newArray.push(message.author.id);
                     data!.team = newArray;
                     data!.save();

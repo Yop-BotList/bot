@@ -104,7 +104,7 @@ class Bugs extends Slash {
                 })
 
                 await buglogs.send({
-                    content: `<@${data.ownerId}>${data.team.length > 0 ? `, ${data.team.map((x: string) => `<@${x}>`).join(", ")}` : ""}`,
+                    content: `<@${data.ownerId}>${data.team!.length > 0 ? `, ${data.team!.map((x: string) => `<@${x}>`).join(", ")}` : ""}`,
                     embeds: [
                         {
                             title: "Nouveau bug signalé !",

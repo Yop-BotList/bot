@@ -66,7 +66,7 @@ export = async (client: Class, member: GuildMember) => {
       
       if (data && data.verified === true) member.roles.add(roles.listedbot)
       if (data && data.verified === false) member.roles.add(roles.botintests)
-      member.setNickname(`[${data.prefix}] ${member.user.username}`)
+      member.setNickname(`[${data!.prefix}] ${member.user.username}`)
       
       const owner = await member.guild.members.fetch(data!.ownerId!)
       

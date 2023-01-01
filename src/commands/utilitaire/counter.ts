@@ -23,9 +23,9 @@ class Counter extends Command {
             const userData = await users.find();
             
             if (!userData || userData.length < 2) return message.reply(`**${client.emotes.no} ➜ Il n'y a pas assez de compteurs dans le classement pour que je puisse afficher en afficher un.**`);
-            let array = userData.sort((a, b) => (a.totalNumbers < b.totalNumbers) ? 1 : -1).slice(0, 10);
-            let fullList = userData.sort((a, b) => (a.totalNumbers < b.totalNumbers) ? 1 : -1);
-            let listQuiSertJustePourLaListePrecedente = userData.sort((a, b) => (a.totalNumbers < b.totalNumbers) ? 1 : -1); //ne pas supprimer
+            let array = userData.sort((a, b) => (a.totalNumbers! < b.totalNumbers!) ? 1 : -1).slice(0, 10);
+            let fullList = userData.sort((a, b) => (a.totalNumbers! < b.totalNumbers!) ? 1 : -1);
+            let listQuiSertJustePourLaListePrecedente = userData.sort((a, b) => (a.totalNumbers! < b.totalNumbers!) ? 1 : -1); //ne pas supprimer
             
             array = array.filter(element => element.totalNumbers !== 0);
             
@@ -57,7 +57,7 @@ class Counter extends Command {
                 content: `**${client.emotes.no} ➜ Impossible d'afficher les objectifs car le compteur n'est pas mis en place.**`
             });
 
-            client.counterObjectifs.forEach((objectif: number) => (objectif < counterDb!.counter) ? objectifs.push(`**${client.emotes.yes} Atteint ➜ ${objectif}**`) : objectifs.push(`**${client.emotes.no} Non atteint ➜ ${objectif}**`));
+            client.counterObjectifs.forEach((objectif: number) => (objectif < counterDb!.counter!) ? objectifs.push(`**${client.emotes.yes} Atteint ➜ ${objectif}**`) : objectifs.push(`**${client.emotes.no} Non atteint ➜ ${objectif}**`));
 
             message.reply({
                 embeds: [

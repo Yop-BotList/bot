@@ -7,7 +7,7 @@ export default abstract class Slash {
     name_localizations: Partial<Record<"en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", string | null>> | undefined;
     description: string;
     description_localizations: Partial<Record<"en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", string | null>> | undefined;
-    options: ApplicationCommandOptionData[] | undefined;
+    options: any[] | undefined;
     default_member_permissions: bigint | undefined;
     dm_permission: boolean;
     guild_id: string | undefined;
@@ -33,7 +33,7 @@ interface SlashData {
     name_localizations?: LocalizationMap;
     description: string;
     description_localizations?: LocalizationMap;
-    options?: ApplicationCommandOptionData[];
+    options?: any[];
     default_member_permissions?: bigint;
     dm_permission?: boolean
 }

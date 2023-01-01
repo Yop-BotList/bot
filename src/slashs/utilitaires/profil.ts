@@ -1,4 +1,4 @@
-import { CommandInteraction, PermissionsBitField } from "discord.js";
+import {CommandInteraction, GuildMember, PermissionsBitField} from "discord.js";
 import Class from "../..";
 import { config, emotes } from "../../configs";
 import Slash from "../../utils/Slash";
@@ -31,15 +31,15 @@ class Profil extends Slash {
     }
 
     async run(client: Class, interaction: CommandInteraction) {
-        let member = interaction.guild.members.cache.get(interaction.options.getUser("membre")?.id || interaction.user.id) || interaction.guild.members.fetch(interaction.options.getUser("membre")?.id || interaction.user.id).catch(() => {}) || interaction.member
+        let member = interaction.guild!.members.cache.get(interaction.options.getUser("membre")?.id || interaction.user.id) || await interaction.guild!.members.fetch(interaction.options.getUser("membre")?.id || interaction.user.id).catch(() => {}) || interaction.member;
 
-        if (!member!.user.bot) {
+        if (!member!.user!.bot) {
             const data = await bots.find();
 
             let robots: any[] = []
 
             data.forEach(x => {
-                if (x.ownerId === member!.user.id || x.team.includes(member!.user.id)) robots.push(x.botId)
+                if (x.ownerId === member!.user!.id || x.team!.includes(member!.user!.id)) robots.push(x.botId)
             })
 
             /**
@@ -47,13 +47,13 @@ class Profil extends Slash {
              * @return String
              */
             async function drawBadges () {
-                const user = await users.findOne({ userId: member!.user.id })
+                const user = await users.findOne({ userId: member!.user!.id })
 
                 if (!user) return ""
 
                 let list = ""
 
-                user.badges.forEach(async (badge: { id: string; acquired: boolean; }) => {
+                user.badges.forEach(async (badge: any) => {
                 if (!badge.acquired) return;
 
                 switch (badge.id) {
@@ -89,11 +89,11 @@ class Profil extends Slash {
 
             let components = []
 
-            const data2 = await verificators.findOne({ userId: member.user.id })
-            if (data2.verifications) components.push({
+            const data2 = await verificators.findOne({ userId: member!.user!.id })
+            if (data2!.verifications) components.push({
                 type: 2,
                 style: 1,
-                label: `${data2.verifications || 0} vérification(s)`,
+                label: `${data2!.verifications || 0} vérification(s)`,
                 disabled: true,
                 customId: "VERIFICATIONS"
             })
@@ -101,28 +101,33 @@ class Profil extends Slash {
                 type: 2,
                 style: 5,
                 label: "Voir sur le site !",
-                url: `https://yopbotlist.me/users/${member!.user.id}`
+                url: `https://yopbotlist.me/users/${member!.user!.id}`
             })
 
             interaction.reply({
                 embeds: [
                 {
-                    title: `Informations sur ${member!.user.tag}`,
+                    // @ts-ignore
+                    title: `Informations sur ${member!.user!.tag}`,
                     color: client.config.color.integer,
                     thumbnail: {
-                    url: member!.user.displayAvatarURL()
+                        // @ts-ignore
+                        url: member!.user.displayAvatarURL()
                     },
                     fields: [
                     {
                         name: '__🏷 Nom :__',
+                        // @ts-ignore
                         value: `> <@${member!.user.id}> (\`${member!.user.tag}\`) ${await drawBadges()}`,
                         inline: false
                     }, {
                         name: '__📆 Date de création :__',
+                        // @ts-ignore
                         value: `> ${moment(member!.user.createdAt).format('Do MMMM YYYY')}`,
                         inline: false
                     }, {
                         name: '__📆 A rejoint le :__',
+                        // @ts-ignore
                         value: `> ${moment(member!.joinedAt).format('Do MMMM YYYY')}`,
                         inline: true
                     }, {
@@ -147,22 +152,27 @@ class Profil extends Slash {
             if (!db) interaction.reply({
                 embeds: [
                     {
+                        // @ts-ignore
                         title: `Informations sur ${member!.user.tag}`,
                         color: client.config.color.integer,
                         thumbnail: {
-                        url: member!.user.displayAvatarURL()
+                            // @ts-ignore
+                            url: member!.user.displayAvatarURL()
                         },
                         fields: [
                             {
                                 name: '__🏷 Nom :__',
+                                // @ts-ignore
                                 value: `> <@${member!.user.id}> (\`${member!.user.tag}\`)`,
                                 inline: false
                             }, {
                                 name: '__📆 Date de création :__',
+                                // @ts-ignore
                                 value: `> ${moment(member!.user.createdAt).format('Do MMMM YYYY')}`,
                                 inline: false
                             }, {
                                 name: '__📆 A rejoint le :__',
+                                // @ts-ignore
                                 value: `> ${moment(member!.joinedAt).format('Do MMMM YYYY')}`,
                                 inline: true
                             }
@@ -178,22 +188,26 @@ class Profil extends Slash {
                 owners = [];
 
                 owners.push(db.ownerId)
-                if (db.team?.length > 0) db.team.forEach(async (x) => owners.push(x))
+                if (db.team!.length > 0) db.team!.forEach(async (x) => owners.push(x))
 
                 interaction.reply({
                     embeds: [
                         {
+                            // @ts-ignore
                             title: `Informations sur ${member!.user.tag}`,
                             color: client.config.color.integer,
                             thumbnail: {
+                                // @ts-ignore
                                 url: member!.user.displayAvatarURL()
                             },
                             footer: {
+                                // @ts-ignore
                                 text: `${member!.user.username} a rejoint la liste le ${moment(member!.joinedAt).format('Do MMMM YYYY')}`
                             },
                             fields: [
                                 {
                                 name: '__:robot: Nom :__',
+                                // @ts-ignore
                                 value: `> <@${member!.user.id}> (\`${member!.user.tag}\`)`,
                                 inline: true
                                 }, {
