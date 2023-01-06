@@ -133,7 +133,7 @@ class Bugs extends Slash {
                     }
 
                     setTimeout(async () => {
-                        if (thread) thread.send({
+                        thread.send({
                             content: `<@${interaction.user.id}> veuillez détailler ici comment en êtes vous arrivé(e) à tomber sur ce bug pour que l'équipe de <@${data.botId}> puisse avoir le plus de facilités possible pour régler ce problème.`,
                             embeds: [
                                 {
@@ -189,7 +189,7 @@ class Bugs extends Slash {
                                 content: `**${client.emotes.yes} ➜ Signalement envoyé au développeur. Vous pouvez détailler votre signalement dans le <#${thread.id}>.**`
                             })
                         })
-                    }, 1000)
+                    }, 100)
                 })
                 break;
             }
