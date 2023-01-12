@@ -3,6 +3,7 @@ import Class from "..";
 import onCooldown from "./onCooldown";
 import moment from "moment";
 import { channels } from "../configs";
+import { roles } from "../configs";
 
 export default function execCommand(command: any, client: Class, message: Message, args: string[]): Promise<Message<boolean>> | undefined {
     const channel = message.channel as TextChannel;
@@ -38,7 +39,7 @@ export default function execCommand(command: any, client: Class, message: Messag
         if (!message.member?.roles.cache.has(command.requiredRole)) return message.reply({ content: `**${client.emotes.no} ➜ Vous n'avez pas le rôle requis pour utiliser cette commande.**` });
     }
 
-    if (onCooldown(client, message, command) && !client.config.owners.includes(message.author.id)) return message.reply({ content: `**${client.emotes.no} ➜ Veuillez patienter encore ${onCooldown(client, message, command)} avant de pouvoir réutiliser la commande \`${command.name}\` !**` });
+    if (onCooldown(client, message, command) && !message.member?.roles.cache.has(roles.bypass) && !client.config.owners.includes(message.author.id)) return message.reply({ content: `**${client.emotes.no} ➜ Veuillez patienter encore ${onCooldown(client, message, command)} avant de pouvoir réutiliser la commande \`${command.name}\` !**` });
 
     if (command.minArgs > 0 && args.length < command.minArgs) return message.reply({ content: `**${client.emotes.no} ➜ \`${command.usage}\`**` });
 
