@@ -1,7 +1,7 @@
 export default {
-    token: "",
+    token: "token",
     prefix: "y/",
-    mongooseConnectionString: "",
+    mongooseConnectionString: "URL Mongo",
     color: {
         hexa: "#f2ac34",
         integer: 0xf2ac34
