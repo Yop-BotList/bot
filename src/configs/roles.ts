@@ -1,5 +1,5 @@
 export default {
-    verificator: "782676062306959413",
+    verificator: "848550188095242261",
     isclient: "784480914587254795",
     ticketsaccess: "829348127345344584",
     botintests: "783691786664673280",

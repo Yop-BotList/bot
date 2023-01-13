@@ -11,7 +11,7 @@ class Counter extends Command {
             category: "Utilitaire",
             description: 'Voir les plus grands compteurs du serveur.',
             aliases: ['count'],
-            cooldown: 5,
+            cooldown: 3000,
             minArgs: 1,
             example: ['counter <leaderboard | objectifs>'],
             usage: 'counter <leaderboard | objectifs>'

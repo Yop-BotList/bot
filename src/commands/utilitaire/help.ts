@@ -10,7 +10,7 @@ class Help extends Command {
             category: 'Utilitaire',
             description: 'Affiche la liste des commandes disponibles.',
             usage: 'help [commande]',
-            cooldown: 0
+            cooldown: 3000
         });
     }
     

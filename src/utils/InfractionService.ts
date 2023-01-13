@@ -135,7 +135,7 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         });
         
         let embed = {
-            title: 'Nouvelle infraction',
+            title: `Nouvelle infraction : ${warnCode}`,
             color: client.config.color.integer,
             timestamp: new Date().toISOString(),
             thumbnail: {
@@ -151,7 +151,7 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         }));
         
         embed = {
-            title: 'Nouvelle infraction', 
+            title: `Nouvelle infraction : ${warnCode}`,
             color: client.config.color.integer,
             timestamp: new Date().toISOString(),
             thumbnail: {

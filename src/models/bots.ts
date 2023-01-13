@@ -39,5 +39,6 @@ export default model("bots", new Schema({
          */
         msgId: notReqString
     }],
-    supportSlashs: { type: Boolean, required: false}
+    supportSlashs: { type: Boolean, required: false},
+    msgID: { type: String, required: false}
 }));

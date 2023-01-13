@@ -9,7 +9,7 @@ export default function execCommand(command: any, client: Class, message: Messag
     const channel = message.channel as TextChannel;
     if (channel.name.startsWith("🎫・ticket-")) return;
 
-    if (!channels.commandsChannel.includes(channel.id)) return message.reply({ content: `**${client.emotes.no} ➜ Merci d'utiliser un channel approprié pour executer les commandes.**` })
+    if (!channels.commandsChannel.includes(channel.id)) return message.reply({ content: `**${client.emotes.no} ➜ Merci d'utiliser un channel approprié pour exécuter les commandes.**` })
 
     if (command.owner === true) {
         if (!client.config.owners.includes(message.author.id)) return message.reply({ content: `**${client.emotes.no} ➜ Vous n'avez pas la permission d'utiliser cette commande.**` });

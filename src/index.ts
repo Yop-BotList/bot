@@ -9,6 +9,7 @@ import mongoconnection from "./functions/mongoose";
 import moment from "moment";
 
 
+
 class Class extends Client {
     version: string;
     cooldowns: Collection<string, any>;
