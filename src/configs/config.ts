@@ -1,7 +1,7 @@
 export default {
-    token: "Nzg4MDg0OTk4ODAwMjc3NTY0.GGsPSA.ZIng0KnpHLFYohs28ye1fT5J4a-UIuH0iiVEgY",
+    token: "",
     prefix: "y/",
-    mongooseConnectionString: "mongodb+srv://DBTestUser:KUQYggyda05MW2n5@cluster0.pqoag.mongodb.net/?retryWrites=true&w=majority",
+    mongooseConnectionString: "",
     color: {
         hexa: "#f2ac34",
         integer: 0xf2ac34
@@ -9,6 +9,8 @@ export default {
     autokick: true,
     staffGuildId: "839895687340753026",
     owners: [
+        "692374264476860507",
+        "650664078649458699",
         "458218450393890831"
     ],
     mainguildid: "839895687340753026",
