@@ -10,5 +10,3 @@ yarn.lock
 package-lock.json
 *.txt
 src/configs/config.ts
-
-src/configs/config.ts
