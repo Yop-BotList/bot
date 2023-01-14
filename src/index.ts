@@ -26,7 +26,7 @@ class Class extends Client {
                 Partials.Channel,
                 Partials.GuildMember,
                 Partials.Message,
-                Partials.Reaction
+                Partials.Reaction,
             ],
             intents: [
                 "Guilds",

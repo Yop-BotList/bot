@@ -216,7 +216,7 @@ class Profil extends Slash {
                                 inline: true
                                 }, {
                                 name: '__:bookmark_tabs: Préfixe :__',
-                                value: `> ${db.prefix || ""} ${db.supportSlashs && db.supportSlashs === true ? emotes.badges.supportSlashs : ""}`,
+                                value: `> ${db.prefix && db.prefix !== "/" && db.prefix !== "/cmd" && db.prefix !== "/cmds" && db.prefix !== "/command" && db.prefix !== "/commands" ? db.prefix :  ""} ${db.supportSlashs && db.supportSlashs === true ? emotes.badges.supportSlashs : ""}`,
                                 inline: true
                                 }, {
                                 name: '__:pencil: Description :__',

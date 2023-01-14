@@ -266,6 +266,12 @@ export default class TicketsDM {
                                             },
                                             value: "B"
                                         }, {
+                                            label: "YopHeberg",
+                                            emoji: {
+                                                name: "🌐"
+                                            },
+                                            value: "D"
+                                        }, {
                                             label: "Autre / Other",
                                             emoji: {
                                                 name: "☎"
@@ -281,7 +287,7 @@ export default class TicketsDM {
                 });
             }
             
-            if (interaction.isSelectMenu()) {
+            if (interaction.isStringSelectMenu()) {
 
                 if (interaction.values[0] === "A") { // @ts-ignore
                     this._handleTicket(msg, collector, interaction, "Signaler un bug / Report a bug");
@@ -293,6 +299,10 @@ export default class TicketsDM {
                 
                 if (interaction.values[0] === "C") { // @ts-ignore
                     this._handleTicket(msg, collector, interaction, "Autre / Other");
+                }
+
+                if (interaction.values[0] === "D") { // @ts-ignore
+                    this._handleTicket(msg, collector, interaction, "YopHeberg")
                 }
             }
         });

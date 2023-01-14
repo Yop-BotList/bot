@@ -178,6 +178,34 @@ class Bot extends Slash {
                                 }
                             ]
                         },
+                        {
+                            type: 1,
+                            name: "slashs",
+                            description: "Modifier si votre robot prend en charge les commandes slash.",
+                            description_localizations: {
+                                "en-US": "Edit if your bot supports slash commands."
+                            },
+                            options: [
+                                {
+                                    type: 6,
+                                    name: "bot",
+                                    description: "Robot dont vous souhaitez modifier la prise en charge des commandes slash.",
+                                    description_localizations: {
+                                        "en-US": "Bot for which you want to edit the support of slash commands."
+                                    },
+                                    required: true
+                                },
+                                {
+                                    type: 5,
+                                    name: "slashs",
+                                    description: "Est-ce que votre robot prend en charge les commandes slash ?",
+                                    description_localizations: {
+                                        "en-US": "Does your bot support slash commands ?"
+                                    },
+                                    required: true
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -236,67 +264,7 @@ class Bot extends Slash {
                             max_length: 4
                         }
                     ]
-                },
-                {
-                    type: 1,
-                    name: "reject",
-                    description: "Refuser un robot.",
-                    description_localizations: {
-                        "en-US": "Reject a bot."
-                    },
-                    options: [
-                        {
-                            type: 6,
-                            name: "bot",
-                            description: "Le robot que vous souhaitez refuser.",
-                            description_localizations: {
-                                "en-US": "The bot you want to reject."
-                            },
-                            required: true
-                        },
-                        {
-                            type: 3,
-                            name: "raison",
-                            name_localizations: {
-                                "en-US": "reason"
-                            },
-                            description: "Raison du refus",
-                            description_localizations: {
-                                "en-US": "Reason for rejection."
-                            },
-                            required: true,
-                            max_length: 200
-                        },
-                        {
-                            type: 3,
-                            name: "avertir",
-                            name_localizations: {
-                                "en-US": "warn"
-                            },
-                            description: "Avertir l'utilisateur ?",
-                            description_localizations: {
-                                "en-US": "Warn user?"
-                            },
-                            required: true,
-                            choices: [
-                                {
-                                    name: "✅ Oui",
-                                    name_localizations: {
-                                        "en-US": "✅Yes "
-                                    },
-                                    value: "yes"
-                                },
-                                {
-                                    name: "❌ Non",
-                                    name_localizations: {
-                                        "en-US": "❌ No"
-                                    },
-                                    value: "no"
-                                }
-                            ]
-                        }
-                    ]
-                },
+                }
             ]
         });
     }
@@ -645,10 +613,7 @@ class Bot extends Slash {
 
                         break;
                     }
-                case
-                    "description"
-                :
-                    {
+                case "description": {
                         const member = interaction.options.getUser("bot") as User
                         const description = interaction.options.getString("description") as string
 
@@ -712,8 +677,66 @@ class Bot extends Slash {
                             await modal.handleSubmit(client, interaction).catch(() => interaction)
                         }
                     }
+                    case "slashs": {
+                        const member = interaction.options.getUser("bot") as User;
+                        const slashs = interaction.options.getBoolean("slashs") as boolean;
+
+                        const db = await bots.findOne({botId: member.id});
+
+                        if (!db) return interaction.reply({
+                            content: "**" + client.emotes.no + ' ➜ Désolé, mais je ne retrouve pas ce bot sur ma liste. (Ce n\'est d\'ailleurs peut-être même pas un bot).**',
+                            ephemeral: true
+                        })
+                        // @ts-ignore
+                        if (db.ownerId !== interaction.user.id && !interaction.member!.roles.cache.get(roles.verificator) && !db.team.includes(interaction.user.id)) return interaction.reply({
+                            content: "**" + client.emotes.no + " ➜ Désolé, mais vous n'avez pas la permission d'utiliser cette commande.**",
+                            ephemeral: true
+                        })
+
+                        if (slashs === db.supportSlashs) return interaction.reply({
+                            content: "**" + client.emotes.no + ' ➜ Tu m\'as demandé de modifier la prise en charge des commandes slashs de ton robot, mais tu n\'as pas changé la valeur actuelle...**',
+                            ephemeral: true
+                        })
+
+                        const channel = client.channels.cache.get(channels.botslogs) as TextChannel;
+
+                        channel?.isTextBased() ? channel.send({
+                                content: `<@${db.ownerId}>${db.team!.length > 0 ? `, ${db.team!.map((x: string) => `<@${x}>`).join(", ")}` : ""}`,
+                                embeds: [
+                                    {
+                                        color: client.config.color.integer,
+                                        title: "Modification du profil...",
+                                        thumbnail: {
+                                            url: member.displayAvatarURL()
+                                        },
+                                        timestamp: new Date().toISOString(),
+                                        description: `<@${interaction.user.id}> vient juste d'éditer la prise en charge des commandes slashs de votre robot <@${member.id}> :`,
+                                        fields: [
+                                            {
+                                                name: "➜ Avant :",
+                                                value: `\`\`\`${db!.supportSlashs ? "Oui" : "Non"}\`\`\``,
+                                                inline: false
+                                            }, {
+                                                name: "➜ Après :",
+                                                value: `\`\`\`${slashs ? "Oui" : "Non"}\`\`\``,
+                                                inline: false
+                                            }
+                                        ]
+                                    }
+                                ]
+                            })
+                            : new Error(`Channel botlogs: ${channels.botslogs} is not a text based channel.`);
+
+                        setTimeout(() => {
+                            db!.supportSlashs = slashs;
+                            db!.save();
+                        }, 1000)
+
+                        return interaction.reply(`**${client.emotes.yes} ➜ Modifications enregistrées !**`);
+                        break
+                    }
                 }
             }
         }
 
-        export = new Bot;
+export = new Bot;
