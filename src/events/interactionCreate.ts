@@ -1,12 +1,12 @@
-import {Interaction, Message, SelectMenuInteraction, ThreadChannel} from "discord.js";
+import { Interaction, Message, SelectMenuInteraction, ThreadChannel, ChannelType } from "discord.js";
 import Class from "..";
 import TicketsDM from "../functions/ticketsDM";
-import {users, bots, verificators} from "../models";
+import { users, bots, verificators } from "../models";
 import FaqModal from "../modals/FaqModal";
 import RejectBotModal from "../modals/RejectBotModal";
 import SendModal from "../utils/SendModal";
 import suggestManager from "../functions/suggestManager";
-import {roles} from "../configs"
+import { roles, emotes } from "../configs"
 
 
 export = async (client: Class, interaction: Interaction) => {
@@ -29,7 +29,7 @@ export = async (client: Class, interaction: Interaction) => {
     }
     if (interaction.isButton()) {
         if (interaction.customId === "faqVerifBtn") {
-            const userFind = await users.findOne({userId: interaction.user.id});
+            const userFind = await users.findOne({ userId: interaction.user.id });
 
             if (!userFind) new users({
                 readFaq: false,
@@ -62,7 +62,7 @@ export = async (client: Class, interaction: Interaction) => {
                 ]
             }).save();
 
-            const userGet = await users.findOne({userId: interaction.user.id});
+            const userGet = await users.findOne({ userId: interaction.user.id });
 
             if (userGet!.readFaq === true) return interaction.reply({
                 ephemeral: true,
@@ -98,7 +98,7 @@ export = async (client: Class, interaction: Interaction) => {
         if (interaction.customId.endsWith("bugChangeStatus")) {
             const data = interaction.customId.split(".")
 
-            const db = await bots.findOne({botId: data[0]})
+            const db = await bots.findOne({ botId: data[0] })
             //@ts-ignore
             if (!db || !interaction.member!.roles!.cache.has(roles.verificator) && interaction.user.id !== db!.ownerId && db.team && !db.team.includes(interaction.user.id)) return interaction.reply({
                 content: `**${client.emotes.no} ➜ Ce bot n'est pas listé ou ne vous appartient pas.**`,
@@ -123,28 +123,28 @@ export = async (client: Class, interaction: Interaction) => {
                                         label: "Investigations en cours...",
                                         value: "1",
                                         description: "Votre équipe de développement est actuellement en train de rechercher l'origine de ce bug.",
-                                        emoji: {name: "🔍"},
+                                        emoji: { name: "🔍" },
                                         default: bugData.status === 1
                                     },
                                     {
                                         label: "Résolution en cours...",
                                         value: "2",
                                         description: "Votre équipe de développement est actuellement en train de tenter de résoudre ce bug.",
-                                        emoji: {name: "💻"},
+                                        emoji: { name: "💻" },
                                         default: bugData.status === 2
                                     },
                                     {
                                         label: "Correctif publié lors de la prochaine mise à jour",
                                         value: "3",
                                         description: "Votre équipe de développement a résolu ce bug. Il sera corrigé lors de la prochaine mise à jour.",
-                                        emoji: {name: "📆"},
+                                        emoji: { name: "📆" },
                                         default: bugData.status === 3
                                     },
                                     {
                                         label: "Corrigé !",
                                         value: "4",
                                         description: "Ce bug a été corrigé !",
-                                        emoji: {name: "✅"},
+                                        emoji: { name: "✅" },
                                         default: bugData.status === 4
                                     }
                                 ]
@@ -156,7 +156,7 @@ export = async (client: Class, interaction: Interaction) => {
                 fetchReply: true
             }).then(async (msg: Message) => {
                 const filter = (x: any) => x.user.id === interaction.user.id && x.customId === "menuSelectBugStatus";
-                const collector = await msg.createMessageComponentCollector({filter, max: 1})
+                const collector = await msg.createMessageComponentCollector({ filter, max: 1 })
 
                 collector.on("collect", async (int: SelectMenuInteraction) => {
                     await int.deferUpdate()
@@ -193,7 +193,7 @@ export = async (client: Class, interaction: Interaction) => {
                         ]
                     })
 
-                    interaction.editReply({content: `**${client.emotes.yes} ➜ Statut modifié.**`, components: []})
+                    interaction.editReply({ content: `**${client.emotes.yes} ➜ Statut modifié.**`, components: [] })
 
                     if (int.values[0] === "3" || int.values[0] === "4") {
                         let bugLength = db.bugs.filter((x: any) => x.status !== 3 && x.status !== 4).length || 0
@@ -223,10 +223,10 @@ export = async (client: Class, interaction: Interaction) => {
                 ephemeral: true
             })
 
-            const adb = await bots.findOne({msgID: interaction.message.id})
+            const adb = await bots.findOne({ msgID: interaction.message.id })
 
             if (!adb) {
-                return interaction.reply({content: `Impossible de retrouver L'ID de l'embeds.`, ephemeral: true})
+                return interaction.reply({ content: `Impossible de retrouver L'ID de l'embeds.`, ephemeral: true })
             }
 
             if (adb) {
@@ -237,13 +237,13 @@ export = async (client: Class, interaction: Interaction) => {
                     ephemeral: true
                 })
 
-                await bots.findOneAndUpdate({botId: adb.botId}, {$unset: {msgID: String()}})
-                await bots.findOneAndUpdate({botId: adb.botId}, {$set: {verified: true}})
+                await bots.findOneAndUpdate({ botId: adb.botId }, { $unset: { msgID: String() } })
+                await bots.findOneAndUpdate({ botId: adb.botId }, { $set: { verified: true } })
 
                 // @ts-ignore
                 interaction.guild.channels.cache.get(interaction.channel.id).messages.fetch(interaction.message.id).then(async (msg) => {
-                    msg.edit({components: []})
-// @ts-ignore
+                    msg.edit({ components: [] })
+                    // @ts-ignore
                     interaction.channel.send({
                         // @ts-ignore
                         content: `<@${adb.ownerId}>`, embeds: [
@@ -272,10 +272,10 @@ export = async (client: Class, interaction: Interaction) => {
                 ephemeral: true
             })
 
-            const adb = await bots.findOne({msgID: interaction.message.id})
+            const adb = await bots.findOne({ msgID: interaction.message.id })
 
             if (!adb) {
-                return interaction.reply({content: `Impossible de retrouver L'ID de l'embeds.`, ephemeral: true})
+                return interaction.reply({ content: `Impossible de retrouver L'ID de l'embeds.`, ephemeral: true })
             }
 
             if (adb) {
@@ -293,5 +293,81 @@ export = async (client: Class, interaction: Interaction) => {
             }
         }
     }
-}
 
+    if (interaction.isStringSelectMenu()) {
+        await interaction.deferUpdate();
+        if (interaction.customId === 'notifs_mps') {
+            const user = await users.findOne({ userId: interaction.user.id })
+
+
+            if (interaction.values.includes("suggestion")) {
+              if (user) await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "suggestion" } } }, { upsert: false })
+
+              if (user) await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "suggestion", 'acquired': true } } }, { upsert: false })
+            }
+
+            if (!interaction.values.includes("suggestion")) {
+                if (user)   await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "suggestion" } } }, { upsert: false })
+
+                if (user)   await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "suggestion", 'acquired': false } } }, { upsert: false })
+            }
+
+            if (interaction.values.includes("reverification")) {
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "reverification" } } }, { upsert: false })
+
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "reverification", 'acquired': true } } }, { upsert: false })
+            }
+
+            if (!interaction.values.includes("reverification")) {
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "reverification" } } }, { upsert: false })
+
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "reverification", 'acquired': false } } }, { upsert: false })
+            }
+
+            if (interaction.values.includes("newbugs")) {
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "newbugs" } } }, { upsert: false })
+
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "newbugs", 'acquired': true } } }, { upsert: false })
+            }
+
+            if (!interaction.values.includes("newbugs")) {
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "newbugs" } } }, { upsert: false })
+
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "newbugs", 'acquired': false } } }, { upsert: false })
+            }
+
+            if (interaction.values.includes("sanction")) {
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "sanction" } } }, { upsert: false })
+
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "sanction", 'acquired': true } } }, { upsert: false })
+            }
+
+            if (!interaction.values.includes("sanction")) {
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "sanction" } } }, { upsert: false })
+
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "sanction", 'acquired': false } } }, { upsert: false })
+            }
+
+            if (interaction.values.includes("counter")) {
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "counter" } } }, { upsert: false })
+
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "counter", 'acquired': true } } }, { upsert: false })
+            }
+
+            if (!interaction.values.includes("counter")) {
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $pull: { notifs: { "name": "counter" } } }, { upsert: false })
+
+                await users.findOneAndUpdate({ userId: interaction.user.id }, { $push: { notifs: { "name": "counter", 'acquired': false } } }, { upsert: false })
+            }
+
+            if (interaction.channel!.type === ChannelType.GuildText) {
+                const channel = await client.channels.fetch(interaction.channelId)
+                // @ts-ignore
+                const msg = await channel!.messages.edit(interaction.message.id)
+                //    await msg.edit({ content: `**${emotes.yes} ➜ Modifications enregistrées !**`, embeds: [], components: [] })
+
+                await interaction.followUp({ content: `** ${emotes.yes} ➜ Modifications enregistrées !**` })
+            }
+        }
+    }
+}

@@ -21,7 +21,7 @@ async function newInfraction(client: Class, user: User, mod: GuildMember, guild:
         
         if (user.id === guild.ownerId) return resolve(`**${client.emotes.no} ➜ Vous ne pouvez pas sanctionner le propriétaire du serveur.**`);
         
-        if (member && member.roles?.highest.position >= mod.roles?.highest.position && mod.id !== guild.ownerId) return resolve(`**${client.emotes.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`);
+   //     if (member && member.roles?.highest.position >= mod.roles?.highest.position && mod.id !== guild.ownerId) return resolve(`**${client.emotes.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`);
         
         if (!reason) return resolve(`**${client.emotes.no} ➜ Veuillez entrer une raison.**`);
         

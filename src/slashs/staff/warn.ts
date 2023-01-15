@@ -56,7 +56,7 @@ class Warn extends Slash {
     if (!member || !member.user) return interaction.reply({ content: `**${client.emotes.no} ➜ Veuillez entrer un membre valide.**`, ephemeral: true });
 
     // @ts-ignore
-    if (member!.roles.highest.position >= interaction.member?.roles.highest.position) return interaction.reply({ content: `**${client.emotes.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`, ephemeral: true });
+   // if (member!.roles.highest.position >= interaction.member?.roles.highest.position) return interaction.reply({ content: `**${client.emotes.no} ➜ Ce membre est au même rang ou plus haut que vous dans la hiérarchie des rôles de ce serveur. Vous ne pouvez donc pas le sanctionner.**`, ephemeral: true });
 
     if (member?.user.bot) return interaction.reply({ content: `**${client.emotes.no} ➜ Le saviez-vous, avertir un bot est entièrement inutile puisqu'il n'en tiendra pas compte.**`, ephemeral: true });
 

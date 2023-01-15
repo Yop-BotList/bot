@@ -29,6 +29,50 @@ export default model("users", new Schema({
     readFaq: { type: Boolean, required: false, default: false },
     locale: { type: String, required: false },
     lastVoteDate: { type: Number, required: false },
+    notifs: [
+        {
+            name: { type: String, required: false, default : "suggestion" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            name: { type: String, required: false, default : "reverification" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            name: { type: String, required: false, default : "newbugs" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            name: { type: String, required: false, default : "sanction" },
+            acquired: { type: Boolean, required: false, default: false },
+        }, {
+            name: { type: String, required: false, default : "counter" },
+            acquired: { type: Boolean, required: false, default: false },
+        },
+    ],
+    
+
+
+
+
+
+/*
+
+notifs: {
+        suggestions: { type: Boolean, required: false },
+        reverifications: { type: Boolean, required: false },
+        newbugs: { type: Boolean, required: false },
+        sanctions: { type: Boolean, required: false },
+        counter: { type: Boolean, required: false },
+    },
+
+    */
+
+
+
+
+
+
+
+
+
     badges: [
         {
             id: { type: String, required: false, default : "dev" },

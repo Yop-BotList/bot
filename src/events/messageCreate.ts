@@ -30,23 +30,51 @@ export = async (client: Class, message: Message) => {
         cmdbl: false,
         ticketsbl: false,
         warns: [],
-        totalNumbers: 0
+        totalNumbers: 0,
+        notifs: [
+            {
+                name: "suggestion",
+                acquired: false
+            },
+            {
+                name: "reverification",
+                acquired: false
+            },
+            {
+                name: "newbugs",
+                acquired: false
+            },
+            {
+                name: "sanction",
+                acquired: false
+            },
+            {
+                name: "counter",
+                acquired: false
+            }
+        ]
     }).save()
 
     if (message.channelId === channels.counter) {
         message.delete()
         const counterDb = await counter.findOne();
 
+
+        for (const v of data!.notifs) {
+                if ((v.name === "counter" && v.acquired)) {
+                    return            
+        }}
+
         if (!counterDb || !counterDb.counter) {
-            if (Number(message.content) !== 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est 1.**`).catch(() => {})
+            if (Number(message.content) !== 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est 1.**`).catch(() => { })
 
             new counter({
                 counter: 1,
                 lastCountUser: message.author.id
             }).save();
         } else {
-            if (counterDb.lastCountUser === message.author.id) return message.author.send(`**${client.emotes.no} ➜ Vous êtes déjà le dernier utilisateur a avoir envoyé un nombre. Veuillez patienter...**`).catch(() => {})
-            if (Number(message.content) !== counterDb.counter + 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est ${counterDb.counter + 1}.**`).catch(() => {})
+            if (counterDb.lastCountUser === message.author.id) return message.author.send(`**${client.emotes.no} ➜ Vous êtes déjà le dernier utilisateur a avoir envoyé un nombre. Veuillez patienter...**`).catch(() => { })
+            if (Number(message.content) !== counterDb.counter + 1) return message.author.send(`**${client.emotes.no} ➜ Le prochain nombre est ${counterDb.counter + 1}.**`).catch(() => { })
 
             let actual = 100;
             let next = 100;
