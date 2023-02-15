@@ -1,13 +1,15 @@
 import { Schema, model } from "mongoose";
 
 export default model("suggests", new Schema({
-    content: { type: String, required: false },
-    userId: { type: String, required: false },
-    messageId: { type: String, required: false },
-    suggId: { type: Number, required: false },
-    accepted: { type: Boolean, required: false, default: false },
-    deleted: { type: Boolean, required: false, default: false },
-    for: { type: Number, required: false, default: 0 },
-    against: { type: Number, required: false, default: 0 },
-    voted: { type: [String], required: false }
+    against: {type: Number, required: true, default: 0},
+    content: {type: String, required: true},
+    for: {type: Number, required: true, default: 0},
+    id: {type: Number, required: true},
+    moderated: {type: Boolean, required: true, default: false},
+    msgId: {type: String, required: true},
+    userId: {type: String, required: true},
+    voted: [{
+        userId: {type: String, required: true},
+        vote: {type: String, required: true}
+    }]
 }));

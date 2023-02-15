@@ -5,8 +5,8 @@ import {users, bots, verificators} from "../models";
 import FaqModal from "../modals/FaqModal";
 import RejectBotModal from "../modals/RejectBotModal";
 import SendModal from "../utils/SendModal";
-import suggestManager from "../functions/suggestManager";
 import {roles} from "../configs"
+import {sendVoters, votesReceiver} from "../functions/voteReceiver";
 
 
 export = async (client: Class, interaction: Interaction) => {
@@ -31,7 +31,7 @@ export = async (client: Class, interaction: Interaction) => {
         if (interaction.customId === "faqVerifBtn") {
             const userFind = await users.findOne({userId: interaction.user.id});
 
-            if (!userFind) new users({
+            if (!userFind) await new users({
                 readFaq: false,
                 totalNumbers: 0,
                 warns: [],
@@ -70,30 +70,98 @@ export = async (client: Class, interaction: Interaction) => {
             });
 
             const faqModal = new FaqModal();
-            SendModal(client, interaction, faqModal);
-            faqModal.handleSubmit(client, interaction);
+            await SendModal(client, interaction, faqModal);
+            await faqModal.handleSubmit(client, interaction);
         }
 
-        if (interaction.customId === "forSugg") suggestManager("FOR", client, interaction);
-        if (interaction.customId === "botSugg") interaction.reply({
-            content: "Vous venez juste de voter pour cette suggestion.",
-            ephemeral: true
-        });
-        if (interaction.customId === "againstSugg") suggestManager("AGAINST", client, interaction);
-        if (interaction.customId === "suggestThread") {
-            interaction.message.edit({
-                embeds: interaction.message.embeds,
-                components: [interaction.message.components[0]]
-            });
+        if (interaction.customId === 'forSugg') await votesReceiver(client, "FOR", interaction)
+        if (interaction.customId === 'bofSugg') await votesReceiver(client, "BOF", interaction)
+        if (interaction.customId === 'againstSugg') await votesReceiver(client, "AGAINST", interaction)
+        if (interaction.customId === "viewVotersSugg") await sendVoters(client, interaction)
+        if (interaction.customId === "openThread") {
+            interaction.message.startThread({ name: `Suggestion de ${interaction.user.tag}`, reason: "Création automatique de fils." }).then(async (thread: ThreadChannel) => {
+                const currentEmbed = interaction.message.embeds[0]
 
-            interaction.message.startThread({
-                name: `Suggestion de ${interaction.message.embeds[0].title!.split(" ! ")[0].split(" ").slice(3).join(" ")}`
-            });
+                if (!currentEmbed) interaction.message.delete()
+
+                interaction.message.edit({
+                    embeds: [
+                        {
+                            title: currentEmbed.title!,
+                            thumbnail: {
+                                url: interaction.guild!.iconURL()!,
+                            },
+                            color: client.config.color.integer,
+                            timestamp: new Date().toISOString(),
+                            footer: {
+                                text: `YopBot V${client.version}`
+                            },
+                            description: currentEmbed.description!,
+                            fields: currentEmbed.fields!
+                        }
+                    ],
+                    components: [
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 2,
+                                    style: 3,
+                                    custom_id: "forSugg",
+                                    emoji: {
+                                        name: "👍"
+                                    }
+                                }, {
+                                    type: 2,
+                                    style: 2,
+                                    custom_id: "bofSugg",
+                                    emoji: {
+                                        name: "🤷"
+                                    }
+                                }, {
+                                    type: 2,
+                                    style: 4,
+                                    custom_id: "againstSugg",
+                                    emoji: {
+                                        name: "👎"
+                                    }
+                                },
+                            ]
+                        },
+                        {
+                            type: 1,
+                            components: [
+                                {
+                                    type: 2,
+                                    style: 1,
+                                    custom_id: "viewVotersSugg",
+                                    emoji: { name: "👀" },
+                                    label: "Voteurs"
+                                },
+                                {
+                                    type: 2,
+                                    style: 2,
+                                    custom_id: "openThread",
+                                    emoji: {name: "hierarchie", id: "907996994595848192"},
+                                    label: "Ouvrir un fil",
+                                    disabled: true
+                                }
+                            ]
+                        }
+                    ]
+                })
+
+                await interaction.reply({
+                    content: `${client.emotes.yes} ➜ Fil **ouvert** : <#${thread.id}> !`,
+                    ephemeral: true
+                })
+            })
+
         }
 
-        if (interaction.customId === "buttonTransfer") ticketManager.transfer(interaction);
+        if (interaction.customId === "buttonTransfer") await ticketManager.transfer(interaction);
 
-        if (interaction.customId === "buttonClose") ticketManager.transcript(interaction, interaction.channelId);
+        if (interaction.customId === "buttonClose") await ticketManager.transcript(interaction, interaction.channelId);
 
         if (interaction.customId.endsWith("bugChangeStatus")) {
             const data = interaction.customId.split(".")
@@ -218,7 +286,7 @@ export = async (client: Class, interaction: Interaction) => {
 
         if (interaction.customId === "AcceptBot") {
             // @ts-ignore
-            if (!interaction.member!.roles!.cache.has(roles.verificator) && !client.config.owners.includes(interaction.user.id)) return interaction.reply({
+            if (!interaction.member!.roles!.cache.has(roles.verificator)) return interaction.reply({
                 content: `**${client.emotes.no} ➜ Vous n'avez pas le rôle requis pour utiliser cette commande.**`,
                 ephemeral: true
             })
@@ -240,11 +308,10 @@ export = async (client: Class, interaction: Interaction) => {
                 await bots.findOneAndUpdate({botId: adb.botId}, {$unset: {msgID: String()}})
                 await bots.findOneAndUpdate({botId: adb.botId}, {$set: {verified: true}})
 
-                // @ts-ignore
-                interaction.guild.channels.cache.get(interaction.channel.id).messages.fetch(interaction.message.id).then(async (msg) => {
+                interaction.channel!.messages.fetch(interaction.message.id).then(async (msg) => {
                     msg.edit({components: []})
-// @ts-ignore
-                    interaction.channel.send({
+
+                    interaction.channel!.send({
                         // @ts-ignore
                         content: `<@${adb.ownerId}>`, embeds: [
                             {
@@ -261,13 +328,13 @@ export = async (client: Class, interaction: Interaction) => {
                             }
                         ]
                     })
-                })
+                }).catch(() => {})
             }
         }
 
         if (interaction.customId === "RejectBot") {
             // @ts-ignore
-            if (!interaction.member!.roles!.cache.has(roles.verificator) && !client.config.owners.includes(interaction.user.id)) return interaction.reply({
+            if (!interaction.member!.roles!.cache.has(roles.verificator)) return interaction.reply({
                 content: `**${client.emotes.no} ➜ Vous n'avez pas le rôle requis pour utiliser cette commande.**`,
                 ephemeral: true
             })
