@@ -1,25 +1,24 @@
-import { ButtonInteraction, Message } from "discord.js";
+import {ButtonInteraction, CommandInteraction, InteractionResponse, Message} from "discord.js";
 import Class from "../..";
-import { bots } from "../../models";
-import Command from "../../utils/Command";
-import { roles } from '../../configs'
+import Slash from "../../utils/Slash";
+import { bots } from "../../models"
 
-class Waiting extends Command {
+class Waiting extends Slash {
     constructor() {
         super({
-            name: 'waiting',
-            category: 'Botlist',
-            description: 'Recevoir un liste de tous les robots en attente de vérification sur le serveur.',
-            cooldown: 5,
-            //requiredRole: roles.verificator
-        })
+            name: "waiting",
+            description: "Afficher la liste d'attente de la liste.",
+            description_localizations: {
+                "en-US": "Display the waiting list of the bot list."
+            },
+        });
     }
 
-    async run(client: Class, message: Message): Promise<Message<boolean> | undefined> {
+    async run(client: Class, interaction: CommandInteraction) {
         const data = await bots.find({ verified: false });
         const dataChecked = await bots.find({ checked: false });
 
-        if (!data || data.length === 0 && dataChecked.length === 0) return message.reply({
+        if (!data || data.length === 0 && dataChecked.length === 0) return interaction.reply({
             content: `**🎉 ➜ Félicitations, tous les robots en attente sont vérifiés !**`
         });
 
@@ -33,19 +32,19 @@ class Waiting extends Command {
                     style: 1,
                     label: 'Voir les robots en attente de re-vérification',
                     custom_id: 'btn',
-                    disabled: dataChecked.length > 0 ? false : true
+                    disabled: dataChecked.length <= 0
                 }
             ]
         }] : [];
 
-        message.reply({
+        interaction.reply({
             embeds: [
                 {
                     title: 'Liste des robots en attente de ' + ((data.length === 0 && dataChecked.length > 0) ? 're-' : '') + 'vérification:',
                     color: client.config.color.integer,
                     timestamp: new Date().toISOString(),
                     thumbnail: {
-                        url: `${message.guild!.iconURL()}`
+                        url: interaction.guild!.iconURL()!
                     },
                     footer: {
                         text: 'YopBot V' + client.version
@@ -54,23 +53,23 @@ class Waiting extends Command {
                 }
             ],
             components: components
-        }).then(async (msg: Message) => {
+        }).then(async (res: InteractionResponse) => {
             if (components.length === 0) return;
 
-            const filter = (x: any) => x.user.id === message.author.id && x.customId === 'btn';
-            const collector = await msg.createMessageComponentCollector({ filter, time: 180000 })
+            const filter = (x: any) => x.user.id === interaction.user.id && x.customId === 'btn';
+            const collector = await res.createMessageComponentCollector({ filter, time: 180000 })
 
             collector.on('collect', async (interaction: ButtonInteraction) => {
                 await interaction.deferUpdate()
 
-                msg.edit({
+                await interaction.editReply({
                     embeds: [
                         {
                             title: 'Liste des robots en attente de re-vérification:',
                             color: client.config.color.integer,
                             timestamp: new Date().toISOString(),
                             thumbnail: {
-                                url: `${message.guild!.iconURL()}`
+                                url: interaction.guild!.iconURL()!
                             },
                             footer: {
                                 text: 'YopBot V' + client.version
