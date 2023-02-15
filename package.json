@@ -1,6 +1,6 @@
 {
   "name": "yop-bot",
-  "version": "4.2",
+  "version": "4.3",
   "description": "Botlist manager !",
   "main": "dist/index.js",
   "author": "YopBotList's STAFF",
