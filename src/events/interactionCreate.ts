@@ -298,7 +298,6 @@ export = async (client: Class, interaction: Interaction) => {
             }
 
             if (adb) {
-
                 const member_guild = await interaction.guild?.members.cache.get(adb.botId)
                 if (!member_guild) return interaction.reply({
                     content: `Impossible d'accepter le bot <@${adb.botId}> car il n'est pas présent sur le serveur.`,
@@ -329,6 +328,16 @@ export = async (client: Class, interaction: Interaction) => {
                         ]
                     })
                 }).catch(() => {})
+
+
+                await member_guild.roles.add(roles.listedbot)
+                await member_guild.roles.remove(roles.botintests)
+
+                const owner = await interaction.guild!.members.fetch(adb.ownerId).catch(() => null)
+
+                if (owner) {
+                    await owner.roles.add(roles.isclient)
+                }
             }
         }
 
