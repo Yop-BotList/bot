@@ -6,7 +6,7 @@ import { channels, roles } from '../configs';
 export = async (client: Class, member: GuildMember) => {
     if (member.guild.id !== client.config.mainguildid) return;
     
-    if (member.user.bot) {
+    if (member.user.bot && client.config.autokick) {
         const data = await bots.findOne({ botId: member.user.id });
         
         if (!data) return;
@@ -40,6 +40,40 @@ export = async (client: Class, member: GuildMember) => {
         }
         
         await bots.deleteOne({ botId: member.user.id });
+    }
+
+    if (!member.user.bot && client.config.autokick) {
+        const botget = await bots.find({ ownerID: member.user.id })
+
+        if (botget) {
+            botget.forEach(async x => {
+                const robot = await member.guild.members.fetch(x.botId);
+
+                const channel = client.channels.cache.get(channels.botslogs);
+
+                if (!channel || channel.type !== ChannelType.GuildText) return new Error(`Le salon de logs b’existe pas ou n’est pas un salon textuel`);
+
+                channel.send({
+                    embeds: [
+                        {
+                            title: `Suppression ...`,
+                            color: 0xFF0000,
+                            timestamp: new Date().toISOString(),
+                            footer: {
+                                text: `Vous pensez que c'est une erreur ? Envoyez-moi un Message Privé !`
+                            },
+                            description: `${member.user.username} vient juste de quitter le serveur. Son robot ${robot.user.username} a donc été supprimé de la liste.`,
+                            thumbnail: {
+                                url: member.user.displayAvatarURL()
+                            }
+                        }
+                    ]
+                });
+
+                robot.kick("Bot supprimé de la liste.")
+                await bots.deleteOne({ botID: x.botId })
+            });
+        }
     }
     
     if (!member.user.bot) {
