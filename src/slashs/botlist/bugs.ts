@@ -103,6 +103,70 @@ class Bugs extends Slash {
                     ]
                 })
 
+                async function sendMsgInThread (thread: ThreadChannel, data: any) {
+                    await thread!.send({
+                        content: `<@${interaction.user.id}> veuillez détailler ici comment en êtes vous arrivé(e) à tomber sur ce bug pour que l'équipe de <@${data.botId}> puisse avoir le plus de facilités possible pour régler ce problème.`,
+                        embeds: [
+                            {
+                                footer: {
+                                    text: "Version " + client.version
+                                },
+                                timestamp: new Date().toISOString(),
+                                color: client.config.color.integer,
+                                description: `\`\`\`md\n# ${interaction.options.getString("description")}\`\`\``,
+                                image: image && image?.contentType?.startsWith("image") ? { url: image.url, proxy_url: image.proxyURL, height: image.height || undefined, width: image.width || undefined } : undefined
+                            }
+                        ],
+                        components: []
+                    }).then(async (msg: Message) => {
+                        data.bugThread = thread!.id
+                        data.bugs.push({
+                            submitter: interaction.user.id,
+                            status: 0,
+                            msgId: msg.id
+                        })
+                        data.save()
+
+                        await msg.edit({
+                            content: `<@${interaction.user.id}> veuillez détailler ici comment en êtes vous arrivé(e) à tomber sur ce bug pour que l'équipe de <@${data.botId}> puisse avoir le plus de facilités possible pour régler ce problème.`,
+                            embeds: [
+                                {
+                                    footer: {
+                                        text: "Interagissez avec le bouton ci-dessous ! - Version " + client.version
+                                    },
+                                    timestamp: new Date().toISOString(),
+                                    color: client.config.color.integer,
+                                    description: `\`\`\`md\n# ${interaction.options.getString("description")}\`\`\``,
+                                    image: image && image?.contentType?.startsWith("image") ? {
+                                        url: image.url,
+                                        proxy_url: image.proxyURL,
+                                        height: image.height || undefined,
+                                        width: image.width || undefined
+                                    } : undefined
+                                }
+                            ],
+                            components: [
+                                {
+                                    type: 1,
+                                    components: [
+                                        {
+                                            type: 2,
+                                            style: 1,
+                                            customId: `${data.botId}.${msg.id}.bugChangeStatus`,
+                                            label: "Modifier le statut",
+                                            emoji: {name: "📝"}
+                                        }
+                                    ]
+                                }
+                            ]
+                        })
+                    })
+                }
+
+                await interaction.reply({
+                    content: `**${client.emotes.loading} ➜ Traitement de l'opération en cours...**`,
+                })
+
                 await buglogs.send({
                     content: `<@${data.ownerId}>${data.team!.length > 0 ? `, ${data.team!.map((x: string) => `<@${x}>`).join(", ")}` : ""}`,
                     embeds: [
@@ -121,75 +185,34 @@ class Bugs extends Slash {
                     ],
                     components: comp || []
                 }).then(async (message: Message) => {
-                    let thread: ThreadChannel;
-                    //@ts-ignore
-                    if (!data.bugThread || !client.channels.cache.get(data.bugThread) as ThreadChannel) {
-                        message.startThread({ name: `Bug(s) signalé(s) sur ${user!.username}` }).then((t: ThreadChannel) => {
-                            thread = t
+                    if (data.bugThread) {
+                        const thread = client.channels.cache.get(data.bugThread) as ThreadChannel;
+
+                        if (thread) {
+                            await sendMsgInThread(thread, data)
+                        } else {
+                            await message.startThread({
+                                name: `🐛 Bug report - ${user!.tag}`,
+                                autoArchiveDuration: 60,
+                                reason: `Bug report de ${interaction.user.tag} sur ${user!.tag}`
+                            }).then(async (thread: ThreadChannel) => {
+                                await sendMsgInThread(thread, data)
+                            })
+                        }
+                    }
+                    if (!data.bugThread) {
+                        await message.startThread({
+                            name: `🐛 Bug report - ${user!.tag}`,
+                            autoArchiveDuration: 60,
+                            reason: `Bug report de ${interaction.user.tag} sur ${user!.tag}`
+                        }).then(async (thread: ThreadChannel) => {
+                            await sendMsgInThread(thread, data)
                         })
                     }
-                    if (data.bugThread && client.channels.cache.get(data.bugThread) as ThreadChannel) {
-                        thread = client.channels.cache.get(data.bugThread) as ThreadChannel
-                    }
 
-                    setTimeout(async () => {
-                        thread.send({
-                            content: `<@${interaction.user.id}> veuillez détailler ici comment en êtes vous arrivé(e) à tomber sur ce bug pour que l'équipe de <@${data.botId}> puisse avoir le plus de facilités possible pour régler ce problème.`,
-                            embeds: [
-                                {
-                                    footer: {
-                                        text: "Version " + client.version
-                                    },
-                                    timestamp: new Date().toISOString(),
-                                    color: client.config.color.integer,
-                                    description: `\`\`\`md\n# ${interaction.options.getString("description")}\`\`\``,
-                                    image: image && image?.contentType?.startsWith("image") ? { url: image.url, proxy_url: image.proxyURL, height: image.height || undefined, width: image.width || undefined } : undefined
-                                }
-                            ],
-                            components: []
-                        }).then(async (msg: Message) => {
-                            data.bugThread = thread.id
-                            data.bugs.push({
-                                submitter: interaction.user.id,
-                                status: 0,
-                                msgId: msg.id
-                            })
-                            data.save()
-
-                            msg.edit({
-                                content: `<@${interaction.user.id}> veuillez détailler ici comment en êtes vous arrivé(e) à tomber sur ce bug pour que l'équipe de <@${data.botId}> puisse avoir le plus de facilités possible pour régler ce problème.`,
-                                embeds: [
-                                    {
-                                        footer: {
-                                            text: "Interagissez avec le bouton ci-dessous ! - Version " + client.version
-                                        },
-                                        timestamp: new Date().toISOString(),
-                                        color: client.config.color.integer,
-                                        description: `\`\`\`md\n# ${interaction.options.getString("description")}\`\`\``,
-                                        image: image && image?.contentType?.startsWith("image") ? { url: image.url, proxy_url: image.proxyURL, height: image.height || undefined, width: image.width || undefined } : undefined
-                                    }
-                                ],
-                                components: [
-                                    {
-                                        type: 1,
-                                        components: [
-                                            {
-                                                type: 2,
-                                                style: 1,
-                                                customId: `${data.botId}.${msg.id}.bugChangeStatus`,
-                                                label: "Modifier le statut",
-                                                emoji: { name: "📝" }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            })
-
-                            interaction.reply({
-                                content: `**${client.emotes.yes} ➜ Signalement envoyé au développeur. Vous pouvez détailler votre signalement dans le <#${thread.id}>.**`
-                            })
-                        })
-                    }, 100)
+                    await interaction.editReply({
+                        content: `**${client.emotes.yes} ➜ Signalement envoyé au développeur. Vous pouvez détailler votre signalement dans le fil dans lequel vous venez d'être mentionné.**`
+                    })
                 })
                 break;
             }
