@@ -26,5 +26,9 @@ export default {
             massmentions: 5
         },
         badwords: ["con", "connard", "pute", "fdp", "geule", "connasse", "merde", "chier", "chiant", "chiante", "nique", "niquer", "salop", "salope", "salopard", "ntm"]
+    },
+    mega: {
+        email: "email", // Ces identifiants sont les identifiants d'accès à votre compte Mega (https://mega.io)
+        password: "password" // Remplacez par "" pour désactiver la sauvegarde de la base de données
     }
 };
