@@ -6,6 +6,7 @@ import Class from '..';
 import { users, avis, bots, counter, suggests, tickets, verificators } from "../models"
 import ms from "ms"
 import {roles} from "../configs"
+import backupDatabase from "../functions/backupDatabase";
 
 moment.locale("fr");
 
@@ -187,6 +188,8 @@ export = async (client: Class) => {
     const botsData = await bots.find();
 
     setInterval(async () => {
+        await backupDatabase(client)
+
         botsData.forEach(async (bot: any) => {
             if (moment(Date.now()).format("DD") !== "01") return;
             

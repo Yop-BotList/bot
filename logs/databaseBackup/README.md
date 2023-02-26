@@ -1,0 +1,2 @@
+## Tu pourras ici retrouver les logs des sauvegardes de ta base de données. Vu que la base de données se sauvegarde une fois par jour, il y aura un fichier par jour.
+### Si tu désactive la sauvegarde, tu peux simplement ignorer ce fichier.
