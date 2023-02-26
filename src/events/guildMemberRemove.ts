@@ -43,7 +43,7 @@ export = async (client: Class, member: GuildMember) => {
     }
 
     if (!member.user.bot && client.config.autokick) {
-        const botget = await bots.find({ ownerID: member.user.id })
+        const botget = await bots.find({ ownerId: member.user.id })
 
         if (botget) {
             botget.forEach(async x => {
