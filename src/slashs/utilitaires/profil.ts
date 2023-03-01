@@ -90,7 +90,7 @@ class Profil extends Slash {
             let components = []
 
             const data2 = await verificators.findOne({ userId: member!.user!.id })
-            if (data2!.verifications) components.push({
+            if (data2 && data2!.verifications) components.push({
                 type: 2,
                 style: 1,
                 label: `${data2!.verifications || 0} vérification(s)`,
