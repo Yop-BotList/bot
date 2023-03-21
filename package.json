@@ -37,7 +37,7 @@
     "tsc": "^2.0.4"
   },
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc",
     "start:js": "nodemon dist/index.js",
     "start:ts": "nodemon src/index.ts",
     "prod:start": "pm2 start dist/index.js",
