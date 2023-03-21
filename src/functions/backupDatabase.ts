@@ -18,7 +18,7 @@ export default async function backupDatabase(client: Class) {
     const json = await databaseToJson()
     addToLogs("Données de la base de données récupérées.")
     addToLogs("Préparation à l'envoi...")
-    const stringJson = JSON.stringify(json, null, 4)
+    const stringJson = JSON.stringify(json)
 
     const file = await storage.upload(`${moment(Date.now()).format('DD_MM_YYYY')}.json`, stringJson).complete
     addToLogs("Envoi réussi. Fichier enregistré sous le nom : " + file.name)
@@ -68,8 +68,6 @@ function addToLogs (txt: string) {
     const oldLogs = existsSync(`./logs/databaseBackup/${moment(Date.now()).format('DD_MM_YYYY')}.txt`) ? readFileSync(`./logs/databaseBackup/${moment(Date.now()).format('DD_MM_YYYY')}.txt`, { encoding: "utf-8" }) : null;
 
     const newText = oldLogs !== null ? oldLogs + `\n[${moment(Date.now()).format("kk:mm:ss")}] ${txt}` : `[${moment(Date.now()).format("kk:mm:ss")}] ${txt}`
-
-    console.log(newText)
 
     writeFile("./logs/databaseBackup/" + `${moment(Date.now()).format('DD_MM_YYYY')}.txt`, newText, { encoding: "utf-8" }, (err) => {
         if (err) console.log(err.stack);
