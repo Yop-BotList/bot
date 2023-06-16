@@ -30,5 +30,6 @@ export default {
     mega: {
         email: "email", // Ces identifiants sont les identifiants d'accès à votre compte Mega (https://mega.io)
         password: "password" // Remplacez par "" pour désactiver la sauvegarde de la base de données
-    }
+    },
+    DiscordAnalytics: "token"
 };

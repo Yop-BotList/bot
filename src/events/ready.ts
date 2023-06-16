@@ -7,6 +7,8 @@ import { users, avis, bots, counter, suggests, tickets, verificators } from "../
 import ms from "ms"
 import {roles} from "../configs"
 import backupDatabase from "../functions/backupDatabase";
+// @ts-ignore
+import DiscordAnalytics, {LibType} from "discord-analytics";
 
 moment.locale("fr");
 
@@ -180,6 +182,17 @@ export = async (client: Class) => {
 
     const activities = [`${client.config.prefix}help`, `Version ${client.version}`, 'By Nolhan#2508 and ValDesign#6507'];
     await client.user!.setActivity("Démarrage en cours...", { type: 1, url: "https://twitch.tv/discord" });
+
+    const analytics = new DiscordAnalytics(client, LibType.DJS, {
+      trackGuilds: true,
+      trackGuildsLocale: true,
+      trackInteractions: true,
+      trackUserCount: true,
+      trackUserLanguage: true,
+    }, client.config.DiscordAnalytics);
+    
+    // start tracking selected events
+    analytics.trackEvents();
 
     setInterval(async () => {
       await client.user!.setActivity(activities[Math.floor(Math.random() * activities.length)], { type: 1, url: "https://twitch.tv/discord" });
