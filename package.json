@@ -8,7 +8,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "colors": "^1.4.0",
-    "discord-analytics": "^1.0.5",
+    "discord-analytics": "^1.0.8",
     "discord.js": "^14.7.1",
     "figlet": "^1.5.2",
     "fs": "^0.0.1-security",
